@@ -273,9 +273,12 @@ body {
 /* Track grid */
 .tracks-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 2rem;
   margin-bottom: 3rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .track-card {
@@ -285,6 +288,9 @@ body {
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
   cursor: pointer;
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .track-card:hover {
@@ -714,6 +720,28 @@ body {
 .not-found-icon {
   font-size: 4rem;
   margin-bottom: 1rem;
+}
+
+/* Large Desktop */
+@media (min-width: 1400px) {
+  .tracks-grid {
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 1400px;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) and (max-width: 1399px) {
+  .tracks-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Tablet */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .tracks-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 /* Mobile Responsive */
