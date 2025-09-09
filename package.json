@@ -1,0 +1,29 @@
+{
+  "name": "aktivity-dw-mapy",
+  "version": "1.0.0",
+  "description": "Activity tracks finder - Vue.js web application",
+  "main": "src/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.4.0",
+    "vue-router": "^4.2.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.5.0",
+    "vite": "^5.0.0"
+  },
+  "keywords": [
+    "vue",
+    "tracks",
+    "running",
+    "cycling",
+    "outdoor",
+    "activities"
+  ],
+  "author": "",
+  "license": "MIT"
+}
