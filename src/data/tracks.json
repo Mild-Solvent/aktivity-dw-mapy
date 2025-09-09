@@ -12,8 +12,8 @@
       "locationRegion": "slovakia",
       "duration": "1h 30m",
       "elevation": "450m",
-      "previewImage": "/src/assets/tracks/vrsatec/preview.png",
-      "gpxFile": "/src/assets/tracks/vrsatec/track.gpx",
+      "previewImage": "/aktivity-dw-mapy/assets/tracks/vrsatec/preview.png",
+      "gpxFile": "/aktivity-dw-mapy/assets/tracks/vrsatec/track.gpx",
       "mapUrl": "https://mapy.com/s/gokolovofa",
       "tags": ["mountain", "scenic", "autumn", "forest"],
       "createdAt": "2024-11-03"
@@ -30,8 +30,8 @@
       "locationRegion": "slovakia",
       "duration": "2h 45m",
       "elevation": "780m",
-      "previewImage": "/src/assets/tracks/mountain-biking-trail/preview.png",
-      "gpxFile": "/src/assets/tracks/mountain-biking-trail/track.gpx",
+      "previewImage": "/aktivity-dw-mapy/assets/tracks/mountain-biking-trail/preview.png",
+      "gpxFile": "/aktivity-dw-mapy/assets/tracks/mountain-biking-trail/track.gpx",
       "mapUrl": "https://mapy.com/s/gokolovofa",
       "tags": ["mountain", "technical", "challenging", "summit"],
       "createdAt": "2024-11-01"
@@ -48,8 +48,8 @@
       "locationRegion": "slovakia",
       "duration": "45m",
       "elevation": "50m",
-      "previewImage": "/src/assets/tracks/river-run/preview.png",
-      "gpxFile": "/src/assets/tracks/river-run/track.gpx",
+      "previewImage": "/aktivity-dw-mapy/assets/tracks/river-run/preview.png",
+      "gpxFile": "/aktivity-dw-mapy/assets/tracks/river-run/track.gpx",
       "mapUrl": "https://mapy.com/s/gokolovofa",
       "tags": ["river", "flat", "beginner", "peaceful"],
       "createdAt": "2024-11-02"
@@ -66,8 +66,8 @@
       "locationRegion": "slovakia",
       "duration": "3h 15m",
       "elevation": "320m",
-      "previewImage": "/src/assets/tracks/forest-hike/preview.png",
-      "gpxFile": "/src/assets/tracks/forest-hike/track.gpx",
+      "previewImage": "/aktivity-dw-mapy/assets/tracks/forest-hike/preview.png",
+      "gpxFile": "/aktivity-dw-mapy/assets/tracks/forest-hike/track.gpx",
       "mapUrl": "https://mapy.com/s/gokolovofa",
       "tags": ["forest", "wildlife", "peaceful", "nature"],
       "createdAt": "2024-10-30"
