@@ -3,125 +3,125 @@
     <div class="container">
       <div class="page-header">
         <button @click="goBack" class="back-button">
-          ← Back
+← Späť
         </button>
-        <h1>Privacy Policy</h1>
+        <h1>Ochrana súkromia</h1>
       </div>
 
       <div class="content">
         <section class="section">
-          <p class="last-updated">Last updated: November 2024</p>
+          <p class="last-updated">Posledná aktualizácia: november 2024</p>
         </section>
 
         <section class="section">
-          <h2>1. Information We Collect</h2>
+          <h2>1. Informácie, ktoré zhromažďujeme</h2>
           <p>
-            TrackFinder collects information to provide better services to our users. We collect information in the following ways:
+            Hľadač Trás zhromažďuje informácie na poskytovanie lepších služieb našim používateľom. Informácie zhromažďujeme nasledujúcimi spôsobmi:
           </p>
           <ul>
-            <li><strong>Information you give us:</strong> Search queries and filter preferences to improve your experience</li>
-            <li><strong>Information we get from your use of our services:</strong> We may collect information about the tracks you view and download</li>
-            <li><strong>Location information:</strong> We may collect location data to provide relevant track recommendations</li>
+            <li><strong>Informácie, ktoré nám poskytujete:</strong> Vyhľadávacie dotazy a predvoľby filtrov na zlepšenie vašej skúdenosti</li>
+            <li><strong>Informácie, ktoré získavame z vašho používania našich služieb:</strong> Môžeme zhromažďovať informácie o trasách, ktoré si prezîrate a sťahujete</li>
+            <li><strong>Poloha informácie:</strong> Môžeme zhromažďovať údaje o polohe na poskytovanie relevántnych odporúčaní trás</li>
           </ul>
         </section>
 
         <section class="section">
-          <h2>2. How We Use Information</h2>
+          <h2>2. Ako používame informácie</h2>
           <p>
-            We use the information we collect from all of our services to:
+            Informácie, ktoré zhromažďujeme zo všetkých našich služieb, používame na:
           </p>
           <ul>
-            <li>Provide, maintain, and improve our services</li>
-            <li>Provide track recommendations based on your preferences</li>
-            <li>Develop new services and features</li>
-            <li>Protect TrackFinder and our users</li>
+            <li>Poskytovanie, udržiavanie a zlepšovanie našich služieb</li>
+            <li>Poskytovanie odporúčaní trás na základe vašich predvoľtieb</li>
+            <li>Vývoj nových služieb a funkcií</li>
+            <li>Ochranu Hľadača Trás a našich používateľov</li>
           </ul>
         </section>
 
         <section class="section">
-          <h2>3. Information Sharing</h2>
+          <h2>3. Zdieľanie informácií</h2>
           <p>
-            We do not share personal information with companies, organizations, and individuals outside of TrackFinder unless one of the following circumstances applies:
+            Osobné informácie nezdieľame so spoločnosťami, organizáciami a jednotlivcami mimo Hľadača Trás, ak sa neuplatnia nasledujúce okolnosti:
           </p>
           <ul>
-            <li><strong>With your consent:</strong> We will share personal information when we have your consent</li>
-            <li><strong>For legal reasons:</strong> We will share personal information if we believe that access, use, preservation, or disclosure is reasonably necessary</li>
+            <li><strong>S vaším súhlasom:</strong> Osobné informácie budeme zdieľať, keď budeme mať váš sýhlas</li>
+            <li><strong>Z právnych dôvodov:</strong> Osobné informácie budeme zdieľať, ak sa domievame, že prístup, použitie, uchovanie alebo prezradenie je rozumne potrebné</li>
           </ul>
         </section>
 
         <section class="section">
-          <h2>4. Information Security</h2>
+          <h2>4. Bezpečnosť informácií</h2>
           <p>
-            We work hard to protect TrackFinder and our users from unauthorized access to or unauthorized alteration, 
-            disclosure, or destruction of information we hold. In particular:
+            Tvrdo pracujeme na ochrane Hľadača Trás a našich používateľov pred neoprávneným prístupom alebo neoprávnenou zmenou, 
+            prezradením alebo zničením informácií, ktoré držíme. Konkrétne:
           </p>
           <ul>
-            <li>We encrypt many of our services using SSL</li>
-            <li>We review our information collection, storage, and processing practices</li>
-            <li>We restrict access to personal information to TrackFinder employees who need to know that information</li>
+            <li>Šifrujeme mnohé z našich služieb pomocou SSL</li>
+            <li>Prehodnocujeme naše praktiky zhromažďovania, ukladania a spracovania informácií</li>
+            <li>Obmedzujeme prístup k osobným informáciám na zamestnancov Hľadača Trás, ktorí potrebujú tieto informácie poznať</li>
           </ul>
         </section>
 
         <section class="section">
-          <h2>5. Cookies and Similar Technologies</h2>
+          <h2>5. Cookies a podobné technológie</h2>
           <p>
-            We use various technologies to collect and store information when you visit a TrackFinder service, 
-            and this may include using cookies or similar technologies to identify your browser or device.
+            Používame rôzne technológie na zhromažďovanie a ukladanie informácií, keď navštívite služby Hľadača Trás, 
+            a to môže zahňovať použitie cookies alebo podobných technológií na identifikáciu vašho prehliadača alebo zariadenia.
           </p>
         </section>
 
         <section class="section">
-          <h2>6. Third-Party Services</h2>
+          <h2>6. Služby tretích strán</h2>
           <p>
-            Our service may contain links to third-party websites or services, such as Mapy.com for map viewing. 
-            We are not responsible for the privacy practices of these third-party services. We encourage you to 
-            review their privacy policies before providing any personal information.
+            Naša služba môže obsahovať odkazy na webové stránky alebo služby tretích strán, ako je napríklad Mapy.com na zobrazenie máp. 
+            Nie sme zodpovední za praktiky ochrany súkromia týchto služieb tretích strán. Odpoŕčame vám, 
+            aby ste si preskúmali ich zásady ochrany súkromia pred poskytnutím akýchkoľvek osobných informácií.
           </p>
         </section>
 
         <section class="section">
-          <h2>7. Data Retention</h2>
+          <h2>7. Uchovanie údajov</h2>
           <p>
-            We retain collected information for as long as necessary to provide services. We will delete or 
-            anonymize your personal information when it's no longer needed for the purposes outlined in this Privacy Policy.
+            Zhromazďenené informácie uchávame tak dlho, ako je to potrebné na poskytovanie služieb. Vaše osobné informácie vymažeme alebo 
+            anonymizujeme, keď už nebudú potrebné na účely uvedené v týchto zásadách ochrany súkromia.
           </p>
         </section>
 
         <section class="section">
-          <h2>8. Your Rights</h2>
+          <h2>8. Vaše práva</h2>
           <p>
-            You have the right to:
+            Máte právo na:
           </p>
           <ul>
-            <li>Access your personal information</li>
-            <li>Update or correct your personal information</li>
-            <li>Delete your personal information</li>
-            <li>Object to our use of your personal information</li>
-            <li>Request that we transfer your personal information to another service</li>
+            <li>Prístup k vašim osobným informáciám</li>
+            <li>Aktualizáciu alebo opravu vašich osobných informácií</li>
+            <li>Vymazanie vašich osobných informácií</li>
+            <li>Namietanie proti našemu používaniu vašich osobných informácií</li>
+            <li>Požiadanie o prenos vašich osobných informácií do inej služby</li>
           </ul>
         </section>
 
         <section class="section">
-          <h2>9. Children's Privacy</h2>
+          <h2>9. Ochrana súkromia detí</h2>
           <p>
-            Our services are not directed to children under 13. We do not knowingly collect personal information 
-            from children under 13. If we become aware that a child under 13 has provided us with personal information, 
-            we will delete such information from our files.
+            Naše služby nie sú smerobané na deti mladšie ako 13 rokov. Vedomky nezhromažďujeme osobné informácie 
+            od detí mladších ako 13 rokov. Ak sa dozvedieme, že dieťa mladšie ako 13 rokov nám poskytlo osobné informácie, 
+            také informácie z našich súbor vymažeme.
           </p>
         </section>
 
         <section class="section">
-          <h2>10. Changes to This Policy</h2>
+          <h2>10. Zmeny týchto zásad</h2>
           <p>
-            Our Privacy Policy may change from time to time. We will post any privacy policy changes on this page 
-            and, if the changes are significant, we will provide a more prominent notice.
+            Naše zásady ochrany súkromia sa môžu čas od času zmeniť. Akékoľvek zmeny zásad ochrany súkromia zverejníme na tejto stránke 
+            a ak sú zmeny významné, poskytneme výraznejšie upozornenie.
           </p>
         </section>
 
         <section class="section">
-          <h2>11. Contact Us</h2>
+          <h2>11. Kontaktujte nás</h2>
           <p>
-            If you have any questions about this Privacy Policy, please contact us through our website.
+            Ak máte akékoĺvek otázky o týchto zásadách ochrany súkromia, kontaktujte nás prosím prostredníctvom našej webovej stránky.
           </p>
         </section>
       </div>

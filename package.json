@@ -1,7 +1,7 @@
 {
   "name": "aktivity-dw-mapy",
   "version": "1.0.0",
-  "description": "Activity tracks finder - Vue.js web application",
+  "description": "Hľadač aktivitných trás - Vue.js webová aplikácia",
   "main": "src/main.js",
   "scripts": {
     "dev": "vite",

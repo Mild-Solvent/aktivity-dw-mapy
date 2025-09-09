@@ -1,13 +1,13 @@
 <template>
   <div class="home-page">
     <div class="hero-section">
-      <h1 class="hero-title">Discover Amazing Tracks</h1>
-      <p class="hero-subtitle">Find the perfect running, cycling, or hiking routes near you</p>
+      <h1 class="hero-title">Objavte Úžasné Trasy</h1>
+      <p class="hero-subtitle">Nájdite perfektné bežecké, cyklistické alebo turistické trasy vo vašom okolí</p>
     </div>
 
     <div class="container">
       <div class="results-info">
-        <p>{{ filteredTracks.length }} tracks found</p>
+        <p>Nájdených {{ filteredTracks.length }} trás</p>
       </div>
 
       <div class="tracks-grid">
@@ -59,8 +59,8 @@
       <div v-if="filteredTracks.length === 0" class="no-results">
         <div class="no-results-content">
           <div class="no-results-icon">🔍</div>
-          <h3>No tracks found</h3>
-          <p>Try adjusting your filters or search criteria</p>
+          <h3>Neboli nájdené žiadne trasy</h3>
+          <p>Skúste upraviť filtre alebo kritériá vyhľadávania</p>
         </div>
       </div>
     </div>

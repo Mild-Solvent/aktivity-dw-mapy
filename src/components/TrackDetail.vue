@@ -2,7 +2,7 @@
   <div class="track-detail" v-if="track">
     <div class="track-header">
       <button @click="goBack" class="back-button">
-        ← Back to tracks
+← Späť na trasy
       </button>
       <div class="track-title-section">
         <h1 class="track-title">{{ track.name }}</h1>
@@ -30,35 +30,35 @@
             <div class="stat-item">
               <div class="stat-icon">📏</div>
               <div class="stat-content">
-                <div class="stat-label">Distance</div>
+                <div class="stat-label">Vzdialenosť</div>
                 <div class="stat-value">{{ track.distance }}</div>
               </div>
             </div>
             <div class="stat-item">
               <div class="stat-icon">⏱️</div>
               <div class="stat-content">
-                <div class="stat-label">Duration</div>
+                <div class="stat-label">Trvanie</div>
                 <div class="stat-value">{{ track.duration }}</div>
               </div>
             </div>
             <div class="stat-item">
               <div class="stat-icon">⛰️</div>
               <div class="stat-content">
-                <div class="stat-label">Elevation</div>
+                <div class="stat-label">Prevýšenie</div>
                 <div class="stat-value">{{ track.elevation }}</div>
               </div>
             </div>
             <div class="stat-item">
               <div class="stat-icon">📍</div>
               <div class="stat-content">
-                <div class="stat-label">Location</div>
+                <div class="stat-label">Lokalita</div>
                 <div class="stat-value">{{ track.location }}</div>
               </div>
             </div>
           </div>
 
           <div class="track-tags">
-            <h3>Tags</h3>
+            <h3>Značky</h3>
             <div class="tags-list">
               <span v-for="tag in track.tags" :key="tag" class="tag">
                 #{{ tag }}
@@ -69,7 +69,7 @@
       </div>
 
       <div class="map-section">
-        <h2>Interactive Map</h2>
+        <h2>Interaktívna mapa</h2>
         <div class="map-container">
           <iframe 
             :src="getEmbedMapUrl()" 
@@ -82,7 +82,7 @@
             referrerpolicy="no-referrer-when-downgrade">
           </iframe>
           <div class="map-overlay">
-            <p>📍 Interactive map view of the track route</p>
+            <p>📍 Interaktívny pohľad na mapu trasy</p>
           </div>
         </div>
       </div>
@@ -94,21 +94,21 @@
           rel="noopener noreferrer"
           class="action-button primary"
         >
-          🗺️ View on Mapy.com
+🗺️ Zobraziť na Mapy.com
         </a>
         <button 
           @click="downloadGPX" 
           class="action-button secondary"
         >
-          📥 Download GPX
+📥 Stiahnuť GPX
         </button>
       </div>
 
       <div class="additional-info">
         <div class="info-section">
-          <h3>About this track</h3>
-          <p>Created on {{ formatDate(track.createdAt) }}</p>
-          <p>This track offers a {{ track.difficulty }} level experience perfect for {{ track.sport }} enthusiasts.</p>
+          <h3>O tejto trase</h3>
+          <p>Vytvorené dňa {{ formatDate(track.createdAt) }}</p>
+          <p>Táto trasa ponúka zážitok {{ getDifficultyText(track.difficulty) }} úrovne, ideálny pre nadšencov {{ getSportText(track.sport) }}.</p>
         </div>
       </div>
     </div>
@@ -117,10 +117,10 @@
   <div v-else class="track-not-found">
     <div class="not-found-content">
       <div class="not-found-icon">❌</div>
-      <h2>Track not found</h2>
-      <p>The requested track could not be found.</p>
+      <h2>Trasa nebola nájdená</h2>
+      <p>Požadovanú trasu sa nepodarilo nájsť.</p>
       <button @click="goBack" class="back-button">
-        ← Back to tracks
+← Späť na trasy
       </button>
     </div>
   </div>
@@ -181,6 +181,22 @@ export default {
         link.click()
         document.body.removeChild(link)
       }
+    },
+    getDifficultyText(difficulty) {
+      const translations = {
+        easy: 'ľahkej',
+        moderate: 'strednej',
+        hard: 'ťažkej'
+      }
+      return translations[difficulty] || 'strednej'
+    },
+    getSportText(sport) {
+      const translations = {
+        cycling: 'cyklistiky',
+        running: 'behu',
+        hiking: 'turistiky'
+      }
+      return translations[sport] || 'sportu'
     }
   }
 }

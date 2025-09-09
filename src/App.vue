@@ -18,54 +18,54 @@
             <div class="menu-content">
               <div class="menu-main">
                 <router-link to="/" @click="closeMenu" class="menu-item">
-                  🏠 Home
+                  🏠 Domov
                 </router-link>
                 <router-link to="/terms" @click="closeMenu" class="menu-item">
-                  📋 Terms & Conditions
+                  📋 Všeobecné podmienky
                 </router-link>
                 <router-link to="/privacy" @click="closeMenu" class="menu-item">
-                  🔒 Privacy Policy
+                  🔒 Ochrana súkromia
                 </router-link>
               </div>
               
               <!-- Filters (only show on home page) -->
               <div v-if="$route.name === 'Home'" class="filters">
-                <h3>Filters</h3>
+                <h3>Filtre</h3>
                 <div class="filter-group">
-                  <label>Sport</label>
+                  <label>Šport</label>
                   <select v-model="filters.sport" @change="applyFilters">
-                    <option value="">All Sports</option>
-                    <option value="cycling">🚴 Cycling</option>
-                    <option value="running">🏃 Running</option>
-                    <option value="hiking">🥾 Hiking</option>
+                    <option value="">Všetky športy</option>
+                    <option value="cycling">🚴 Cyklistika</option>
+                    <option value="running">🏃 Beh</option>
+                    <option value="hiking">🥾 Turistika</option>
                   </select>
                 </div>
                 
                 <div class="filter-group">
-                  <label>Distance</label>
+                  <label>Vzdialenosť</label>
                   <select v-model="filters.distance" @change="applyFilters">
-                    <option value="">Any Distance</option>
+                    <option value="">Akákoľvek vzdialenosť</option>
                     <option value="short">< 10 km</option>
-                    <option value="medium">10-20 km</option>
+                    <option value="medium">10–20 km</option>
                     <option value="long">> 20 km</option>
                   </select>
                 </div>
                 
                 <div class="filter-group">
-                  <label>Difficulty</label>
+                  <label>Náročnosť</label>
                   <select v-model="filters.difficulty" @change="applyFilters">
-                    <option value="">Any Difficulty</option>
-                    <option value="easy">🟢 Easy</option>
-                    <option value="moderate">🟡 Moderate</option>
-                    <option value="hard">🔴 Hard</option>
+                    <option value="">Akákoľvek náročnosť</option>
+                    <option value="easy">🟢 Ľahká</option>
+                    <option value="moderate">🟡 Stredná</option>
+                    <option value="hard">🔴 Ťažká</option>
                   </select>
                 </div>
                 
                 <div class="filter-group">
-                  <label>Location</label>
+                  <label>Lokalita</label>
                   <select v-model="filters.location" @change="applyFilters">
-                    <option value="">Any Location</option>
-                    <option value="slovakia">🇸🇰 Slovakia</option>
+                    <option value="">Akákoľvek lokalita</option>
+                    <option value="slovakia">🇸🇰 Slovensko</option>
                   </select>
                 </div>
               </div>
@@ -76,7 +76,7 @@
         <!-- Logo -->
         <div class="logo">
           <router-link to="/" class="logo-link">
-            🗺️ TrackFinder
+            🗺️ Hľadač Trás
           </router-link>
         </div>
 
@@ -86,7 +86,7 @@
             v-model="searchQuery"
             @input="handleSearch"
             type="text"
-            placeholder="Search tracks..."
+            placeholder="Hľadať trasy..."
             class="search-input"
           />
           <span class="search-icon">🔍</span>

@@ -3,82 +3,82 @@
     <div class="container">
       <div class="page-header">
         <button @click="goBack" class="back-button">
-          ← Back
+← Späť
         </button>
-        <h1>Terms & Conditions</h1>
+        <h1>Všeobecné podmienky</h1>
       </div>
 
       <div class="content">
         <section class="section">
-          <h2>1. Acceptance of Terms</h2>
+          <h2>1. Prijatie podmienok</h2>
           <p>
-            By accessing and using TrackFinder, you accept and agree to be bound by the terms and provision of this agreement.
+            Prístupom a používaním Hľadača Trás prijimate a súhlasíte s tým, že sa budete riadiť podmienkami a ustanoveniami tejto zmluvy.
           </p>
         </section>
 
         <section class="section">
-          <h2>2. Use License</h2>
+          <h2>2. Licencia na používanie</h2>
           <p>
-            Permission is granted to temporarily download one copy of the materials on TrackFinder for personal, 
-            non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
+            Udělíte sa povolenie na dočasné stiahnutie jednej kópie materiálov z Hľadača Trás iba na osobné, 
+            nekomerčné a dočasné prezretie. Jedná sa o udělenie licencie, nie o prenos vlastníctva, a pod touto licenciou nemôžete:
           </p>
           <ul>
-            <li>modify or copy the materials;</li>
-            <li>use the materials for any commercial purpose or for any public display (commercial or non-commercial);</li>
-            <li>attempt to decompile or reverse engineer any software contained on the website;</li>
-            <li>remove any copyright or other proprietary notations from the materials.</li>
+            <li>modifikovať alebo kopírovať materiály;</li>
+            <li>používať materiály na komerčné účely alebo na akekǿolvek verejné zobrazenie (komerčné alebo nekomerčné);</li>
+            <li>pokúšať sa dekompilovať alebo reverzne inžinyriť akýkoĺvek softvér obsiahnutý na webovej stránke;</li>
+            <li>odstrániť akékoĺvek označenie autorských práv alebo iné vlastnícke označenia z materiálov.</li>
           </ul>
         </section>
 
         <section class="section">
-          <h2>3. Track Information</h2>
+          <h2>3. Informácie o trasách</h2>
           <p>
-            All track information, including routes, difficulty levels, and descriptions, are provided for informational 
-            purposes only. Users are responsible for their own safety and should verify all information before embarking on any activity.
+            Všetky informácie o trasách, vrátane trás, úrovní obtiaznosti a popisov, sú poskytované iba na 
+            informačné účely. Používatelia sú zodpovední za svoju vlastnú bezpečnosť a mali by si overiť všetky informácie pred začatím akejkoľvek aktivity.
           </p>
         </section>
 
         <section class="section">
-          <h2>4. Disclaimer</h2>
+          <h2>4. Zrieknutie sa zodpovednosti</h2>
           <p>
-            The materials on TrackFinder are provided on an 'as is' basis. TrackFinder makes no warranties, expressed or implied, 
-            and hereby disclaims and negates all other warranties including without limitation, implied warranties or conditions 
-            of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.
+            Materiály na Hľadači Trás sú poskytované 'tak ako sú'. Hľadač Trás neposkytuje žiadne záruky, vyslovné ani implicitné, 
+            a týmto sa zrieka a neguje všetky ostatné záruky vrátane, bez obmedzenia, implicitných záruk alebo podmienok 
+            obchodovateľnosti, vhodnosti na konkrétny účel alebo neporušenia duševného vlastníctva alebo iného porušenia práv.
           </p>
         </section>
 
         <section class="section">
-          <h2>5. Limitations</h2>
+          <h2>5. Obmedzenia</h2>
           <p>
-            In no event shall TrackFinder or its suppliers be liable for any damages (including, without limitation, 
-            damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use 
-            the materials on TrackFinder, even if TrackFinder or an authorized representative has been notified orally or 
-            in writing of the possibility of such damage. Because some jurisdictions do not allow limitations on implied 
-            warranties, or limitations of liability for consequential or incidental damages, these limitations may not apply to you.
+            V žiadnom prípade nie je Hľadač Trás ani jeho dodávatelia zodpovední za akékoľvek škody (vrátane, bez obmedzenia, 
+            škôd za stratu údajov alebo zisku, alebo v dôsledku prerušenia podnikania) vyplývajúce z používania alebo nemožnosti používať 
+            materiály na Hľadači Trás, a to aj v prípade, že Hľadač Trás alebo autorizovaný zástupca bol ústne alebo 
+            písomne upozornený na možnosť takejto škody. Keďže niektore jurisdikcie neumožňujú obmedzenia implicitných 
+            záruk alebo obmedzenia zodpovednosti za následné alebo náhodné škody, tieto obmedzenia sa na vás nemusia vzťahovať.
           </p>
         </section>
 
         <section class="section">
-          <h2>6. Safety Notice</h2>
+          <h2>6. Bezpečnostné upozornenie</h2>
           <p>
-            Outdoor activities including running, cycling, and hiking can be dangerous. Users participate at their own risk. 
-            Always inform someone of your plans, carry appropriate safety equipment, and be prepared for changing conditions. 
-            TrackFinder is not responsible for any accidents, injuries, or incidents that may occur during activities.
+            Vonkajšie aktivity vrátane behu, cyklistiky a turistiky môžu byť nebezpečné. Používatelia sa zúčastňujú na vlastné riziko. 
+            Vždy informujte niekoho o svojich plánoch, noste vhodné bezpečnostné vybavenie a buďte pripravení na meniace sa podmienky. 
+            Hľadač Trás nie je zodpovedný za žiadne nehody, zranenia alebo incidenty, ktoré sa môžu vyskytnúť počas aktivit.
           </p>
         </section>
 
         <section class="section">
-          <h2>7. Revisions</h2>
+          <h2>7. Revízie</h2>
           <p>
-            TrackFinder may revise these terms of service at any time without notice. By using this web site you are agreeing 
-            to be bound by the then current version of these terms of service.
+            Hľadač Trás môže kedykoľvek zrevidovať tieto podmienky používania bez upozornenia. Používaním tejto webovej stránky súhlasisíte 
+            s tým, že budete viazaný aktuálnou verziou týchto podmienok používania.
           </p>
         </section>
 
         <section class="section">
-          <h2>8. Contact Information</h2>
+          <h2>8. Kontaktné informácie</h2>
           <p>
-            If you have any questions about these Terms & Conditions, please contact us through our website.
+            Ak máte akékoľvek otázky týkajúce sa týchto Všeobecných podmienok, kontaktujte nás prosím prostredníctvom našej webovej stránky.
           </p>
         </section>
       </div>
