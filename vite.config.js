@@ -5,5 +5,11 @@ export default defineConfig({
   plugins: [vue()],
   server: {
     port: 3000
+  },
+  // GitHub Pages base path (uncomment for deployment)
+  // base: '/aktivity-dw-mapy/',
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets'
   }
 })

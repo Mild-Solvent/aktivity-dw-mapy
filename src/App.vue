@@ -14,7 +14,7 @@
             <span></span>
           </button>
           
-          <nav class="menu" :class="{ open: isMenuOpen }">
+          <nav class="menu" :class="{ open: isMenuOpen }" @click.stop>
             <div class="menu-content">
               <div class="menu-main">
                 <router-link to="/" @click="closeMenu" class="menu-item">
