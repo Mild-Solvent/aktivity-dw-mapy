@@ -1,5 +1,25 @@
 <template>
-  <div class="track-detail" v-if="track">
+  <!-- Loading State -->
+  <div v-if="loading" class="track-loading">
+    <div class="loading-content">
+      <div class="loading-spinner">⏳</div>
+      <p>Načítavanie trasy...</p>
+    </div>
+  </div>
+  
+  <!-- Error State -->
+  <div v-else-if="error" class="track-error">
+    <div class="error-content">
+      <div class="error-icon">❌</div>
+      <h2>{{ error }}</h2>
+      <button @click="goBack" class="back-button">
+← Späť na trasy
+      </button>
+    </div>
+  </div>
+  
+  <!-- Track Content -->
+  <div class="track-detail" v-else-if="track">
     <div class="track-header">
       <button @click="goBack" class="back-button">
 ← Späť na trasy
@@ -34,32 +54,32 @@
           <p class="track-description">{{ track.description }}</p>
           
           <div class="track-stats-grid">
-            <div class="stat-item">
-              <div class="stat-icon">📏</div>
+            <div class="stat-item" v-if="track.stats?.distance">
+              <div class="stat-icon">{{ track.stats.distance.icon }}</div>
               <div class="stat-content">
-                <div class="stat-label">Vzdialenosť</div>
-                <div class="stat-value">{{ track.distance }}</div>
+                <div class="stat-label">{{ track.stats.distance.label }}</div>
+                <div class="stat-value">{{ track.stats.distance.value }}</div>
               </div>
             </div>
-            <div class="stat-item">
-              <div class="stat-icon">⏱️</div>
+            <div class="stat-item" v-if="track.stats?.duration">
+              <div class="stat-icon">{{ track.stats.duration.icon }}</div>
               <div class="stat-content">
-                <div class="stat-label">Trvanie</div>
-                <div class="stat-value">{{ track.duration }}</div>
+                <div class="stat-label">{{ track.stats.duration.label }}</div>
+                <div class="stat-value">{{ track.stats.duration.value }}</div>
               </div>
             </div>
-            <div class="stat-item">
-              <div class="stat-icon">⛰️</div>
+            <div class="stat-item" v-if="track.stats?.elevation">
+              <div class="stat-icon">{{ track.stats.elevation.icon }}</div>
               <div class="stat-content">
-                <div class="stat-label">Prevýšenie</div>
-                <div class="stat-value">{{ track.elevation }}</div>
+                <div class="stat-label">{{ track.stats.elevation.label }}</div>
+                <div class="stat-value">{{ track.stats.elevation.value }}</div>
               </div>
             </div>
-            <div class="stat-item">
-              <div class="stat-icon">📍</div>
+            <div class="stat-item" v-if="track.stats?.startPoint">
+              <div class="stat-icon">{{ track.stats.startPoint.icon }}</div>
               <div class="stat-content">
-                <div class="stat-label">START</div>
-                <div class="stat-value">{{ track.location }}</div>
+                <div class="stat-label">{{ track.stats.startPoint.label }}</div>
+                <div class="stat-value">{{ track.stats.startPoint.value }}</div>
               </div>
             </div>
           </div>
@@ -79,28 +99,17 @@
 
       <div class="additional-info">
         <div class="info-section">
-          <h3>O tejto trase</h3>
-          <p>Vytvorené dňa {{ formatDate(track.createdAt) }}</p>
-          <p>Táto trasa ponúka zážitok {{ getDifficultyText(track.difficulty) }} úrovne, ideálny pre nadšencov {{ getSportText(track.sport) }}.</p>
+          <h3>{{ track.about?.title || 'O tejto trase' }}</h3>
+          <p>{{ track.about?.createdText || ('Vytvorené dňa ' + formatDate(track.createdAt)) }}</p>
+          <p>{{ track.about?.experienceText || ('Táto trasa ponúka zážitok ' + getDifficultyText(track.difficulty) + ' úrovne, ideálny pre nadšencov ' + getSportText(track.sport) + '.') }}</p>
         </div>
       </div>
-    </div>
-  </div>
-
-  <div v-else class="track-not-found">
-    <div class="not-found-content">
-      <div class="not-found-icon">❌</div>
-      <h2>Trasa nebola nájdená</h2>
-      <p>Požadovanú trasu sa nepodarilo nájsť.</p>
-      <button @click="goBack" class="back-button">
-← Späť na trasy
-      </button>
     </div>
   </div>
 </template>
 
 <script>
-import tracksData from '../data/tracks.json'
+import trackLoader from '../utils/trackLoader.js'
 
 export default {
   name: 'TrackDetail',
@@ -110,12 +119,39 @@ export default {
       required: true
     }
   },
-  computed: {
-    track() {
-      return tracksData.tracks.find(track => track.id === this.id)
+  data() {
+    return {
+      track: null,
+      loading: true,
+      error: null
+    }
+  },
+  async mounted() {
+    await this.loadTrack()
+  },
+  watch: {
+    id: {
+      handler: 'loadTrack',
+      immediate: false
     }
   },
   methods: {
+    async loadTrack() {
+      try {
+        this.loading = true
+        this.track = await trackLoader.getTrackById(this.id)
+        if (!this.track) {
+          this.error = 'Trasa nebola nájdená'
+        } else {
+          this.error = null
+        }
+      } catch (error) {
+        console.error('Error loading track:', error)
+        this.error = 'Chyba pri načítaní trasy'
+      } finally {
+        this.loading = false
+      }
+    },
     goBack() {
       this.$router.push('/')
     },

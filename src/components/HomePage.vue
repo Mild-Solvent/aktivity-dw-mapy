@@ -6,61 +6,82 @@
     </div>
 
     <div class="container">
-      <div class="results-info">
-        <p>Nájdených {{ filteredTracks.length }} trás</p>
+      <!-- Loading State -->
+      <div v-if="loading" class="loading-state">
+        <div class="loading-content">
+          <div class="loading-spinner">⏳</div>
+          <p>Načítavanie trás...</p>
+        </div>
       </div>
+      
+      <!-- Error State -->
+      <div v-else-if="error" class="error-state">
+        <div class="error-content">
+          <div class="error-icon">❌</div>
+          <h3>Chyba pri načítavaní</h3>
+          <p>{{ error }}</p>
+          <button @click="loadTracks" class="retry-button">Skúsiť znovu</button>
+        </div>
+      </div>
+      
+      <!-- Main Content -->
+      <div v-else>
+        <div class="results-info">
+          <p>Nájdených {{ filteredTracks.length }} trás</p>
+        </div>
 
-      <div class="tracks-grid">
-        <div 
-          v-for="track in filteredTracks" 
-          :key="track.id"
-          class="track-card"
-          @click="goToTrack(track.id)"
-        >
-          <div class="track-image">
-            <img :src="track.previewImage" :alt="track.name" />
-            <div class="track-badges">
-              <span class="sport-badge" :class="track.sport">
-                {{ getSportIcon(track.sport) }} {{ track.sport }}
-              </span>
-              <span class="difficulty-badge" :class="track.difficulty">
-                {{ getDifficultyIcon(track.difficulty) }} {{ track.difficulty }}
-              </span>
-            </div>
-          </div>
-          
-          <div class="track-content">
-            <h3 class="track-title">{{ track.name }}</h3>
-            <p class="track-description">{{ track.description }}</p>
-            
-            <div class="track-stats">
-              <div class="stat">
-                <span class="stat-icon">📏</span>
-                <span class="stat-value">{{ track.distance }}</span>
-              </div>
-              <div class="stat">
-                <span class="stat-icon">⏱️</span>
-                <span class="stat-value">{{ track.duration }}</span>
-              </div>
-              <div class="stat">
-                <span class="stat-icon">⛰️</span>
-                <span class="stat-value">{{ track.elevation }}</span>
+        <div class="tracks-grid">
+          <div 
+            v-for="track in filteredTracks" 
+            :key="track.id"
+            class="track-card"
+            @click="goToTrack(track.id)"
+          >
+            <div class="track-image">
+              <img :src="track.previewImage" :alt="track.name" />
+              <div class="track-badges">
+                <span class="sport-badge" :class="track.sport">
+                  {{ getSportIcon(track.sport) }} {{ track.sport }}
+                </span>
+                <span class="difficulty-badge" :class="track.difficulty">
+                  {{ getDifficultyIcon(track.difficulty) }} {{ track.difficulty }}
+                </span>
               </div>
             </div>
             
-            <div class="track-location">
-              <span class="location-icon">📍</span>
-              <span class="location-text">{{ track.location }}</span>
+            <div class="track-content">
+              <h3 class="track-title">{{ track.name }}</h3>
+              <p class="track-description">{{ track.description }}</p>
+              
+              <div class="track-stats">
+                <div class="stat">
+                  <span class="stat-icon">📏</span>
+                  <span class="stat-value">{{ track.distance }}</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-icon">⏱️</span>
+                  <span class="stat-value">{{ track.duration }}</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-icon">⛰️</span>
+                  <span class="stat-value">{{ track.elevation }}</span>
+                </div>
+              </div>
+              
+              <div class="track-location">
+                <span class="location-icon">📍</span>
+                <span class="location-text">{{ track.location }}</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div v-if="filteredTracks.length === 0" class="no-results">
-        <div class="no-results-content">
-          <div class="no-results-icon">🔍</div>
-          <h3>Neboli nájdené žiadne trasy</h3>
-          <p>Skúste upraviť filtre alebo kritériá vyhľadávania</p>
+        <div v-if="filteredTracks.length === 0" class="no-results">
+          <div class="no-results-content">
+            <div class="no-results-icon">🔍</div>
+            <h3>Neboli nájdené žiadne trasy</h3>
+            <p>Skúste upraviť filtre alebo kritériá vyhľadávania</p>
+          </div>
         </div>
       </div>
     </div>
@@ -68,7 +89,7 @@
 </template>
 
 <script>
-import tracksData from '../data/tracks.json'
+import trackLoader from '../utils/trackLoader.js'
 
 export default {
   name: 'HomePage',
@@ -84,8 +105,13 @@ export default {
   },
   data() {
     return {
-      tracks: tracksData.tracks
+      tracks: [],
+      loading: true,
+      error: null
     }
+  },
+  async mounted() {
+    await this.loadTracks()
   },
   computed: {
     filteredTracks() {
@@ -134,6 +160,18 @@ export default {
     }
   },
   methods: {
+    async loadTracks() {
+      try {
+        this.loading = true
+        this.tracks = await trackLoader.loadAllTracks()
+        this.error = null
+      } catch (error) {
+        console.error('Error loading tracks:', error)
+        this.error = 'Chyba pri načítaní trás'
+      } finally {
+        this.loading = false
+      }
+    },
     goToTrack(trackId) {
       this.$router.push({ name: 'TrackDetail', params: { id: trackId } })
     },

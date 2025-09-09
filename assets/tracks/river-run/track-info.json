@@ -1,0 +1,45 @@
+{
+  "id": "river-run",
+  "name": "Bežecká trasa pozdĺž rieky",
+  "description": "Pokojná bežecká trasa pozdĺž rieky s rovnatým terénom, perfektná pre začiatočníkov a regeneračné behy.",
+  "sport": "running",
+  "distance": "8.5 km",
+  "distanceValue": 8.5,
+  "difficulty": "easy",
+  "location": "Bratislava, Slovensko",
+  "locationRegion": "slovakia",
+  "duration": "45m",
+  "elevation": "50m",
+  "previewImage": "./preview.png",
+  "gpxFile": "./track.gpx",
+  "mapUrl": "https://mapy.com/s/gokolovofa",
+  "tags": ["rieka", "rovnaté", "začiatočník", "pokojné"],
+  "createdAt": "2024-11-02",
+  "about": {
+    "title": "O tejto trase",
+    "createdText": "Vytvorené dňa November 2, 2024",
+    "experienceText": "Táto trasa ponúka zážitok ľahkej úrovne, ideálny pre nadšencov behu."
+  },
+  "stats": {
+    "distance": {
+      "icon": "📏",
+      "label": "Vzdialenosť",
+      "value": "8.5 km"
+    },
+    "duration": {
+      "icon": "⏱️",
+      "label": "Trvanie",
+      "value": "45m"
+    },
+    "elevation": {
+      "icon": "⛰️",
+      "label": "Prevýšenie",
+      "value": "50m"
+    },
+    "startPoint": {
+      "icon": "📍",
+      "label": "START",
+      "value": "Bratislava, Slovensko"
+    }
+  }
+}
