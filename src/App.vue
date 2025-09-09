@@ -76,7 +76,7 @@
         <!-- Logo -->
         <div class="logo">
           <router-link to="/" class="logo-link">
-            🗺️ Hľadač Trás
+            🏃 ACTIVITY DW Club
           </router-link>
         </div>
 
@@ -135,12 +135,20 @@
         </div>
       </div>
     </footer>
+    
+    <!-- Cookie Banner -->
+    <CookieBanner />
   </div>
 </template>
 
 <script>
+import CookieBanner from './components/CookieBanner.vue'
+
 export default {
   name: 'App',
+  components: {
+    CookieBanner
+  },
   data() {
     return {
       isMenuOpen: false,

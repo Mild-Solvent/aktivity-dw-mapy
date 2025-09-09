@@ -12,21 +12,22 @@
         <section class="section">
           <h2>1. Prijatie podmienok</h2>
           <p>
-            Prístupom a používaním Hľadača Trás prijimate a súhlasíte s tým, že sa budete riadiť podmienkami a ustanoveniami tejto zmluvy.
+            Prístupom a používaním webovej stránky <strong>ACTIVITY DW Club</strong> prijimate a súhlasi te s tým, že sa budete riadiť podmienkami a ustanoveniami týchto všeobecných podmienok.
           </p>
         </section>
 
         <section class="section">
           <h2>2. Licencia na používanie</h2>
           <p>
-            Udělíte sa povolenie na dočasné stiahnutie jednej kópie materiálov z Hľadača Trás iba na osobné, 
-            nekomerčné a dočasné prezretie. Jedná sa o udělenie licencie, nie o prenos vlastníctva, a pod touto licenciou nemôžete:
+            <strong>ACTIVITY DW Club</strong> vám uděľuje povoleníue na používanie tejto webovej stránky na osobné, 
+            nekomerčné účely. Jedná sa o udělenie licencie, nie o prenos vlastníctva. Pod touto licenciou nemôžete:
           </p>
           <ul>
-            <li>modifikovať alebo kopírovať materiály;</li>
-            <li>používať materiály na komerčné účely alebo na akekǿolvek verejné zobrazenie (komerčné alebo nekomerčné);</li>
-            <li>pokúšať sa dekompilovať alebo reverzne inžinyriť akýkoĺvek softvér obsiahnutý na webovej stránke;</li>
-            <li>odstrániť akékoĺvek označenie autorských práv alebo iné vlastnícke označenia z materiálov.</li>
+            <li>kopírovať alebo distribuíne obsah stránky bez súhlasu;</li>
+            <li>používať obsah na komerčné účely;</li>
+            <li>pokúšať sa dekompilovať alebo reverzne inžinyriť kód webovej stránky;</li>
+            <li>odstrániť označenia autorských práv alebo iné vlastnícke označenia;</li>
+            <li>narušovať fungovanie stránky alebo jej bezpečnosť.</li>
           </ul>
         </section>
 
@@ -41,21 +42,24 @@
         <section class="section">
           <h2>4. Zrieknutie sa zodpovednosti</h2>
           <p>
-            Materiály na Hľadači Trás sú poskytované 'tak ako sú'. Hľadač Trás neposkytuje žiadne záruky, vyslovné ani implicitné, 
-            a týmto sa zrieka a neguje všetky ostatné záruky vrátane, bez obmedzenia, implicitných záruk alebo podmienok 
-            obchodovateľnosti, vhodnosti na konkrétny účel alebo neporušenia duševného vlastníctva alebo iného porušenia práv.
+            Obsah na <strong>ACTIVITY DW Club</strong> je poskytovaný 'tak ako je'. 
+            Neposkytujeme žiadne záruky, vyslovné ani implicitné, o presnosti, 
+            úplnosti alebo spolählivosti informácií o trasách.
           </p>
         </section>
 
         <section class="section">
-          <h2>5. Obmedzenia</h2>
+          <h2>5. Obmedzenie zodpovednosti</h2>
           <p>
-            V žiadnom prípade nie je Hľadač Trás ani jeho dodávatelia zodpovední za akékoľvek škody (vrátane, bez obmedzenia, 
-            škôd za stratu údajov alebo zisku, alebo v dôsledku prerušenia podnikania) vyplývajúce z používania alebo nemožnosti používať 
-            materiály na Hľadači Trás, a to aj v prípade, že Hľadač Trás alebo autorizovaný zástupca bol ústne alebo 
-            písomne upozornený na možnosť takejto škody. Keďže niektore jurisdikcie neumožňujú obmedzenia implicitných 
-            záruk alebo obmedzenia zodpovednosti za následné alebo náhodné škody, tieto obmedzenia sa na vás nemusia vzťahovať.
+            <strong>ACTIVITY DW Club</strong> nie je zodpovedné za žiadne škody vyplývajúce z používania tejto stránky,
+            vrátane ale nie obmedzene na:
           </p>
+          <ul>
+            <li>Zranenia počas športovej aktivity</li>
+            <li>Nepresné informácie o trasách</li>
+            <li>Technické problémy alebo výpadky stránky</li>
+            <li>Stratu času alebo príležitosťí</li>
+          </ul>
         </section>
 
         <section class="section">
@@ -68,17 +72,26 @@
         </section>
 
         <section class="section">
-          <h2>7. Revízie</h2>
+          <h2>7. GitHub Pages a Open Source</h2>
           <p>
-            Hľadač Trás môže kedykoľvek zrevidovať tieto podmienky používania bez upozornenia. Používaním tejto webovej stránky súhlasisíte 
-            s tým, že budete viazaný aktuálnou verziou týchto podmienok používania.
+            Táto stránka je hostovaná na GitHub Pages ako statická webová stránka. 
+            Zdrojový kód môže byť dostupný na GitHub repozitári.
           </p>
         </section>
 
         <section class="section">
-          <h2>8. Kontaktné informácie</h2>
+          <h2>8. Zmeny podmienok</h2>
           <p>
-            Ak máte akékoľvek otázky týkajúce sa týchto Všeobecných podmienok, kontaktujte nás prosím prostredníctvom našej webovej stránky.
+            <strong>ACTIVITY DW Club</strong> si vyhradzuje právo zmeniť tieto podmienky kedykoľvek. 
+            Zmeny budú zverejnené na tejto stránke a nadobudú účinosť okamžite po zverejnení.
+          </p>
+        </section>
+
+        <section class="section">
+          <h2>9. Kontakt</h2>
+          <p>
+            Ak máte otázky o týchto Všeobecných podmienkach pre <strong>ACTIVITY DW Club</strong>, 
+            môžete nás kontaktovať prostredníctvom našej webovej stránky.
           </p>
         </section>
       </div>
