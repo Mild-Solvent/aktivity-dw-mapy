@@ -3,7 +3,7 @@
     <header class="header">
       <div class="header-container">
         <!-- Burger Menu -->
-        <div class="burger-menu">
+        <div class="burger-menu" ref="burgerMenu">
           <button 
             class="burger-button"
             @click="toggleMenu"
@@ -14,7 +14,7 @@
             <span></span>
           </button>
           
-          <nav class="menu" :class="{ open: isMenuOpen }" @click.stop>
+          <nav class="menu" :class="{ open: isMenuOpen }" @click="handleMenuClick">
             <div class="menu-content">
               <div class="menu-main">
                 <router-link to="/" @click="closeMenu" class="menu-item">
@@ -97,8 +97,7 @@
     <!-- Menu Overlay -->
     <div 
       v-if="isMenuOpen" 
-      class="menu-overlay" 
-      @click="closeMenu"
+      class="menu-overlay"
     ></div>
 
     <main class="main-content">
@@ -133,6 +132,10 @@ export default {
     closeMenu() {
       this.isMenuOpen = false
     },
+    handleMenuClick(event) {
+      // Prevent the menu from closing when clicking inside it
+      event.stopPropagation()
+    },
     handleSearch() {
       // Search will be handled by components listening to this prop
     },
@@ -141,7 +144,19 @@ export default {
     },
     updateFilters(newFilters) {
       this.filters = { ...this.filters, ...newFilters }
+    },
+    handleGlobalClick(event) {
+      // Close menu if clicking outside of burger menu area
+      if (this.isMenuOpen && !this.$refs.burgerMenu?.contains(event.target)) {
+        this.closeMenu()
+      }
     }
+  },
+  mounted() {
+    document.addEventListener('click', this.handleGlobalClick)
+  },
+  unmounted() {
+    document.removeEventListener('click', this.handleGlobalClick)
   },
   watch: {
     $route() {
