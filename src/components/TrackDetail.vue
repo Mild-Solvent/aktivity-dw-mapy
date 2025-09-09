@@ -20,7 +20,14 @@
     <div class="container">
       <div class="track-content">
         <div class="track-image-section">
-          <img :src="track.previewImage" :alt="track.name" class="track-main-image" />
+          <a 
+            :href="track.mapUrl" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="track-image-link"
+          >
+            <img :src="track.previewImage" :alt="track.name" class="track-main-image" />
+          </a>
         </div>
 
         <div class="track-info">
@@ -51,56 +58,22 @@
             <div class="stat-item">
               <div class="stat-icon">📍</div>
               <div class="stat-content">
-                <div class="stat-label">Lokalita</div>
+                <div class="stat-label">START</div>
                 <div class="stat-value">{{ track.location }}</div>
               </div>
             </div>
           </div>
 
-          <div class="track-tags">
-            <h3>Značky</h3>
-            <div class="tags-list">
-              <span v-for="tag in track.tags" :key="tag" class="tag">
-                #{{ tag }}
-              </span>
-            </div>
-          </div>
         </div>
       </div>
 
-      <div class="map-section">
-        <h2>Interaktívna mapa</h2>
-        <div class="map-container">
-          <iframe 
-            :src="getEmbedMapUrl()" 
-            width="100%" 
-            height="400" 
-            frameborder="0" 
-            style="border:0;" 
-            allowfullscreen="" 
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade">
-          </iframe>
-          <div class="map-overlay">
-            <p>📍 Interaktívny pohľad na mapu trasy</p>
-          </div>
-        </div>
-      </div>
 
       <div class="action-buttons">
-        <a 
-          :href="track.mapUrl" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          class="action-button primary"
-        >
-🗺️ Zobraziť na Mapy.com
-        </a>
         <button 
           @click="downloadGPX" 
           class="action-button secondary"
         >
-📥 Stiahnuť GPX
+📥 Stiahnúť GPX
         </button>
       </div>
 

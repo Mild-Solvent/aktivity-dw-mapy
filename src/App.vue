@@ -62,7 +62,7 @@
                 </div>
                 
                 <div class="filter-group">
-                  <label>Lokalita</label>
+                  <label>START</label>
                   <select v-model="filters.location" @change="applyFilters">
                     <option value="">Akákoľvek lokalita</option>
                     <option value="slovakia">🇸🇰 Slovensko</option>
