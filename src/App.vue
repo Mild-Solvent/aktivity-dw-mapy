@@ -107,6 +107,34 @@
         @update-filters="updateFilters"
       />
     </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-content">
+          <div class="footer-links">
+            <router-link to="/" class="footer-link">
+              🏠 Domov
+            </router-link>
+            <router-link to="/terms" class="footer-link">
+              📋 Všeobecné podmienky
+            </router-link>
+            <router-link to="/privacy" class="footer-link">
+              🔒 Ochrana súkromia
+            </router-link>
+          </div>
+          
+          <div class="footer-info">
+            <div class="copyright">
+              Vytvorené v spolupráci s <a href="https://new.ceaeurope.sk/" target="_blank" rel="noopener" class="support-link">ceaeurope.sk</a>
+            </div>
+            <div class="developer">
+              Development a design od <a href="https://mild-solvent.github.io/Portfolio/" target="_blank" rel="noopener" class="developer-link">Mild Solvent</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
   </div>
 </template>
 
