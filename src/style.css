@@ -337,6 +337,10 @@ body {
   margin-bottom: 2rem;
   font-weight: 500;
   color: #666;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 2rem;
 }
 
 /* Track grid */
@@ -346,8 +350,8 @@ body {
   gap: 2rem;
   margin-bottom: 3rem;
   max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto 3rem auto;
+  padding: 0 2rem;
 }
 
 .track-card {
@@ -821,15 +825,32 @@ body {
   }
 }
 
-/* Large Desktop */
+/* MacBook Pro and Large Desktop */
 @media (min-width: 1400px) {
   .tracks-grid {
     grid-template-columns: repeat(4, 1fr);
     max-width: 1400px;
+    padding: 0 3rem;
+  }
+  
+  .results-info {
+    max-width: 1400px;
+    padding: 0 3rem;
   }
 }
 
-/* Desktop */
+/* MacBook Pro 14" and 16" */
+@media (min-width: 1024px) and (max-width: 1399px) {
+  .tracks-grid {
+    padding: 0 2.5rem;
+  }
+  
+  .results-info {
+    padding: 0 2.5rem;
+  }
+}
+
+/* Desktop - Updated grid columns */
 @media (min-width: 1024px) and (max-width: 1399px) {
   .tracks-grid {
     grid-template-columns: repeat(3, 1fr);
