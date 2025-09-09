@@ -88,6 +88,41 @@
       </div>
 
 
+      <!-- Profile Image Section -->
+      <div class="profile-section" v-if="track.profileImage && showProfileImage">
+        <h3>Profil trasy</h3>
+        <div class="profile-image-container">
+          <img 
+            :src="track.profileImage" 
+            :alt="`Profil trasy ${track.name}`" 
+            class="profile-image"
+            @error="handleProfileImageError"
+          />
+        </div>
+      </div>
+
+      <!-- Gallery Section -->
+      <div class="gallery-section">
+        <h3>Galéria obrázkov</h3>
+        <div class="gallery-container" v-if="validGalleryImages.length > 0">
+          <div 
+            v-for="(image, index) in validGalleryImages" 
+            :key="index" 
+            class="gallery-item"
+            @click="openImageModal(image, index)"
+          >
+            <img 
+              :src="image" 
+              :alt="`Obrázok z trasy ${track.name} ${index + 1}`" 
+              class="gallery-image"
+            />
+          </div>
+        </div>
+        <div class="no-images-message" v-else>
+          <p>Žiadne obrázky z tejto trasy</p>
+        </div>
+      </div>
+
       <div class="action-buttons">
         <button 
           @click="downloadGPX" 
@@ -123,7 +158,14 @@ export default {
     return {
       track: null,
       loading: true,
-      error: null
+      error: null,
+      validGalleryImages: [],
+      showProfileImage: true,
+      imageModal: {
+        show: false,
+        currentImage: null,
+        currentIndex: 0
+      }
     }
   },
   async mounted() {
@@ -144,6 +186,8 @@ export default {
           this.error = 'Trasa nebola nájdená'
         } else {
           this.error = null
+          // Load gallery images after track is loaded
+          await this.loadGalleryImages()
         }
       } catch (error) {
         console.error('Error loading track:', error)
@@ -206,6 +250,58 @@ export default {
         hiking: 'turistiky'
       }
       return translations[sport] || 'sportu'
+    },
+    async loadGalleryImages() {
+      if (!this.track?.galleryImages) {
+        this.validGalleryImages = []
+        return
+      }
+      
+      // Check which gallery images actually exist
+      const imagePromises = this.track.galleryImages.map(async (imageSrc) => {
+        try {
+          return await this.checkImageExists(imageSrc)
+        } catch {
+          return null
+        }
+      })
+      
+      const results = await Promise.all(imagePromises)
+      this.validGalleryImages = results.filter(img => img !== null)
+    },
+    checkImageExists(src) {
+      return new Promise((resolve, reject) => {
+        const img = new Image()
+        img.onload = () => resolve(src)
+        img.onerror = () => reject()
+        img.src = src
+      })
+    },
+    handleProfileImageError() {
+      // Hide profile image section if image fails to load
+      this.showProfileImage = false
+    },
+    openImageModal(image, index) {
+      this.imageModal = {
+        show: true,
+        currentImage: image,
+        currentIndex: index
+      }
+    },
+    closeImageModal() {
+      this.imageModal.show = false
+    },
+    nextImage() {
+      if (this.imageModal.currentIndex < this.validGalleryImages.length - 1) {
+        this.imageModal.currentIndex++
+        this.imageModal.currentImage = this.validGalleryImages[this.imageModal.currentIndex]
+      }
+    },
+    prevImage() {
+      if (this.imageModal.currentIndex > 0) {
+        this.imageModal.currentIndex--
+        this.imageModal.currentImage = this.validGalleryImages[this.imageModal.currentIndex]
+      }
     }
   }
 }

@@ -41,6 +41,12 @@ class TrackLoader {
       trackInfo.previewImage = `${this.baseAssetsPath}/${trackId}/${trackInfo.previewImage.replace('./', '')}`;
       trackInfo.gpxFile = `${this.baseAssetsPath}/${trackId}/${trackInfo.gpxFile.replace('./', '')}`;
       
+      // Add profile image if it exists
+      trackInfo.profileImage = `${this.baseAssetsPath}/${trackId}/profil.png`;
+      
+      // Load gallery images (will be filtered client-side if images don't exist)
+      trackInfo.galleryImages = this.getGalleryImages(trackId);
+      
       return trackInfo;
     } catch (error) {
       console.error(`Error loading track info for ${trackId}:`, error);
@@ -73,6 +79,28 @@ class TrackLoader {
   async getTrackById(trackId) {
     const tracks = await this.loadAllTracks();
     return tracks.find(track => track.id === trackId) || null;
+  }
+
+  // Get gallery images for a track
+  getGalleryImages(trackId) {
+    // Common image file patterns for gallery
+    const imageExtensions = ['png', 'jpg', 'jpeg'];
+    const galleryImages = [];
+    
+    // For now, we'll generate a list of potential gallery images
+    // In a real implementation, you might want to use a different approach
+    // to dynamically discover images, but Vite's import.meta.glob is build-time only
+    
+    // Common patterns for gallery images
+    const commonPatterns = ['img1', 'img2', 'img3', 'img4', 'img5', 'foto1', 'foto2', 'foto3', 'photo1', 'photo2', 'photo3'];
+    
+    imageExtensions.forEach(ext => {
+      commonPatterns.forEach(pattern => {
+        galleryImages.push(`${this.baseAssetsPath}/${trackId}/${pattern}.${ext}`);
+      });
+    });
+    
+    return galleryImages;
   }
 
   // Clear cache to force reload
