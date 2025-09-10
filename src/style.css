@@ -2,14 +2,14 @@
   /* CEA-WEB Base color palette */
   --licorice: #1e0b0b;
   --fire-engine-red: #c32224;
-  --atomic-tangerine: #f39668;
+  --atomic-tangerine: rgba(255, 255, 255, 0.3);
   --white: #ffffff;
 
   /* Core theme variables */
   --primary: var(--fire-engine-red);
   --primary-hover: #9c1b1d;
   --secondary: var(--atomic-tangerine);
-  --secondary-hover: #e77e4d;
+  --secondary-hover: rgba(255, 255, 255, 0.4);
   --text-primary: var(--licorice);
   --text-secondary: #4b2c2c;
   --text-white: var(--white);
