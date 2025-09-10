@@ -15,6 +15,13 @@
   --text-white: var(--white);
   --background: var(--white);
   --foreground: var(--licorice);
+
+  /* Responsive layout variables */
+  --container-max-width: 1400px;
+  --content-padding: 2rem;
+  --grid-gap: 2rem;
+  --card-min-width: 280px;
+  --card-max-width: 400px;
 }
 
 /* Reset and base styles */
@@ -33,7 +40,7 @@ body {
 
 /* Global container */
 .container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 1rem;
 }
@@ -53,7 +60,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 0 1rem;
   gap: 1rem;
@@ -265,7 +272,7 @@ body {
 }
 
 .footer-container {
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 0 1rem;
 }
@@ -356,7 +363,7 @@ body {
   margin-bottom: 2rem;
   font-weight: 500;
   color: #666;
-  max-width: 1200px;
+  max-width: 1600px;
   margin-left: auto;
   margin-right: auto;
   padding: 0 2rem;
@@ -365,10 +372,11 @@ body {
 /* Track grid */
 .tracks-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 400px));
+  justify-content: center;
   gap: 2rem;
   margin-bottom: 3rem;
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto 3rem auto;
   padding: 0 2rem;
 }
@@ -381,11 +389,13 @@ body {
   transition: all 0.3s ease;
   cursor: pointer;
   max-width: 400px;
+  min-width: 280px;
   width: 100%;
   margin: 0 auto;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  aspect-ratio: 0.75;
 }
 
 .track-card:hover {
@@ -903,17 +913,29 @@ body {
   }
 }
 
-/* MacBook Pro and Large Desktop */
+/* Large Desktop */
 @media (min-width: 1400px) {
   .tracks-grid {
-    grid-template-columns: repeat(4, 1fr);
-    max-width: 1400px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 380px));
+    gap: 2.5rem;
     padding: 0 3rem;
   }
   
   .results-info {
-    max-width: 1400px;
     padding: 0 3rem;
+    font-size: 1.1rem;
+  }
+  
+  .track-card {
+    max-width: 380px;
+  }
+  
+  .hero-title {
+    font-size: 3.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.3rem;
   }
 }
 
@@ -1088,6 +1110,157 @@ body {
   
   .footer {
     padding: 1.5rem 0;
+  }
+}
+
+/* Ultra-wide displays (1600px+) */
+@media (min-width: 1600px) {
+  .tracks-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 350px));
+    gap: 2.5rem;
+    max-width: 1800px;
+    padding: 0 4rem;
+  }
+  
+  .results-info {
+    max-width: 1800px;
+    padding: 0 4rem;
+  }
+  
+  .container {
+    max-width: 1800px;
+  }
+  
+  .track-card {
+    max-width: 350px;
+  }
+  
+  /* Track detail improvements */
+  .track-detail .track-content {
+    max-width: 1400px;
+    margin: 3rem auto;
+    padding: 0 2rem;
+  }
+  
+  .track-main-image {
+    height: 400px;
+  }
+  
+  .gallery-container {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+/* Extra wide displays (1920px+) */
+@media (min-width: 1920px) {
+  .tracks-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 340px));
+    gap: 3rem;
+    max-width: 2200px;
+    padding: 0 5rem;
+  }
+  
+  .results-info {
+    max-width: 2200px;
+    padding: 0 5rem;
+  }
+  
+  .container {
+    max-width: 2200px;
+  }
+  
+  .header-container {
+    max-width: 2200px;
+    padding: 0 2rem;
+  }
+  
+  .footer-container {
+    max-width: 2200px;
+  }
+  
+  .track-card {
+    max-width: 340px;
+  }
+  
+  /* Track detail improvements */
+  .track-detail .track-content {
+    max-width: 1600px;
+    margin: 3rem auto;
+    padding: 0 3rem;
+  }
+  
+  .content {
+    padding: 4rem;
+  }
+  
+  .gallery-container {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+}
+
+/* 4K and ultra-wide displays (2560px+) */
+@media (min-width: 2560px) {
+  .tracks-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 350px));
+    gap: 3rem;
+    max-width: 2800px;
+    padding: 0 6rem;
+  }
+  
+  .results-info {
+    max-width: 2800px;
+    padding: 0 6rem;
+  }
+  
+  .container {
+    max-width: 2800px;
+  }
+  
+  .header-container {
+    max-width: 2800px;
+    padding: 0 3rem;
+  }
+  
+  .footer-container {
+    max-width: 2800px;
+  }
+  
+  .track-card {
+    max-width: 350px;
+  }
+  
+  /* Track detail improvements */
+  .track-detail .track-content {
+    max-width: 2000px;
+    margin: 4rem auto;
+    padding: 0 4rem;
+  }
+  
+  .track-main-image {
+    height: 500px;
+  }
+  
+  .content {
+    padding: 5rem;
+  }
+  
+  .gallery-container {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2.5rem;
+  }
+  
+  .hero-section {
+    padding: 6rem 0;
+  }
+  
+  .hero-title {
+    font-size: 4rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.4rem;
   }
 }
 
