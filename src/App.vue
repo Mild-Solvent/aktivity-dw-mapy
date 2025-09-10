@@ -74,22 +74,33 @@
         </div>
 
         <!-- Logo -->
-        <div class="logo">
+        <div class="logo" :class="{ 'logo-hidden': isSearchExpanded }">
           <router-link to="/" class="logo-link">
             🏃 ACTIVITY DW Club
           </router-link>
         </div>
 
         <!-- Search Bar -->
-        <div class="search-container">
+        <div 
+          class="search-container" 
+          :class="{ 'search-expanded': isSearchExpanded }"
+          ref="searchContainer"
+        >
           <input
             v-model="searchQuery"
             @input="handleSearch"
             type="text"
             placeholder="Hľadať trasy..."
             class="search-input"
+            ref="searchInput"
           />
-          <span class="search-icon">🔍</span>
+          <button 
+            class="search-icon"
+            @click="toggleSearch"
+            :class="{ 'search-icon-active': isSearchExpanded }"
+          >
+            🔍
+          </button>
         </div>
       </div>
     </header>
@@ -152,6 +163,7 @@ export default {
   data() {
     return {
       isMenuOpen: false,
+      isSearchExpanded: false,
       searchQuery: '',
       filters: {
         sport: '',
@@ -175,6 +187,21 @@ export default {
     handleSearch() {
       // Search will be handled by components listening to this prop
     },
+    toggleSearch() {
+      this.isSearchExpanded = !this.isSearchExpanded
+      if (this.isSearchExpanded) {
+        // Focus the input when expanded
+        this.$nextTick(() => {
+          const searchInput = this.$refs.searchInput
+          if (searchInput) {
+            searchInput.focus()
+          }
+        })
+      }
+    },
+    collapseSearch() {
+      this.isSearchExpanded = false
+    },
     applyFilters() {
       // Filters will be passed down to components
     },
@@ -185,6 +212,11 @@ export default {
       // Close menu if clicking outside of burger menu area
       if (this.isMenuOpen && !this.$refs.burgerMenu?.contains(event.target)) {
         this.closeMenu()
+      }
+      
+      // Collapse search if clicking outside of search container on mobile
+      if (this.isSearchExpanded && !this.$refs.searchContainer?.contains(event.target)) {
+        this.collapseSearch()
       }
     }
   },
