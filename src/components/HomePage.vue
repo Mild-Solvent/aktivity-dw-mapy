@@ -39,14 +39,6 @@
           >
             <div class="track-image">
               <img :src="track.previewImage" :alt="track.name" />
-              <div class="track-badges">
-                <span class="sport-badge" :class="track.sport">
-                  {{ getSportIcon(track.sport) }} {{ track.sport }}
-                </span>
-                <span class="difficulty-badge" :class="track.difficulty">
-                  {{ getDifficultyIcon(track.difficulty) }} {{ track.difficulty }}
-                </span>
-              </div>
             </div>
             
             <div class="track-content">

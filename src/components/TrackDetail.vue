@@ -26,14 +26,6 @@
       </button>
       <div class="track-title-section">
         <h1 class="track-title">{{ track.name }}</h1>
-        <div class="track-badges">
-          <span class="sport-badge" :class="track.sport">
-            {{ getSportIcon(track.sport) }} {{ track.sport }}
-          </span>
-          <span class="difficulty-badge" :class="track.difficulty">
-            {{ getDifficultyIcon(track.difficulty) }} {{ track.difficulty }}
-          </span>
-        </div>
       </div>
     </div>
 
