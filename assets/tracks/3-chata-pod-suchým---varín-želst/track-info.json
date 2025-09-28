@@ -1,0 +1,49 @@
+{
+  "id": "3-chata-pod-suchým---varín-želst",
+  "name": "3. Chata pod Suchým - Varín žel.st",
+  "description": "Jednoduchá a relaxačná turistická trasa cez krásnu prirodzenú krajinu v regióne Žilinský kraj, Slovensko.",
+  "sport": "hiking",
+  "distance": "18.1 km",
+  "distanceValue": 18.1,
+  "difficulty": "easy",
+  "location": "Žilinský kraj, Slovensko",
+  "locationRegion": "slovakia",
+  "duration": "4h 46m",
+  "elevation": "↑439 m / ↓1,149 m",
+  "previewImage": "./preview.png",
+  "gpxFile": "./track.gpx",
+  "mapUrl": "https://mapy.com/s/lufoludoma",
+  "tags": [
+    "turistika",
+    "pešia túra",
+    "ľahké"
+  ],
+  "createdAt": "2025-09-28",
+  "about": {
+    "title": "O tejto trase",
+    "createdText": "Vytvorené dňa September 28, 2025",
+    "experienceText": "Táto trasa ponúka zážitok easy úrovne, ideálny pre nadšencov hiking."
+  },
+  "stats": {
+    "distance": {
+      "icon": "📏",
+      "label": "Vzdialenosť",
+      "value": "18.1 km"
+    },
+    "duration": {
+      "icon": "⏱️",
+      "label": "Trvanie",
+      "value": "4h 46m"
+    },
+    "elevation": {
+      "icon": "⛰️",
+      "label": "Prevýšenie",
+      "value": "↑439 m / ↓1,149 m"
+    },
+    "startPoint": {
+      "icon": "📍",
+      "label": "START",
+      "value": "Žilinský kraj, Slovensko"
+    }
+  }
+}

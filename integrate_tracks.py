@@ -216,12 +216,14 @@ def extract_location(track_name):
 
 def create_assets_directory_structure(tracks):
     """Create directory structure and copy assets for tracks"""
-    assets_dir = Path("src/assets/tracks")
+    assets_dir = Path("assets/tracks")
     
-    # Remove old tracks (keep only existing ones we want to preserve)
+    # Keep existing tracks but remove generated ones if they exist
     if assets_dir.exists():
-        shutil.rmtree(assets_dir)
-    
+        # Preserve existing sample tracks (vrsatec, mountain-biking-trail, etc.)
+        existing_tracks = [d.name for d in assets_dir.iterdir() if d.is_dir() and not d.name.startswith('.')]
+        print(f"Found existing tracks: {existing_tracks}")
+        
     assets_dir.mkdir(parents=True, exist_ok=True)
     
     copied_tracks = []
@@ -234,7 +236,8 @@ def create_assets_directory_structure(tracks):
         track_info = {
             'id': track_id,
             'name': track['name'],
-            'assets_copied': []
+            'assets_copied': [],
+            'directory': str(track_dir)
         }
         
         # Copy preview image (remove .png and add it back to handle naming)
@@ -267,14 +270,14 @@ def create_assets_directory_structure(tracks):
     
     return copied_tracks
 
-def create_tracks_json(tracks_data):
-    """Create the new tracks.json file"""
-    tracks_json = {
-        "tracks": []
-    }
+def create_individual_track_info_files(tracks_data):
+    """Create individual track-info.json files for each track"""
+    created_count = 0
     
     for i, track in enumerate(tracks_data):
         track_id = clean_filename_for_id(track['name'])
+        track_dir = Path("assets/tracks") / track_id
+        
         sport, difficulty = categorize_sport_and_difficulty(
             track['name'], 
             track['distance'], 
@@ -288,7 +291,8 @@ def create_tracks_json(tracks_data):
         distance_match = re.search(r'([0-9]+\.?[0-9]*)', track['distance'])
         distance_value = float(distance_match.group(1)) if distance_match else 20.0
         
-        track_json = {
+        # Create track info JSON structure matching existing format
+        track_info = {
             "id": track_id,
             "name": track['name'],
             "description": generate_description(track['name'], sport, difficulty, location),
@@ -300,21 +304,50 @@ def create_tracks_json(tracks_data):
             "locationRegion": "slovakia",
             "duration": duration,
             "elevation": track['elevation'],
-            "previewImage": f"/aktivity-dw-mapy/assets/tracks/{track_id}/preview.png",
-            "gpxFile": f"/aktivity-dw-mapy/assets/tracks/{track_id}/track.gpx",
+            "previewImage": "./preview.png",
+            "gpxFile": "./track.gpx",
             "mapUrl": track['source_url'],
             "tags": generate_tags(track['name'], sport, difficulty),
-            "createdAt": datetime.now().strftime("%Y-%m-%d")
+            "createdAt": datetime.now().strftime("%Y-%m-%d"),
+            "about": {
+                "title": "O tejto trase",
+                "createdText": f"Vytvorené dňa {datetime.now().strftime('%B %d, %Y')}",
+                "experienceText": f"Táto trasa ponúka zážitok {difficulty} úrovne, ideálny pre nadšencov {sport}."
+            },
+            "stats": {
+                "distance": {
+                    "icon": "📏",
+                    "label": "Vzdialenosť",
+                    "value": track['distance']
+                },
+                "duration": {
+                    "icon": "⏱️",
+                    "label": "Trvanie",
+                    "value": duration
+                },
+                "elevation": {
+                    "icon": "⛰️",
+                    "label": "Prevýšenie",
+                    "value": track['elevation']
+                },
+                "startPoint": {
+                    "icon": "📍",
+                    "label": "START",
+                    "value": location
+                }
+            }
         }
         
-        tracks_json["tracks"].append(track_json)
+        # Write track-info.json file
+        info_file = track_dir / "track-info.json"
+        with open(info_file, 'w', encoding='utf-8') as f:
+            json.dump(track_info, f, ensure_ascii=False, indent=2)
+        
+        created_count += 1
+        print(f"✓ Created track-info.json for: {track['name']}")
     
-    # Write to file
-    with open('src/data/tracks.json', 'w', encoding='utf-8') as f:
-        json.dump(tracks_json, f, ensure_ascii=False, indent=2)
-    
-    print(f"✓ Created tracks.json with {len(tracks_json['tracks'])} tracks")
-    return tracks_json
+    print(f"✓ Created {created_count} track-info.json files")
+    return created_count
 
 def generate_tags(track_name, sport, difficulty):
     """Generate relevant tags for a track"""
@@ -350,181 +383,65 @@ def generate_tags(track_name, sport, difficulty):
     
     return tags[:5]  # Limit to 5 tags
 
-def update_homepage_component():
-    """Update HomePage.vue to include sport and difficulty icons on cards"""
-    homepage_path = "src/components/HomePage.vue"
+def update_assets_index_json():
+    """Update assets/tracks/index.json with list of all tracks"""
+    assets_dir = Path("assets/tracks")
+    track_ids = []
     
-    with open(homepage_path, 'r', encoding='utf-8') as f:
-        content = f.read()
+    # Find all track directories
+    for item in assets_dir.iterdir():
+        if item.is_dir() and (item / "track-info.json").exists():
+            track_ids.append(item.name)
     
-    # Add sport and difficulty badges to track cards
-    old_track_content = '''            <div class="track-content">
-              <h3 class="track-title">{{ track.name }}</h3>
-              <p class="track-description">{{ track.description }}</p>'''
+    # Sort track IDs
+    track_ids.sort()
     
-    new_track_content = '''            <div class="track-content">
-              <div class="track-badges">
-                <span class="sport-badge" :title="getSportTitle(track.sport)">
-                  {{ getSportIcon(track.sport) }}
-                </span>
-                <span class="difficulty-badge" :title="getDifficultyTitle(track.difficulty)">
-                  {{ getDifficultyIcon(track.difficulty) }}
-                </span>
-              </div>
-              <h3 class="track-title">{{ track.name }}</h3>
-              <p class="track-description">{{ track.description }}</p>'''
+    # Create index.json
+    index_data = {
+        "tracks": track_ids,
+        "updated": datetime.now().strftime("%Y-%m-%d")
+    }
     
-    content = content.replace(old_track_content, new_track_content)
+    index_file = assets_dir / "index.json"
+    with open(index_file, 'w', encoding='utf-8') as f:
+        json.dump(index_data, f, ensure_ascii=False, indent=2)
     
-    # Add methods for titles
-    old_methods = '''    getSportIcon(sport) {
-      const icons = {
-        cycling: '🚴',
-        running: '🏃',
-        hiking: '🥾'
-      }
-      return icons[sport] || '🏃'
-    },
-    getDifficultyIcon(difficulty) {
-      const icons = {
-        easy: '🟢',
-        moderate: '🟡',
-        hard: '🔴'
-      }
-      return icons[difficulty] || '🟡'
-    }'''
-    
-    new_methods = '''    getSportIcon(sport) {
-      const icons = {
-        cycling: '🚴',
-        running: '🏃',
-        hiking: '🥾'
-      }
-      return icons[sport] || '🏃'
-    },
-    getSportTitle(sport) {
-      const titles = {
-        cycling: 'Cyklistika',
-        running: 'Beh',
-        hiking: 'Turistika'
-      }
-      return titles[sport] || 'Šport'
-    },
-    getDifficultyIcon(difficulty) {
-      const icons = {
-        easy: '🟢',
-        moderate: '🟡',
-        hard: '🔴'
-      }
-      return icons[difficulty] || '🟡'
-    },
-    getDifficultyTitle(difficulty) {
-      const titles = {
-        easy: 'Ľahká',
-        moderate: 'Stredná',
-        hard: 'Náročná'
-      }
-      return titles[difficulty] || 'Náročnosť'
-    }'''
-    
-    content = content.replace(old_methods, new_methods)
-    
-    # Add CSS for badges (insert before closing </style>)
-    css_addition = '''
-.track-badges {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
-}
+    print(f"✓ Updated assets/tracks/index.json with {len(track_ids)} tracks")
+    return track_ids
 
-.sport-badge,
-.difficulty-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  font-size: 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  cursor: help;
-}
+def update_readme():
+    """Update assets/tracks/README.md with information about the tracks"""
+    readme_path = Path("assets/tracks/README.md")
+    
+    # Count tracks
+    assets_dir = Path("assets/tracks")
+    track_count = len([d for d in assets_dir.iterdir() if d.is_dir() and (d / "track-info.json").exists()])
+    
+    readme_content = f"""# Track Assets Directory
 
-.sport-badge:hover,
-.difficulty-badge:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.1);
-  transition: all 0.2s ease;
-}
-'''
-    
-    # Find the closing </style> tag and insert CSS before it
-    style_close = content.rfind('</style>')
-    if style_close != -1:
-        content = content[:style_close] + css_addition + content[style_close:]
-    
-    with open(homepage_path, 'w', encoding='utf-8') as f:
-        f.write(content)
-    
-    print("✓ Updated HomePage.vue with sport and difficulty badges")
+This directory contains individual track folders with their assets and metadata.
 
-def update_track_detail_component():
-    """Update TrackDetail.vue to show sport and difficulty info"""
-    detail_path = "src/components/TrackDetail.vue"
+## Structure
+
+Each track folder contains:
+- `track-info.json` - Complete track metadata
+- `preview.png` - Preview image for the track
+- `track.gpx` - GPS track data
+- `profil.png` - Elevation profile/map image (optional)
+
+## Current Tracks
+
+Total tracks: {track_count}
+
+Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+This directory is automatically managed by the integration script.
+"""
     
-    with open(detail_path, 'r', encoding='utf-8') as f:
-        content = f.read()
+    with open(readme_path, 'w', encoding='utf-8') as f:
+        f.write(readme_content)
     
-    # Add sport and difficulty info to track header
-    old_header = '''      <div class="track-title-section">
-        <h1 class="track-title">{{ track.name }}</h1>
-      </div>'''
-    
-    new_header = '''      <div class="track-title-section">
-        <h1 class="track-title">{{ track.name }}</h1>
-        <div class="track-meta-badges">
-          <span class="meta-badge sport-meta" :title="getSportTitle(track.sport)">
-            {{ getSportIcon(track.sport) }} {{ getSportTitle(track.sport) }}
-          </span>
-          <span class="meta-badge difficulty-meta" :title="getDifficultyTitle(track.difficulty)">
-            {{ getDifficultyIcon(track.difficulty) }} {{ getDifficultyTitle(track.difficulty) }}
-          </span>
-        </div>
-      </div>'''
-    
-    content = content.replace(old_header, new_header)
-    
-    # Add the missing methods if they don't exist
-    if 'getSportTitle' not in content:
-        methods_addition = '''    },
-    getSportTitle(sport) {
-      const titles = {
-        cycling: 'Cyklistika',
-        running: 'Beh',
-        hiking: 'Turistika'
-      }
-      return titles[sport] || 'Šport'
-    },
-    getDifficultyTitle(difficulty) {
-      const titles = {
-        easy: 'Ľahká',
-        moderate: 'Stredná',
-        hard: 'Náročná'
-      }
-      return titles[difficulty] || 'Náročnosť'
-    }'''
-        
-        # Find the last method and add our methods
-        last_method = content.rfind('    }')
-        if last_method != -1:
-            content = content[:last_method] + methods_addition + '\n' + content[last_method:]
-    
-    with open(detail_path, 'w', encoding='utf-8') as f:
-        f.write(content)
-    
-    print("✓ Updated TrackDetail.vue with sport and difficulty badges")
+    print(f"✓ Updated assets/tracks/README.md")
 
 def main():
     print("🔄 Starting track integration process...")
@@ -538,27 +455,32 @@ def main():
     print(f"\n📁 Step 2: Creating assets directory structure...")
     copied_tracks = create_assets_directory_structure(tracks_data)
     
-    # Step 3: Create tracks.json
-    print(f"\n📄 Step 3: Creating tracks.json...")
-    tracks_json = create_tracks_json(tracks_data)
+    # Step 3: Create individual track-info.json files
+    print(f"\n📄 Step 3: Creating individual track-info.json files...")
+    created_count = create_individual_track_info_files(tracks_data)
     
-    # Step 4: Update Vue components
-    print(f"\n🔧 Step 4: Updating Vue components...")
-    update_homepage_component()
-    update_track_detail_component()
+    # Step 4: Update assets index
+    print(f"\n📑 Step 4: Updating assets index...")
+    track_ids = update_assets_index_json()
+    
+    # Step 5: Update README
+    print(f"\n📝 Step 5: Updating README...")
+    update_readme()
     
     print(f"\n✅ Track integration completed successfully!")
     print(f"   - Integrated: {len(tracks_data)} tracks")
     print(f"   - Assets created: {len(copied_tracks)} track directories")  
-    print(f"   - Updated: src/data/tracks.json")
-    print(f"   - Updated: HomePage.vue and TrackDetail.vue")
-    print(f"\n🎉 Your Vue.js website now has all the organized tracks with:")
+    print(f"   - Created: {created_count} track-info.json files")
+    print(f"   - Updated: assets/tracks/index.json with {len(track_ids)} tracks")
+    print(f"   - Updated: assets/tracks/README.md")
+    print(f"\n🎉 Your tracks are now integrated into the website structure with:")
     print(f"   - 📏 Distance and elevation data")
     print(f"   - 🖼️ Preview images")  
     print(f"   - 🗺️ Map images (as elevation profiles)")
     print(f"   - 📁 GPX files")
-    print(f"   - 🏃 Sport icons (cycling/running/hiking)")
-    print(f"   - 🟡 Difficulty icons (easy/moderate/hard)")
+    print(f"   - 📄 Individual track-info.json files")
+    print(f"   - 🏃 Categorized by sport (cycling/running/hiking)")
+    print(f"   - 🟡 Difficulty levels (easy/moderate/hard)")
 
 if __name__ == "__main__":
     main()

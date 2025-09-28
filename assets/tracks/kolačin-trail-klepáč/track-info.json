@@ -1,0 +1,50 @@
+{
+  "id": "kolačin-trail-klepáč",
+  "name": "KOLAČIN TRAIL + KLEPÁČ",
+  "description": "Stredne náročná cyklistická trasa cez technický terén v regióne Kolačín, Slovensko.",
+  "sport": "cycling",
+  "distance": "29.3 km",
+  "distanceValue": 29.3,
+  "difficulty": "moderate",
+  "location": "Kolačín, Slovensko",
+  "locationRegion": "slovakia",
+  "duration": "2h 05m",
+  "elevation": "↑844 m / ↓852 m",
+  "previewImage": "./preview.png",
+  "gpxFile": "./track.gpx",
+  "mapUrl": "https://mapy.com/s/kovelodoze",
+  "tags": [
+    "cyklistika",
+    "bicykel",
+    "stredné",
+    "trail"
+  ],
+  "createdAt": "2025-09-28",
+  "about": {
+    "title": "O tejto trase",
+    "createdText": "Vytvorené dňa September 28, 2025",
+    "experienceText": "Táto trasa ponúka zážitok moderate úrovne, ideálny pre nadšencov cycling."
+  },
+  "stats": {
+    "distance": {
+      "icon": "📏",
+      "label": "Vzdialenosť",
+      "value": "29.3 km"
+    },
+    "duration": {
+      "icon": "⏱️",
+      "label": "Trvanie",
+      "value": "2h 05m"
+    },
+    "elevation": {
+      "icon": "⛰️",
+      "label": "Prevýšenie",
+      "value": "↑844 m / ↓852 m"
+    },
+    "startPoint": {
+      "icon": "📍",
+      "label": "START",
+      "value": "Kolačín, Slovensko"
+    }
+  }
+}

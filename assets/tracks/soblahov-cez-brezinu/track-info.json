@@ -1,0 +1,49 @@
+{
+  "id": "soblahov-cez-brezinu",
+  "name": "SOBLAHOV CEZ BREZINU",
+  "description": "Náročná a výzyvná turistická trasa cez krásnu prirodzenú krajinu v regióne Slovensko.",
+  "sport": "hiking",
+  "distance": "51.7 km",
+  "distanceValue": 51.7,
+  "difficulty": "hard",
+  "location": "Slovensko",
+  "locationRegion": "slovakia",
+  "duration": "13h 12m",
+  "elevation": "↑524 m / ↓516 m",
+  "previewImage": "./preview.png",
+  "gpxFile": "./track.gpx",
+  "mapUrl": "https://mapy.com/s/manuhafeja",
+  "tags": [
+    "turistika",
+    "pešia túra",
+    "náročné"
+  ],
+  "createdAt": "2025-09-28",
+  "about": {
+    "title": "O tejto trase",
+    "createdText": "Vytvorené dňa September 28, 2025",
+    "experienceText": "Táto trasa ponúka zážitok hard úrovne, ideálny pre nadšencov hiking."
+  },
+  "stats": {
+    "distance": {
+      "icon": "📏",
+      "label": "Vzdialenosť",
+      "value": "51.7 km"
+    },
+    "duration": {
+      "icon": "⏱️",
+      "label": "Trvanie",
+      "value": "13h 12m"
+    },
+    "elevation": {
+      "icon": "⛰️",
+      "label": "Prevýšenie",
+      "value": "↑524 m / ↓516 m"
+    },
+    "startPoint": {
+      "icon": "📍",
+      "label": "START",
+      "value": "Slovensko"
+    }
+  }
+}

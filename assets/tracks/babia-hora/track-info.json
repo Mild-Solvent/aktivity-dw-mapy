@@ -1,0 +1,51 @@
+{
+  "id": "babia-hora",
+  "name": "BABIA HORA",
+  "description": "Stredne náročná turistická trasa vedúca cez horské oblasti s úžasnými výhľadmi v regióne Babia hora, Slovensko.",
+  "sport": "hiking",
+  "distance": "27.4 km",
+  "distanceValue": 27.4,
+  "difficulty": "moderate",
+  "location": "Babia hora, Slovensko",
+  "locationRegion": "slovakia",
+  "duration": "7h 33m",
+  "elevation": "↑1,289 m / ↓1,289 m",
+  "previewImage": "./preview.png",
+  "gpxFile": "./track.gpx",
+  "mapUrl": "https://mapy.com/s/dobonukeso",
+  "tags": [
+    "turistika",
+    "pešia túra",
+    "stredné",
+    "hory",
+    "vrchol"
+  ],
+  "createdAt": "2025-09-28",
+  "about": {
+    "title": "O tejto trase",
+    "createdText": "Vytvorené dňa September 28, 2025",
+    "experienceText": "Táto trasa ponúka zážitok moderate úrovne, ideálny pre nadšencov hiking."
+  },
+  "stats": {
+    "distance": {
+      "icon": "📏",
+      "label": "Vzdialenosť",
+      "value": "27.4 km"
+    },
+    "duration": {
+      "icon": "⏱️",
+      "label": "Trvanie",
+      "value": "7h 33m"
+    },
+    "elevation": {
+      "icon": "⛰️",
+      "label": "Prevýšenie",
+      "value": "↑1,289 m / ↓1,289 m"
+    },
+    "startPoint": {
+      "icon": "📍",
+      "label": "START",
+      "value": "Babia hora, Slovensko"
+    }
+  }
+}

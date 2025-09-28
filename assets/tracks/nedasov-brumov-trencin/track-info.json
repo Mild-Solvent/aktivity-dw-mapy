@@ -1,0 +1,49 @@
+{
+  "id": "nedasov-brumov-trencin",
+  "name": "NEDASOV BRUMOV TRENCIN",
+  "description": "Náročná a výzyvná cyklistická trasa cez krásnu prirodzenú krajinu v regióne Trenčiansky kraj, Slovensko.",
+  "sport": "cycling",
+  "distance": "82.9 km",
+  "distanceValue": 82.9,
+  "difficulty": "hard",
+  "location": "Trenčiansky kraj, Slovensko",
+  "locationRegion": "slovakia",
+  "duration": "5h 36m",
+  "elevation": "↑441 m / ↓390 m",
+  "previewImage": "./preview.png",
+  "gpxFile": "./track.gpx",
+  "mapUrl": "https://mapy.com/s/bumahupumo",
+  "tags": [
+    "cyklistika",
+    "bicykel",
+    "náročné"
+  ],
+  "createdAt": "2025-09-28",
+  "about": {
+    "title": "O tejto trase",
+    "createdText": "Vytvorené dňa September 28, 2025",
+    "experienceText": "Táto trasa ponúka zážitok hard úrovne, ideálny pre nadšencov cycling."
+  },
+  "stats": {
+    "distance": {
+      "icon": "📏",
+      "label": "Vzdialenosť",
+      "value": "82.9 km"
+    },
+    "duration": {
+      "icon": "⏱️",
+      "label": "Trvanie",
+      "value": "5h 36m"
+    },
+    "elevation": {
+      "icon": "⛰️",
+      "label": "Prevýšenie",
+      "value": "↑441 m / ↓390 m"
+    },
+    "startPoint": {
+      "icon": "📍",
+      "label": "START",
+      "value": "Trenčiansky kraj, Slovensko"
+    }
+  }
+}

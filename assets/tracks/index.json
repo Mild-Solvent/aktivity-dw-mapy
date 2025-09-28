@@ -1,10 +1,22 @@
 {
-  "generated": "2025-09-09T20:03:25.919Z",
-  "validTracks": [
-    "forest-hike",
-    "mountain-biking-trail",
-    "river-run",
-    "vrsatec"
+  "tracks": [
+    "3-chata-pod-suchým---varín-želst",
+    "babia-hora",
+    "baske-cez-bežákovcov",
+    "bb---kordiky---žiar",
+    "iliavka-cez-langáč",
+    "inovec-mitice-ostrý-vrch",
+    "jesenny-vršatec",
+    "kolačin-trail-klepáč",
+    "navrat-do-turčianskych-klačan",
+    "nedasov-brumov-trencin",
+    "nemsova---ibovka---tn---kolačin",
+    "novodubnicky-maraton",
+    "omsenie---dolná-poruba---horná-poruba---iliavka",
+    "pruzina-cicmany-bela",
+    "soblahov-cez-brezinu",
+    "suca-sanov-stitna",
+    "tlsta-ostra"
   ],
-  "invalidTracks": []
+  "updated": "2025-09-28"
 }

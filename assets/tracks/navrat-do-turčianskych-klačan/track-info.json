@@ -1,0 +1,49 @@
+{
+  "id": "navrat-do-turčianskych-klačan",
+  "name": "! Navrat do turčianskych Klačan",
+  "description": "Jednoduchá a relaxačná turistická trasa cez krásnu prirodzenú krajinu v regióne Slovensko.",
+  "sport": "hiking",
+  "distance": "16.8 km",
+  "distanceValue": 16.8,
+  "difficulty": "easy",
+  "location": "Slovensko",
+  "locationRegion": "slovakia",
+  "duration": "4h 23m",
+  "elevation": "↑332 m / ↓1,081 m",
+  "previewImage": "./preview.png",
+  "gpxFile": "./track.gpx",
+  "mapUrl": "https://mapy.com/s/kesusaluto",
+  "tags": [
+    "turistika",
+    "pešia túra",
+    "ľahké"
+  ],
+  "createdAt": "2025-09-28",
+  "about": {
+    "title": "O tejto trase",
+    "createdText": "Vytvorené dňa September 28, 2025",
+    "experienceText": "Táto trasa ponúka zážitok easy úrovne, ideálny pre nadšencov hiking."
+  },
+  "stats": {
+    "distance": {
+      "icon": "📏",
+      "label": "Vzdialenosť",
+      "value": "16.8 km"
+    },
+    "duration": {
+      "icon": "⏱️",
+      "label": "Trvanie",
+      "value": "4h 23m"
+    },
+    "elevation": {
+      "icon": "⛰️",
+      "label": "Prevýšenie",
+      "value": "↑332 m / ↓1,081 m"
+    },
+    "startPoint": {
+      "icon": "📍",
+      "label": "START",
+      "value": "Slovensko"
+    }
+  }
+}
