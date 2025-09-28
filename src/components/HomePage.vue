@@ -42,6 +42,14 @@
             </div>
             
             <div class="track-content">
+              <div class="track-badges">
+                <span class="sport-badge" :title="getSportTitle(track.sport)">
+                  {{ getSportIcon(track.sport) }}
+                </span>
+                <span class="difficulty-badge" :title="getDifficultyTitle(track.difficulty)">
+                  {{ getDifficultyIcon(track.difficulty) }}
+                </span>
+              </div>
               <h3 class="track-title">{{ track.name }}</h3>
               <p class="track-description">{{ track.description }}</p>
               
@@ -175,6 +183,14 @@ export default {
       }
       return icons[sport] || '🏃'
     },
+    getSportTitle(sport) {
+      const titles = {
+        cycling: 'Cyklistika',
+        running: 'Beh',
+        hiking: 'Turistika'
+      }
+      return titles[sport] || 'Šport'
+    },
     getDifficultyIcon(difficulty) {
       const icons = {
         easy: '🟢',
@@ -182,6 +198,14 @@ export default {
         hard: '🔴'
       }
       return icons[difficulty] || '🟡'
+    },
+    getDifficultyTitle(difficulty) {
+      const titles = {
+        easy: 'Ľahká',
+        moderate: 'Stredná',
+        hard: 'Náročná'
+      }
+      return titles[difficulty] || 'Náročnosť'
     }
   }
 }

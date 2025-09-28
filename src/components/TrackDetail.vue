@@ -26,6 +26,14 @@
       </button>
       <div class="track-title-section">
         <h1 class="track-title">{{ track.name }}</h1>
+        <div class="track-meta-badges">
+          <span class="meta-badge sport-meta" :title="getSportTitle(track.sport)">
+            {{ getSportIcon(track.sport) }} {{ getSportTitle(track.sport) }}
+          </span>
+          <span class="meta-badge difficulty-meta" :title="getDifficultyTitle(track.difficulty)">
+            {{ getDifficultyIcon(track.difficulty) }} {{ getDifficultyTitle(track.difficulty) }}
+          </span>
+        </div>
       </div>
     </div>
 
