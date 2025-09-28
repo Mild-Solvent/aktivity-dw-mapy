@@ -4,7 +4,7 @@
   "description": "Náročná a výzyvná bežecká trasa pre milovníkov dlhých výziev v regióne Slovensko.",
   "sport": "running",
   "distance": "87 km",
-  "distanceValue": 87.0,
+  "distanceValue": 87,
   "difficulty": "hard",
   "location": "Slovensko",
   "locationRegion": "slovakia",
@@ -20,21 +20,11 @@
     "maraton"
   ],
   "createdAt": "2025-09-28",
-  "about": {
-    "title": "O tejto trase",
-    "createdText": "Vytvorené dňa September 28, 2025",
-    "experienceText": "Táto trasa ponúka zážitok hard úrovne, ideálny pre nadšencov running."
-  },
   "stats": {
     "distance": {
       "icon": "📏",
       "label": "Vzdialenosť",
       "value": "87 km"
-    },
-    "duration": {
-      "icon": "⏱️",
-      "label": "Trvanie",
-      "value": "11h 45m"
     },
     "elevation": {
       "icon": "⛰️",

@@ -19,21 +19,11 @@
     "stredné"
   ],
   "createdAt": "2025-09-28",
-  "about": {
-    "title": "O tejto trase",
-    "createdText": "Vytvorené dňa September 28, 2025",
-    "experienceText": "Táto trasa ponúka zážitok moderate úrovne, ideálny pre nadšencov hiking."
-  },
   "stats": {
     "distance": {
       "icon": "📏",
       "label": "Vzdialenosť",
       "value": "42.8 km"
-    },
-    "duration": {
-      "icon": "⏱️",
-      "label": "Trvanie",
-      "value": "11h 18m"
     },
     "elevation": {
       "icon": "⛰️",

@@ -19,21 +19,11 @@
     "náročné"
   ],
   "createdAt": "2025-09-28",
-  "about": {
-    "title": "O tejto trase",
-    "createdText": "Vytvorené dňa September 28, 2025",
-    "experienceText": "Táto trasa ponúka zážitok hard úrovne, ideálny pre nadšencov cycling."
-  },
   "stats": {
     "distance": {
       "icon": "📏",
       "label": "Vzdialenosť",
       "value": "104.2 km"
-    },
-    "duration": {
-      "icon": "⏱️",
-      "label": "Trvanie",
-      "value": "7h 22m"
     },
     "elevation": {
       "icon": "⛰️",

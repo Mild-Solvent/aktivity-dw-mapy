@@ -4,7 +4,7 @@
   "description": "Stredne náročná turistická trasa cez krásnu prirodzenú krajinu v regióne Slovensko.",
   "sport": "hiking",
   "distance": "27 km",
-  "distanceValue": 27.0,
+  "distanceValue": 27,
   "difficulty": "moderate",
   "location": "Slovensko",
   "locationRegion": "slovakia",
@@ -19,21 +19,11 @@
     "stredné"
   ],
   "createdAt": "2025-09-28",
-  "about": {
-    "title": "O tejto trase",
-    "createdText": "Vytvorené dňa September 28, 2025",
-    "experienceText": "Táto trasa ponúka zážitok moderate úrovne, ideálny pre nadšencov hiking."
-  },
   "stats": {
     "distance": {
       "icon": "📏",
       "label": "Vzdialenosť",
       "value": "27 km"
-    },
-    "duration": {
-      "icon": "⏱️",
-      "label": "Trvanie",
-      "value": "7h 05m"
     },
     "elevation": {
       "icon": "⛰️",

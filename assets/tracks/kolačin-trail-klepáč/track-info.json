@@ -20,21 +20,11 @@
     "trail"
   ],
   "createdAt": "2025-09-28",
-  "about": {
-    "title": "O tejto trase",
-    "createdText": "Vytvorené dňa September 28, 2025",
-    "experienceText": "Táto trasa ponúka zážitok moderate úrovne, ideálny pre nadšencov cycling."
-  },
   "stats": {
     "distance": {
       "icon": "📏",
       "label": "Vzdialenosť",
       "value": "29.3 km"
-    },
-    "duration": {
-      "icon": "⏱️",
-      "label": "Trvanie",
-      "value": "2h 05m"
     },
     "elevation": {
       "icon": "⛰️",

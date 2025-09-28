@@ -61,13 +61,6 @@
                 <div class="stat-value">{{ track.stats.distance.value }}</div>
               </div>
             </div>
-            <div class="stat-item" v-if="track.stats?.duration">
-              <div class="stat-icon">{{ track.stats.duration.icon }}</div>
-              <div class="stat-content">
-                <div class="stat-label">{{ track.stats.duration.label }}</div>
-                <div class="stat-value">{{ track.stats.duration.value }}</div>
-              </div>
-            </div>
             <div class="stat-item" v-if="track.stats?.elevation">
               <div class="stat-icon">{{ track.stats.elevation.icon }}</div>
               <div class="stat-content">
@@ -84,6 +77,16 @@
             </div>
           </div>
 
+        </div>
+        
+        <!-- GPX Download Button -->
+        <div class="action-buttons">
+          <button 
+            @click="downloadGPX" 
+            class="action-button secondary"
+          >
+📥 Stiahnúť GPX
+          </button>
         </div>
       </div>
 
@@ -123,22 +126,6 @@
         </div>
       </div>
 
-      <div class="action-buttons">
-        <button 
-          @click="downloadGPX" 
-          class="action-button secondary"
-        >
-📥 Stiahnúť GPX
-        </button>
-      </div>
-
-      <div class="additional-info">
-        <div class="info-section">
-          <h3>{{ track.about?.title || 'O tejto trase' }}</h3>
-          <p>{{ track.about?.createdText || ('Vytvorené dňa ' + formatDate(track.createdAt)) }}</p>
-          <p>{{ track.about?.experienceText || ('Táto trasa ponúka zážitok ' + getDifficultyText(track.difficulty) + ' úrovne, ideálny pre nadšencov ' + getSportText(track.sport) + '.') }}</p>
-        </div>
-      </div>
     </div>
   </div>
 </template>
