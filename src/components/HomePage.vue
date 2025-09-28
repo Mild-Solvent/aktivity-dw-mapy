@@ -27,7 +27,7 @@
       <!-- Main Content -->
       <div v-else>
         <div class="results-info">
-          <p>Nájdených {{ filteredTracks.length }} trás</p>
+          <p>Výsledkov: {{ filteredTracks.length }}</p>
         </div>
 
         <div class="tracks-grid">
