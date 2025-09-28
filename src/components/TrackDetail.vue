@@ -215,6 +215,22 @@ export default {
       }
       return icons[difficulty] || '🟡'
     },
+    getSportTitle(sport) {
+      const titles = {
+        cycling: 'Cyklistika',
+        running: 'Beh',
+        hiking: 'Turistika'
+      }
+      return titles[sport] || 'Šport'
+    },
+    getDifficultyTitle(difficulty) {
+      const titles = {
+        easy: 'Ľahká',
+        moderate: 'Stredná',
+        hard: 'Náročná'
+      }
+      return titles[difficulty] || 'Náročnosť'
+    },
     formatDate(dateString) {
       const options = { year: 'numeric', month: 'long', day: 'numeric' }
       return new Date(dateString).toLocaleDateString(undefined, options)
