@@ -78,16 +78,16 @@
           </div>
 
         </div>
-        
-        <!-- GPX Download Button -->
-        <div class="action-buttons">
-          <button 
-            @click="downloadGPX" 
-            class="action-button secondary"
-          >
+      </div>
+      
+      <!-- GPX Download Button -->
+      <div class="action-buttons">
+        <button 
+          @click="downloadGPX" 
+          class="action-button secondary"
+        >
 📥 Stiahnúť GPX
-          </button>
-        </div>
+        </button>
       </div>
 
 
