@@ -1,34 +1,35 @@
 {
-  "id": "baske-cez-bežákovcov",
-  "name": "BASKE CEZ BEŽÁKOVCOV",
-  "description": "Stredne náročná turistická trasa cez krásnu prirodzenú krajinu v regióne Slovensko.",
+  "id": "omsenie-dolna-poruba-iliavka",
+  "name": "OMSENIE - DOLNÁ PORUBA - HORNÁ PORUBA - ILIAVKA",
+  "description": "Náročná turistická trasa vedúca cez malebné dediny a kopce v regióne Slovensko.",
   "sport": "hiking",
-  "distance": "42.8 km",
-  "distanceValue": 42.8,
-  "difficulty": "moderate",
+  "distance": "40.5 km",
+  "distanceValue": 40.5,
+  "difficulty": "hard",
   "location": "Slovensko",
   "locationRegion": "slovakia",
-  "duration": "11h 18m",
-  "elevation": "↑1,108 m / ↓1,108 m",
+  "duration": "11h 36m",
+  "elevation": "↑1,034 m / ↓1,029 m",
   "previewImage": "./preview.png",
   "gpxFile": "./track.gpx",
-  "mapUrl": "https://mapy.com/s/lazahahohe",
+  "mapUrl": "https://mapy.com/s/fahujufute",
   "tags": [
     "turistika",
     "pešia túra",
-    "stredné"
+    "náročné",
+    "dediny"
   ],
   "createdAt": "2025-09-28",
   "stats": {
     "distance": {
       "icon": "📏",
       "label": "Vzdialenosť",
-      "value": "42.8 km"
+      "value": "40.5 km"
     },
     "elevation": {
       "icon": "⛰️",
       "label": "Prevýšenie",
-      "value": "↑1,108 m / ↓1,108 m"
+      "value": "↑1,034 m / ↓1,029 m"
     },
     "startPoint": {
       "icon": "📍",
