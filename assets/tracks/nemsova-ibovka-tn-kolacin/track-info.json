@@ -1,22 +1,22 @@
 {
-  "id": "nemsova---ibovka---tn---kolačin",
+  "id": "nemsova-ibovka-tn-kolacin",
   "name": "NEMSOVA - IBOVKA - TN - KOLAČIN",
-  "description": "Náročná a výzyvná turistická trasa cez krásnu prirodzenú krajinu v regióne Kolačín, Slovensko.",
-  "sport": "hiking",
+  "description": "Stredne náročná cyklistická trasa vedúca cez malebné mestečká a dediny v regióne Trenčiansky kraj, Slovensko.",
+  "sport": "cycling",
   "distance": "51.3 km",
   "distanceValue": 51.3,
-  "difficulty": "hard",
-  "location": "Kolačín, Slovensko",
+  "difficulty": "moderate",
+  "location": "Trenčiansky kraj, Slovensko",
   "locationRegion": "slovakia",
-  "duration": "12h 59m",
+  "duration": "3h 28m",
   "elevation": "↑306 m / ↓305 m",
   "previewImage": "./preview.png",
   "gpxFile": "./track.gpx",
   "mapUrl": "https://mapy.com/s/polenudave",
   "tags": [
-    "turistika",
-    "pešia túra",
-    "náročné"
+    "cyklistika",
+    "bicykel",
+    "stredné"
   ],
   "createdAt": "2025-09-28",
   "stats": {
@@ -33,7 +33,7 @@
     "startPoint": {
       "icon": "📍",
       "label": "START",
-      "value": "Kolačín, Slovensko"
+      "value": "Trenčiansky kraj, Slovensko"
     }
   }
 }

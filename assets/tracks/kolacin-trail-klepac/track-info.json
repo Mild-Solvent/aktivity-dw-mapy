@@ -1,34 +1,35 @@
 {
-  "id": "pruzina-cicmany-bela",
-  "name": "PRUZINA CICMANY BELA",
-  "description": "Stredne náročná turistická trasa cez krásnu prirodzenú krajinu v regióne Slovensko.",
+  "id": "kolacin-trail-klepac",
+  "name": "KOLAČIN TRAIL + KLEPÁČ",
+  "description": "Náročná turistická trasa s krásnym výhľadom na okolité vrcholy v regióne Slovensko.",
   "sport": "hiking",
-  "distance": "40.1 km",
-  "distanceValue": 40.1,
-  "difficulty": "moderate",
+  "distance": "29.3 km",
+  "distanceValue": 29.3,
+  "difficulty": "hard",
   "location": "Slovensko",
   "locationRegion": "slovakia",
-  "duration": "10h 47m",
-  "elevation": "↑1,367 m / ↓1,387 m",
+  "duration": "8h 24m",
+  "elevation": "↑844 m / ↓852 m",
   "previewImage": "./preview.png",
   "gpxFile": "./track.gpx",
-  "mapUrl": "https://mapy.com/s/kutesebupu",
+  "mapUrl": "https://mapy.com/s/kovelodoze",
   "tags": [
     "turistika",
     "pešia túra",
-    "stredné"
+    "náročné",
+    "vrcholy"
   ],
   "createdAt": "2025-09-28",
   "stats": {
     "distance": {
       "icon": "📏",
       "label": "Vzdialenosť",
-      "value": "40.1 km"
+      "value": "29.3 km"
     },
     "elevation": {
       "icon": "⛰️",
       "label": "Prevýšenie",
-      "value": "↑1,367 m / ↓1,387 m"
+      "value": "↑844 m / ↓852 m"
     },
     "startPoint": {
       "icon": "📍",
