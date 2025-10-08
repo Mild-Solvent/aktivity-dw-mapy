@@ -6,8 +6,8 @@ export default defineConfig({
   server: {
     port: 3000
   },
-  // Custom domain - use root path
-  base: '/',
+  // GitHub Pages deployment base path
+  base: '/aktivity-dw-mapy/',
   build: {
     outDir: 'dist',
     assetsDir: 'assets'

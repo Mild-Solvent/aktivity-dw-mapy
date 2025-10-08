@@ -1,0 +1,39 @@
+{
+  "id": "suca-sanov-stitna",
+  "name": "SUCA SANOV STITNA",
+  "description": "Náročná a výzyvná turistická trasa cez krásnu prirodzenú krajinu v regióne Slovensko.",
+  "sport": "hiking",
+  "distance": "69.8 km",
+  "distanceValue": 69.8,
+  "difficulty": "hard",
+  "location": "Slovensko",
+  "locationRegion": "slovakia",
+  "duration": "17h 46m",
+  "elevation": "↑586 m / ↓592 m",
+  "previewImage": "./preview.png",
+  "gpxFile": "./track.gpx",
+  "mapUrl": "https://mapy.com/s/febafafenu",
+  "tags": [
+    "turistika",
+    "pešia túra",
+    "náročné"
+  ],
+  "createdAt": "2025-09-28",
+  "stats": {
+    "distance": {
+      "icon": "📏",
+      "label": "Vzdialenosť",
+      "value": "69.8 km"
+    },
+    "elevation": {
+      "icon": "⛰️",
+      "label": "Prevýšenie",
+      "value": "↑586 m / ↓592 m"
+    },
+    "startPoint": {
+      "icon": "📍",
+      "label": "START",
+      "value": "Slovensko"
+    }
+  }
+}
