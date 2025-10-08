@@ -1,0 +1,41 @@
+{
+  "id": "inovec-mitice-ostry-vrch",
+  "name": "Inovec Mitice Ostrý vrch",
+  "description": "Náročná cyklistická trasa vedúca cez horské oblasti s úžasnými výhľadmi v regióne Slovensko.",
+  "sport": "cycling",
+  "distance": "81.7 km",
+  "distanceValue": 81.7,
+  "difficulty": "hard",
+  "location": "Slovensko",
+  "locationRegion": "slovakia",
+  "duration": "5h 32m",
+  "elevation": "↑1,735 m / ↓1,728 m",
+  "previewImage": "./preview.png",
+  "gpxFile": "./track.gpx",
+  "mapUrl": "https://mapy.com/s/robavalovu",
+  "tags": [
+    "cyklistika",
+    "bicykel",
+    "náročné",
+    "hory",
+    "vrcholy"
+  ],
+  "createdAt": "2025-09-28",
+  "stats": {
+    "distance": {
+      "icon": "📏",
+      "label": "Vzdialenosť",
+      "value": "81.7 km"
+    },
+    "elevation": {
+      "icon": "⛰️",
+      "label": "Prevýšenie",
+      "value": "↑1,735 m / ↓1,728 m"
+    },
+    "startPoint": {
+      "icon": "📍",
+      "label": "START",
+      "value": "Slovensko"
+    }
+  }
+}
