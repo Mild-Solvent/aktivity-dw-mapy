@@ -56,11 +56,10 @@ class TrackLoader {
               : `/aktivity-dw-mapy/assets/tracks/${mappedId}/track.gpx`
           };
           
-          // Debug logging
-          if (isDev) {
-            console.log('Track:', track.id, '-> mapped to:', mappedId);
-            console.log('Preview path:', adjustedTrack.previewImage);
-          }
+          // Debug logging for both dev and prod
+          console.log('Environment:', isDev ? 'DEV' : 'PROD');
+          console.log('Track:', track.id, '-> mapped to:', mappedId);
+          console.log('Preview path:', adjustedTrack.previewImage);
           
           return adjustedTrack;
         });
