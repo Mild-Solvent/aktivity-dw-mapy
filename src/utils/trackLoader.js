@@ -15,8 +15,18 @@ class TrackLoader {
     }
 
     try {
-      // Use the imported static data
-      this.tracksCache = tracksData.tracks || [];
+      // Use the imported static data and adjust paths for dev vs prod
+      const tracks = tracksData.tracks || [];
+      
+      // In development, remove the /aktivity-dw-mapy prefix from paths
+      const isDev = import.meta.env.DEV;
+      
+      this.tracksCache = tracks.map(track => ({
+        ...track,
+        previewImage: isDev ? track.previewImage.replace('/aktivity-dw-mapy', '') : track.previewImage,
+        gpxFile: isDev ? track.gpxFile.replace('/aktivity-dw-mapy', '') : track.gpxFile
+      }));
+      
       return this.tracksCache;
     } catch (error) {
       console.error('Error loading tracks:', error);
