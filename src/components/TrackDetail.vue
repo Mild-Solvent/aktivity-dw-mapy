@@ -173,24 +173,6 @@ export default {
           this.error = 'Trasa nebola nájdená'
         } else {
           this.error = null
-          // Add simple stats object for the track
-          this.track.stats = {
-            distance: {
-              icon: '📏',
-              label: 'Vzdialenosť',
-              value: this.track.distance
-            },
-            elevation: {
-              icon: '⛰️',
-              label: 'Prevýšenie',
-              value: this.track.elevation
-            },
-            startPoint: {
-              icon: '📍',
-              label: 'START',
-              value: this.track.location
-            }
-          }
           // No need for complex gallery loading - just set empty array
           this.validGalleryImages = []
         }
