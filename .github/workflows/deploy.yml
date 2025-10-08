@@ -24,17 +24,22 @@ jobs:
         with:
           node-version: 18
           cache: npm
+          cache-dependency-path: aktivity-dw-mapy-next/package-lock.json
       
       - name: Install dependencies
-        run: npm ci
+        run: |
+          cd aktivity-dw-mapy-next
+          npm install
       
       - name: Build
-        run: npm run build
+        run: |
+          cd aktivity-dw-mapy-next
+          npm run build
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: ./aktivity-dw-mapy-next/dist
 
   # Deployment job
   deploy:
