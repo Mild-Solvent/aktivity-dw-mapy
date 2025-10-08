@@ -4,8 +4,8 @@
 class TrackLoader {
   constructor() {
     this.tracksCache = null;
-    // Use different base path for development vs production
-    this.baseAssetsPath = import.meta.env.DEV ? '/assets/tracks' : '/aktivity-dw-mapy/assets/tracks';
+    // Since we're using a custom domain, use root path for both dev and production
+    this.baseAssetsPath = '/assets/tracks';
     // Use Vite's import.meta.glob to get all track info files at build time
     this.trackInfoModules = import.meta.glob('../../assets/tracks/*/track-info.json');
   }
