@@ -131,7 +131,7 @@
 </template>
 
 <script>
-import trackLoader from '../utils/trackLoader.js'
+import { getTrackById } from '../data/tracks.js'
 
 export default {
   name: 'TrackDetail',
@@ -155,8 +155,8 @@ export default {
       }
     }
   },
-  async mounted() {
-    await this.loadTrack()
+  mounted() {
+    this.loadTrack()
   },
   watch: {
     id: {
@@ -165,16 +165,34 @@ export default {
     }
   },
   methods: {
-    async loadTrack() {
+    loadTrack() {
       try {
         this.loading = true
-        this.track = await trackLoader.getTrackById(this.id)
+        this.track = getTrackById(this.id)
         if (!this.track) {
           this.error = 'Trasa nebola nájdená'
         } else {
           this.error = null
-          // Load gallery images after track is loaded
-          await this.loadGalleryImages()
+          // Add simple stats object for the track
+          this.track.stats = {
+            distance: {
+              icon: '📏',
+              label: 'Vzdialenosť',
+              value: this.track.distance
+            },
+            elevation: {
+              icon: '⛰️',
+              label: 'Prevýšenie',
+              value: this.track.elevation
+            },
+            startPoint: {
+              icon: '📍',
+              label: 'START',
+              value: this.track.location
+            }
+          }
+          // No need for complex gallery loading - just set empty array
+          this.validGalleryImages = []
         }
       } catch (error) {
         console.error('Error loading track:', error)
@@ -253,32 +271,6 @@ export default {
         hiking: 'turistiky'
       }
       return translations[sport] || 'sportu'
-    },
-    async loadGalleryImages() {
-      if (!this.track?.galleryImages) {
-        this.validGalleryImages = []
-        return
-      }
-      
-      // Check which gallery images actually exist
-      const imagePromises = this.track.galleryImages.map(async (imageSrc) => {
-        try {
-          return await this.checkImageExists(imageSrc)
-        } catch {
-          return null
-        }
-      })
-      
-      const results = await Promise.all(imagePromises)
-      this.validGalleryImages = results.filter(img => img !== null)
-    },
-    checkImageExists(src) {
-      return new Promise((resolve, reject) => {
-        const img = new Image()
-        img.onload = () => resolve(src)
-        img.onerror = () => reject()
-        img.src = src
-      })
     },
     handleProfileImageError() {
       // Hide profile image section if image fails to load

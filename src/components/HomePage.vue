@@ -38,7 +38,11 @@
             @click="goToTrack(track.id)"
           >
             <div class="track-image">
-              <img :src="track.previewImage" :alt="track.name" />
+              <img 
+                :src="track.previewImage" 
+                :alt="track.name" 
+                @error="handleImageError($event, track)"
+              />
             </div>
             
             <div class="track-content">
@@ -89,7 +93,7 @@
 </template>
 
 <script>
-import trackLoader from '../utils/trackLoader.js'
+import { getAllTracks } from '../data/tracks.js'
 
 export default {
   name: 'HomePage',
@@ -110,8 +114,8 @@ export default {
       error: null
     }
   },
-  async mounted() {
-    await this.loadTracks()
+  mounted() {
+    this.loadTracks()
   },
   computed: {
     filteredTracks() {
@@ -160,10 +164,10 @@ export default {
     }
   },
   methods: {
-    async loadTracks() {
+    loadTracks() {
       try {
         this.loading = true
-        this.tracks = await trackLoader.loadAllTracks()
+        this.tracks = getAllTracks()
         this.error = null
       } catch (error) {
         console.error('Error loading tracks:', error)
@@ -206,6 +210,12 @@ export default {
         hard: 'Náročná'
       }
       return titles[difficulty] || 'Náročnosť'
+    },
+    handleImageError(event, track) {
+      // Use fallback image if main image fails to load
+      if (track.fallbackImage) {
+        event.target.src = track.fallbackImage
+      }
     }
   }
 }
