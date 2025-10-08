@@ -9,7 +9,6 @@ const nextConfig: NextConfig = {
   basePath: process.env.NODE_ENV === 'production' ? '/aktivity-dw-mapy' : '',
   assetPrefix: process.env.NODE_ENV === 'production' ? '/aktivity-dw-mapy' : '',
   typedRoutes: false,
-  skipTrailingSlashRedirect: true,
   distDir: 'dist',
 }
 
