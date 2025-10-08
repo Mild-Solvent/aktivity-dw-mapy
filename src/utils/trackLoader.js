@@ -21,11 +21,49 @@ class TrackLoader {
       // In development, remove the /aktivity-dw-mapy prefix from paths
       const isDev = import.meta.env.DEV;
       
-      this.tracksCache = tracks.map(track => ({
-        ...track,
-        previewImage: isDev ? track.previewImage.replace('/aktivity-dw-mapy', '') : track.previewImage,
-        gpxFile: isDev ? track.gpxFile.replace('/aktivity-dw-mapy', '') : track.gpxFile
-      }));
+      // Available track folders that actually have assets
+      const availableTrackIds = [
+        'inovec-mitice-ostry-vrch',
+        'kolacin-trail-klepac',
+        'nedasov-brumov-trencin',
+        'nemsova-ibovka-tn-kolacin',
+        'omsenie-dolna-poruba-iliavka',
+        'soblahov-cez-brezinu',
+        'suca-sanov-stitna'
+      ];
+      
+      // Filter tracks to only include those with existing assets and map track IDs
+      const trackIdMapping = {
+        'kolačin-trail-klepáč': 'kolacin-trail-klepac',
+        'nemsova---ibovka---tn---kolačin': 'nemsova-ibovka-tn-kolacin',
+        'omsenie---dolna-poruba---iliavka': 'omsenie-dolna-poruba-iliavka'
+      };
+      
+      this.tracksCache = tracks
+        .filter(track => {
+          const mappedId = trackIdMapping[track.id] || track.id;
+          return availableTrackIds.includes(mappedId);
+        })
+        .map(track => {
+          const mappedId = trackIdMapping[track.id] || track.id;
+          const adjustedTrack = {
+            ...track,
+            previewImage: isDev 
+              ? `/assets/tracks/${mappedId}/preview.png`
+              : `/aktivity-dw-mapy/assets/tracks/${mappedId}/preview.png`,
+            gpxFile: isDev 
+              ? `/assets/tracks/${mappedId}/track.gpx`
+              : `/aktivity-dw-mapy/assets/tracks/${mappedId}/track.gpx`
+          };
+          
+          // Debug logging
+          if (isDev) {
+            console.log('Track:', track.id, '-> mapped to:', mappedId);
+            console.log('Preview path:', adjustedTrack.previewImage);
+          }
+          
+          return adjustedTrack;
+        });
       
       return this.tracksCache;
     } catch (error) {
