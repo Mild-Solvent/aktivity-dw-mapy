@@ -15,16 +15,24 @@ class TrackLoader {
     }
 
     try {
-      // Use the imported static data and adjust paths for dev vs prod
+      // Use the imported static data and adjust paths
       const tracks = tracksData.tracks || [];
       
-      // In development, remove the /aktivity-dw-mapy prefix from paths
+      // Detect environment more reliably
       const isDev = import.meta.env.DEV;
+      const currentPath = window?.location?.pathname || '';
+      const isGitHubPages = currentPath.includes('/aktivity-dw-mapy/') || !isDev;
+      
+      console.log('Environment detection:', {
+        isDev,
+        currentPath,
+        isGitHubPages
+      });
       
       // Available track folders that actually have assets
       const availableTrackIds = [
         'inovec-mitice-ostry-vrch',
-        'kolacin-trail-klepac',
+        'kolacin-trail-klepac', 
         'nedasov-brumov-trencin',
         'nemsova-ibovka-tn-kolacin',
         'omsenie-dolna-poruba-iliavka',
@@ -32,7 +40,7 @@ class TrackLoader {
         'suca-sanov-stitna'
       ];
       
-      // Filter tracks to only include those with existing assets and map track IDs
+      // Filter tracks to only include those with existing assets
       const trackIdMapping = {
         'kolačin-trail-klepáč': 'kolacin-trail-klepac',
         'nemsova---ibovka---tn---kolačin': 'nemsova-ibovka-tn-kolacin',
@@ -46,20 +54,21 @@ class TrackLoader {
         })
         .map(track => {
           const mappedId = trackIdMapping[track.id] || track.id;
+          
+          // Use different base paths based on deployment
+          const basePath = isGitHubPages ? '/aktivity-dw-mapy' : '';
+          
           const adjustedTrack = {
             ...track,
-            previewImage: isDev 
-              ? `/assets/tracks/${mappedId}/preview.png`
-              : `/aktivity-dw-mapy/assets/tracks/${mappedId}/preview.png`,
-            gpxFile: isDev 
-              ? `/assets/tracks/${mappedId}/track.gpx`
-              : `/aktivity-dw-mapy/assets/tracks/${mappedId}/track.gpx`
+            previewImage: `${basePath}/assets/tracks/${mappedId}/preview.png`,
+            gpxFile: `${basePath}/assets/tracks/${mappedId}/track.gpx`
           };
           
-          // Debug logging for both dev and prod
-          console.log('Environment:', isDev ? 'DEV' : 'PROD');
-          console.log('Track:', track.id, '-> mapped to:', mappedId);
-          console.log('Preview path:', adjustedTrack.previewImage);
+          console.log('Track processed:', {
+            original: track.id,
+            mapped: mappedId,
+            previewPath: adjustedTrack.previewImage
+          });
           
           return adjustedTrack;
         });
