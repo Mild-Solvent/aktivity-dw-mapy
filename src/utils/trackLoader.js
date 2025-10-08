@@ -4,7 +4,8 @@
 class TrackLoader {
   constructor() {
     this.tracksCache = null;
-    this.baseAssetsPath = '/aktivity-dw-mapy/assets/tracks';
+    // Use different base path for development vs production
+    this.baseAssetsPath = import.meta.env.DEV ? '/assets/tracks' : '/aktivity-dw-mapy/assets/tracks';
     // Use Vite's import.meta.glob to get all track info files at build time
     this.trackInfoModules = import.meta.glob('../../assets/tracks/*/track-info.json');
   }
@@ -41,7 +42,7 @@ class TrackLoader {
       trackInfo.previewImage = `${this.baseAssetsPath}/${trackId}/${trackInfo.previewImage.replace('./', '')}`;
       trackInfo.gpxFile = `${this.baseAssetsPath}/${trackId}/${trackInfo.gpxFile.replace('./', '')}`;
       
-      // Add profile image if it exists
+      // Add profile image if it exists (note: 'profil.png' is the correct filename)
       trackInfo.profileImage = `${this.baseAssetsPath}/${trackId}/profil.png`;
       
       // Load gallery images (will be filtered client-side if images don't exist)
