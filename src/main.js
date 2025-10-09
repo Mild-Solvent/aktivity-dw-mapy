@@ -19,4 +19,18 @@ const router = createRouter({
   routes
 })
 
-createApp(App).use(router).mount('#app')
+const app = createApp(App).use(router)
+
+// Handle initial track ID from static generation
+router.beforeEach((to, from, next) => {
+  // If we have an initial track ID from static generation, navigate to it
+  if (window.__INITIAL_TRACK_ID__ && to.path === '/' && !from.name) {
+    const trackId = window.__INITIAL_TRACK_ID__
+    delete window.__INITIAL_TRACK_ID__ // Clean up
+    next({ name: 'TrackDetail', params: { id: trackId } })
+  } else {
+    next()
+  }
+})
+
+app.mount('#app')

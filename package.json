@@ -1,14 +1,17 @@
 {
   "name": "aktivity-dw-mapy",
   "version": "1.0.0",
+  "type": "module",
   "description": "Hľadač aktivitných trás - Vue.js webová aplikácia",
   "main": "src/main.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/generate-static-pages.js",
+    "build:spa": "vite build",
     "preview": "vite preview",
     "deploy": "npm run build && gh-pages -d dist",
-    "tracks:scan": "node scripts/generate-track-index.js"
+    "tracks:scan": "node scripts/generate-track-index.js",
+    "generate:static": "node scripts/generate-static-pages.js"
   },
   "dependencies": {
     "vue": "^3.4.0",
