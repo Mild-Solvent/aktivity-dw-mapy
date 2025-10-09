@@ -47,27 +47,23 @@
             
             <div class="track-content">
               <div class="track-badges">
-                <span class="sport-badge" :title="getSportTitle(track.sport)">
-                  {{ getSportIcon(track.sport) }}
-                </span>
-                <span class="difficulty-badge" :title="getDifficultyTitle(track.difficulty)">
-                  {{ getDifficultyIcon(track.difficulty) }}
-                </span>
+                <img class="sport-icon" :src="getSportIcon(track.sport)" :alt="getSportTitle(track.sport)" :title="getSportTitle(track.sport)" />
+                <img class="difficulty-icon" :src="getDifficultyIcon(track.difficulty)" :alt="getDifficultyTitle(track.difficulty)" :title="getDifficultyTitle(track.difficulty)" />
               </div>
               <h3 class="track-title">{{ track.name }}</h3>
               <p class="track-description">{{ track.description }}</p>
               
               <div class="track-stats">
                 <div class="stat">
-                  <span class="stat-icon">📏</span>
+                  <img class="stat-icon" src="/assets/icons/lenght-of-track.jpg" alt="Length" />
                   <span class="stat-value">{{ track.distance }}</span>
                 </div>
                 <div class="stat">
-                  <span class="stat-icon">⏱️</span>
+                  <img class="stat-icon" src="/assets/icons/duration.jpg" alt="Duration" />
                   <span class="stat-value">{{ track.duration }}</span>
                 </div>
                 <div class="stat">
-                  <span class="stat-icon">⛰️</span>
+                  <img class="stat-icon" src="/assets/icons/profil-elevation.jpg" alt="Elevation" />
                   <span class="stat-value">{{ track.elevation }}</span>
                 </div>
               </div>
@@ -180,28 +176,20 @@ export default {
       this.$router.push({ name: 'TrackDetail', params: { id: trackId } })
     },
     getSportIcon(sport) {
-      const icons = {
-        cycling: '🚴',
-        running: '🏃',
-        hiking: '🥾'
-      }
-      return icons[sport] || '🏃'
+      // All tracks are MTB tracks now
+      return '/assets/icons/icon-for-mtb.jpg'
     },
     getSportTitle(sport) {
-      const titles = {
-        cycling: 'Cyklistika',
-        running: 'Beh',
-        hiking: 'Turistika'
-      }
-      return titles[sport] || 'Šport'
+      // All tracks are MTB tracks now
+      return 'MTB Cyklistika'
     },
     getDifficultyIcon(difficulty) {
       const icons = {
-        easy: '🟢',
-        moderate: '🟡',
-        hard: '🔴'
+        easy: '/assets/icons/easy bike-track.jpg',
+        moderate: '/assets/icons/medium-bike-track.jpg',
+        hard: '/assets/icons/harb-bike-track.jpg'
       }
-      return icons[difficulty] || '🟡'
+      return icons[difficulty] || '/assets/icons/medium-bike-track.jpg'
     },
     getDifficultyTitle(difficulty) {
       const titles = {

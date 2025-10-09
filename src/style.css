@@ -1488,3 +1488,134 @@ button:focus-visible,
 html {
   scroll-behavior: smooth;
 }
+
+/* Custom Icon Styles */
+.sport-icon, .difficulty-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.stat-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.meta-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  border-radius: 4px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* Track badges layout */
+.track-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0.5rem;
+}
+
+/* Track stats layout */
+.track-stats {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.stat-value {
+  font-weight: 500;
+  color: #333;
+}
+
+/* Detail page meta badges */
+.track-meta-badges {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.meta-badge {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: rgba(195, 34, 36, 0.1);
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--primary);
+}
+
+/* Detail page stats grid */
+.track-stats-grid .stat-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 1rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.track-stats-grid .stat-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 2px;
+}
+
+.stat-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Mobile responsive adjustments for icons */
+@media (max-width: 768px) {
+  .sport-icon, .difficulty-icon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .stat-icon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .track-stats-grid .stat-icon {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .meta-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
+  }
+}

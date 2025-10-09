@@ -1,5 +1,6 @@
 // Simple hardcoded tracks data based on actual JSON files
 // All data taken directly from the track-info.json files in assets/tracks
+// Updated to use custom MTB icons and bike track difficulty icons
 
 export const tracks = [
   {
@@ -42,7 +43,7 @@ export const tracks = [
     id: "kolacin-trail-klepac",
     name: "KOLAČIN TRAIL + KLEPÁČ",
     description: "Náročná turistická trasa s krásnym výhľadom na okolité vrcholy v regióne Slovensko.",
-    sport: "hiking",
+    sport: "cycling",
     distance: "29.3 km",
     distanceValue: 29.3,
     difficulty: "hard",
@@ -150,7 +151,7 @@ export const tracks = [
     id: "omsenie-dolna-poruba-iliavka",
     name: "OMSENIE - DOLNÁ PORUBA - HORNÁ PORUBA - ILIAVKA",
     description: "Náročná turistická trasa vedúca cez malebné dediny a kopce v regióne Slovensko.",
-    sport: "hiking",
+    sport: "cycling",
     distance: "40.5 km",
     distanceValue: 40.5,
     difficulty: "hard",
@@ -186,7 +187,7 @@ export const tracks = [
     id: "soblahov-cez-brezinu",
     name: "SOBLAHOV CEZ BREZINU",
     description: "Náročná a výzyvná turistická trasa cez krásnu prirodzenú krajinu v regióne Slovensko.",
-    sport: "hiking",
+    sport: "cycling",
     distance: "51.7 km",
     distanceValue: 51.7,
     difficulty: "hard",
@@ -222,7 +223,7 @@ export const tracks = [
     id: "suca-sanov-stitna",
     name: "SUCA SANOV STITNA",
     description: "Náročná a výzyvná turistická trasa cez krásnu prirodzenú krajinu v regióne Slovensko.",
-    sport: "hiking",
+    sport: "cycling",
     distance: "69.8 km",
     distanceValue: 69.8,
     difficulty: "hard",

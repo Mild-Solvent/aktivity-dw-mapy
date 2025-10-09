@@ -28,10 +28,10 @@
         <h1 class="track-title">{{ track.name }}</h1>
         <div class="track-meta-badges">
           <span class="meta-badge sport-meta" :title="getSportTitle(track.sport)">
-            {{ getSportIcon(track.sport) }} {{ getSportTitle(track.sport) }}
+            <img class="meta-icon" :src="getSportIcon(track.sport)" :alt="getSportTitle(track.sport)" /> {{ getSportTitle(track.sport) }}
           </span>
           <span class="meta-badge difficulty-meta" :title="getDifficultyTitle(track.difficulty)">
-            {{ getDifficultyIcon(track.difficulty) }} {{ getDifficultyTitle(track.difficulty) }}
+            <img class="meta-icon" :src="getDifficultyIcon(track.difficulty)" :alt="getDifficultyTitle(track.difficulty)" /> {{ getDifficultyTitle(track.difficulty) }}
           </span>
         </div>
       </div>
@@ -54,25 +54,25 @@
           <p class="track-description">{{ track.description }}</p>
           
           <div class="track-stats-grid">
-            <div class="stat-item" v-if="track.stats?.distance">
-              <div class="stat-icon">{{ track.stats.distance.icon }}</div>
+            <div class="stat-item">
+              <img class="stat-icon" src="/assets/icons/lenght-of-track.jpg" alt="Distance" />
               <div class="stat-content">
-                <div class="stat-label">{{ track.stats.distance.label }}</div>
-                <div class="stat-value">{{ track.stats.distance.value }}</div>
+                <div class="stat-label">Vzdialenosť</div>
+                <div class="stat-value">{{ track.distance }}</div>
               </div>
             </div>
-            <div class="stat-item" v-if="track.stats?.elevation">
-              <div class="stat-icon">{{ track.stats.elevation.icon }}</div>
+            <div class="stat-item">
+              <img class="stat-icon" src="/assets/icons/duration.jpg" alt="Duration" />
               <div class="stat-content">
-                <div class="stat-label">{{ track.stats.elevation.label }}</div>
-                <div class="stat-value">{{ track.stats.elevation.value }}</div>
+                <div class="stat-label">Trvanie</div>
+                <div class="stat-value">{{ track.duration }}</div>
               </div>
             </div>
-            <div class="stat-item" v-if="track.stats?.startPoint">
-              <div class="stat-icon">{{ track.stats.startPoint.icon }}</div>
+            <div class="stat-item">
+              <img class="stat-icon" src="/assets/icons/profil-elevation.jpg" alt="Elevation" />
               <div class="stat-content">
-                <div class="stat-label">{{ track.stats.startPoint.label }}</div>
-                <div class="stat-value">{{ track.stats.startPoint.value }}</div>
+                <div class="stat-label">Prevýšenie</div>
+                <div class="stat-value">{{ track.elevation }}</div>
               </div>
             </div>
           </div>
@@ -187,28 +187,20 @@ export default {
       this.$router.push('/')
     },
     getSportIcon(sport) {
-      const icons = {
-        cycling: '🚴',
-        running: '🏃',
-        hiking: '🥾'
-      }
-      return icons[sport] || '🏃'
+      // All tracks are MTB tracks now
+      return '/assets/icons/icon-for-mtb.jpg'
     },
     getDifficultyIcon(difficulty) {
       const icons = {
-        easy: '🟢',
-        moderate: '🟡',
-        hard: '🔴'
+        easy: '/assets/icons/easy bike-track.jpg',
+        moderate: '/assets/icons/medium-bike-track.jpg',
+        hard: '/assets/icons/harb-bike-track.jpg'
       }
-      return icons[difficulty] || '🟡'
+      return icons[difficulty] || '/assets/icons/medium-bike-track.jpg'
     },
     getSportTitle(sport) {
-      const titles = {
-        cycling: 'Cyklistika',
-        running: 'Beh',
-        hiking: 'Turistika'
-      }
-      return titles[sport] || 'Šport'
+      // All tracks are MTB tracks now
+      return 'MTB Cyklistika'
     },
     getDifficultyTitle(difficulty) {
       const titles = {
