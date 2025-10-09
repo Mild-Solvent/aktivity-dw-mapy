@@ -15,7 +15,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory('/aktivity-dw-mapy/'),
+  history: createWebHistory('/'),
   routes
 })
 
