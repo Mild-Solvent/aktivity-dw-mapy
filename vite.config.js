@@ -11,6 +11,8 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
+    // Ensure public assets are copied properly
+    copyPublicDir: true,
     rollupOptions: {
       input: {
         main: 'index.html'
@@ -19,5 +21,7 @@ export default defineConfig({
         manualChunks: undefined
       }
     }
-  }
+  },
+  // Ensure all public assets including CNAME and manifest are copied
+  publicDir: 'public'
 })

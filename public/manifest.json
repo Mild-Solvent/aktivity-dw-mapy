@@ -1,0 +1,21 @@
+{
+  "name": "ACTIVITY DW Club - Objavte Úžasné Trasy",
+  "short_name": "ACTIVITY DW",
+  "description": "Objavte najlepšie bežecké, cyklistické a turistické trasy na Slovensku",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2d3748",
+  "orientation": "portrait-primary",
+  "categories": ["sports", "travel", "navigation"],
+  "lang": "sk",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48 32x32 16x16",
+      "type": "image/x-icon",
+      "purpose": "any maskable"
+    }
+  ]
+}
