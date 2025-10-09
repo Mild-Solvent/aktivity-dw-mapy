@@ -20,8 +20,8 @@ if (!fs.existsSync(trackDir)) {
     fs.mkdirSync(trackDir, { recursive: true });
 }
 
-// Read the main index.html template
-const indexTemplate = fs.readFileSync(path.join(__dirname, '../index.html'), 'utf-8');
+// Read the built index.html template (not the source one)
+const indexTemplate = fs.readFileSync(path.join(distDir, 'index.html'), 'utf-8');
 
 // Generate static HTML for each track
 tracks.forEach(track => {
