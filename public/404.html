@@ -6,20 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ACTIVITY DW Club - Objavte Úžasné Trasy</title>
     <meta name="description" content="ACTIVITY DW Club - Nájdite najlepšie bežecké, cyklistické a turistické trasy vo vašom okolí" />
-    <!-- SPA redirect for custom domain -->
+    <!-- Simple redirect to home for custom domain -->
     <script type="text/javascript">
-      // Single Page Apps for GitHub Pages with custom domain
-      // For custom domains, pathSegmentsToKeep should be 0
-      var pathSegmentsToKeep = 0;
-
-      var l = window.location;
-      l.replace(
-        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
-        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
-        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-        l.hash
-      );
+      // For custom domain, just redirect to home page
+      window.location.replace(window.location.origin + '/');
     </script>
   </head>
   <body>
