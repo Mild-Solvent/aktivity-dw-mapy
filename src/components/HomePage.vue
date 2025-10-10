@@ -3,6 +3,16 @@
     <div class="hero-section">
       <h1 class="hero-title">Objavte Úžasné Trasy</h1>
       <p class="hero-subtitle">Nájdite perfektné bežecké, cyklistické alebo turistické trasy vo vašom okolí</p>
+      <div class="footer-image">
+              <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
+              <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
+              <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
+              <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
+              <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
+              <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
+              <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
+              <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
+            </div>
     </div>
 
     <div class="container">
