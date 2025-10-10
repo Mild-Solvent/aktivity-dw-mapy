@@ -370,6 +370,27 @@ body {
   margin-bottom: 0.5rem;
 }
 
+.footer-cea-flower {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.cea-flower-logo {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  transition: all 0.3s ease;
+  opacity: 0.7;
+}
+
+.cea-flower-logo:hover {
+  transform: scale(1.1);
+  opacity: 1;
+  filter: brightness(0) invert(1) drop-shadow(0 2px 8px rgba(255,255,255,0.4));
+}
+
 .support-link, .developer-link {
   color: white;
   text-decoration: underline;
@@ -1293,6 +1314,10 @@ body {
   .copyright {
     font-size: 1.1rem;
   }
+  
+  .cea-flower-logo {
+    height: 35px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1372,6 +1397,10 @@ body {
   
   .copyright {
     font-size: 1rem;
+  }
+  
+  .cea-flower-logo {
+    height: 30px;
   }
 }
 

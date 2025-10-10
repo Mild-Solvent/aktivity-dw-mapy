@@ -152,6 +152,9 @@
             <div class="developer">
               Development a design od <a href="https://mild-solvent.github.io/Portfolio/" target="_blank" rel="noopener" class="developer-link">Mild Solvent</a>
             </div>
+            <div class="footer-cea-flower">
+              <img src="/assets/shared/cea-flower.png" alt="CEA Flower" class="cea-flower-logo">
+            </div>
           </div>
         </div>
       </div>
