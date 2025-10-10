@@ -136,6 +136,9 @@
           </div>
           
           <div class="footer-info">
+            <div class="footer-image">
+              <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
+            </div>
             <div class="copyright">
               Vytvorené v spolupráci s <a href="https://new.ceaeurope.sk/" target="_blank" rel="noopener" class="support-link">ceaeurope.sk</a>
             </div>
