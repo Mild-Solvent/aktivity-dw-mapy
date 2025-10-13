@@ -248,7 +248,7 @@ body {
 /* Logo */
 .logo {
   position: absolute;
-  left: 50%;
+  left: 48%;
   transform: translateX(-50%);
   z-index: 1;
 }
