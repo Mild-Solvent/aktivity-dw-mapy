@@ -76,7 +76,7 @@
         <!-- Logo -->
         <div class="logo" :class="{ 'logo-hidden': isSearchExpanded }">
           <router-link to="/" class="logo-link">
-            🏃 ACTIVITY DW Club
+            ACTIVITY DW Club
           </router-link>
         </div>
 
