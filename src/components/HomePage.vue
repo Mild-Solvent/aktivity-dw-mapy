@@ -7,7 +7,9 @@
           <h1 class="hero-title">Objavte Úžasné Trasy</h1>
           <p class="hero-subtitle">Nájdite perfektné bežecké, cyklistické alebo turistické trasy vo vašom okolí</p>
         </div>
-        <img src="/assets/icons/logo-cea.png" alt="CEA Logo" class="hero-logo hero-logo-right">
+        <a href="https://www.ceaeurope.sk/" target="_blank" rel="noopener noreferrer" class="hero-logo-link">
+          <img src="/assets/icons/logo-cea.png" alt="CEA Logo" class="hero-logo hero-logo-right">
+        </a>
       </div>
       <div class="footer-image">
               <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
