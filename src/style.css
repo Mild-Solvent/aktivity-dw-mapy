@@ -259,6 +259,7 @@ body {
   color: white;
   text-decoration: none;
   transition: all 0.3s ease;
+  white-space: nowrap;
 }
 
 .logo-link:hover {
@@ -1470,6 +1471,13 @@ body {
   }
 }
 
+/* Small mobile screens */
+@media (max-width: 600px) {
+  .logo-link {
+    font-size: 1.1rem;
+  }
+}
+
 @media (max-width: 480px) {
   .container {
     padding: 0 0.75rem;
@@ -1576,6 +1584,11 @@ body {
   
   .cea-flower-logo {
     height: 30px;
+  }
+  
+  /* Even smaller screens - reduce logo font size further */
+  .logo-link {
+    font-size: 1rem;
   }
 }
 
