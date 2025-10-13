@@ -1,8 +1,14 @@
 <template>
   <div class="home-page">
     <div class="hero-section">
-      <h1 class="hero-title">Objavte Úžasné Trasy</h1>
-      <p class="hero-subtitle">Nájdite perfektné bežecké, cyklistické alebo turistické trasy vo vašom okolí</p>
+      <div class="hero-content">
+        <img src="/assets/icons/aktivity-dw-logo.png" alt="Activity DW Logo" class="hero-logo hero-logo-left">
+        <div class="hero-text">
+          <h1 class="hero-title">Objavte Úžasné Trasy</h1>
+          <p class="hero-subtitle">Nájdite perfektné bežecké, cyklistické alebo turistické trasy vo vašom okolí</p>
+        </div>
+        <img src="/assets/icons/logo-cea.png" alt="CEA Logo" class="hero-logo hero-logo-right">
+      </div>
       <div class="footer-image">
               <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
               <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
