@@ -434,6 +434,16 @@ body {
   flex-shrink: 0;
 }
 
+.hero-logo-left {
+  filter: none;
+}
+
+.hero-logo-left:hover {
+  opacity: 1;
+  transform: scale(1.05);
+  filter: drop-shadow(0 4px 12px rgba(255,255,255,0.4));
+}
+
 .hero-logo:hover {
   opacity: 1;
   transform: scale(1.05);
