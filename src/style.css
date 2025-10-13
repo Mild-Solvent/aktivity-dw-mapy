@@ -449,6 +449,19 @@ body {
   object-fit: contain;
 }
 
+/* Mobile/Desktop logo visibility controls */
+.hero-logo-mobile {
+  display: none;
+}
+
+.hero-logo-desktop {
+  display: inline-block;
+}
+
+.hero-logo-desktop.hero-logo-link {
+  display: inline-block;
+}
+
 .hero-title {
   font-size: 3rem;
   font-weight: 700;
@@ -1253,6 +1266,20 @@ body {
     padding: 0 1rem;
   }
   
+  /* Hide desktop logos on mobile */
+  .hero-logo-desktop {
+    display: none !important;
+  }
+  
+  /* Show mobile logo container */
+  .hero-logo-mobile {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    order: 1;
+  }
+  
   .hero-logo {
     height: 70px;
   }
@@ -1261,12 +1288,7 @@ body {
     order: 2;
   }
   
-  .hero-logo-left {
-    order: 1;
-  }
-  
-  .hero-logo-right {
-    order: 3;
+  .hero-logo-mobile .hero-logo-right {
     height: 100px;
   }
   
@@ -1392,11 +1414,21 @@ body {
     padding: 0 0.75rem;
   }
   
+  /* Ensure mobile logo visibility on small screens */
+  .hero-logo-desktop {
+    display: none !important;
+  }
+  
+  .hero-logo-mobile {
+    display: flex !important;
+    gap: 1.5rem;
+  }
+  
   .hero-logo {
     height: 60px;
   }
   
-  .hero-logo-right {
+  .hero-logo-mobile .hero-logo-right {
     height: 80px;
   }
   

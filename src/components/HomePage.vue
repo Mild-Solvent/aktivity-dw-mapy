@@ -2,14 +2,23 @@
   <div class="home-page">
     <div class="hero-section">
       <div class="hero-content">
-        <img src="/assets/icons/aktivity-dw-logo.png" alt="Activity DW Logo" class="hero-logo hero-logo-left">
+        <!-- Desktop layout - logos on sides -->
+        <img src="/assets/icons/aktivity-dw-logo.png" alt="Activity DW Logo" class="hero-logo hero-logo-left hero-logo-desktop">
         <div class="hero-text">
           <h1 class="hero-title">Objavte Úžasné Trasy</h1>
           <p class="hero-subtitle">Nájdite perfektné bežecké, cyklistické alebo turistické trasy vo vašom okolí</p>
         </div>
-        <a href="https://www.ceaeurope.sk/" target="_blank" rel="noopener noreferrer" class="hero-logo-link">
+        <a href="https://www.ceaeurope.sk/" target="_blank" rel="noopener noreferrer" class="hero-logo-link hero-logo-desktop">
           <img src="/assets/icons/logo-cea.png" alt="CEA Logo" class="hero-logo hero-logo-right">
         </a>
+        
+        <!-- Mobile layout - logos together -->
+        <div class="hero-logos-container hero-logo-mobile">
+          <img src="/assets/icons/aktivity-dw-logo.png" alt="Activity DW Logo" class="hero-logo hero-logo-left">
+          <a href="https://www.ceaeurope.sk/" target="_blank" rel="noopener noreferrer" class="hero-logo-link">
+            <img src="/assets/icons/logo-cea.png" alt="CEA Logo" class="hero-logo hero-logo-right">
+          </a>
+        </div>
       </div>
       <div class="footer-image">
               <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
