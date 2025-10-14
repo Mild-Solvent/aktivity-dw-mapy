@@ -1,0 +1,40 @@
+{
+  "id": "baske-cez-bezakovcov",
+  "name": "BAŠKE CEZ BEŽÁKOVCOV",
+  "description": "Stredne náročná MTB trasa spájajúca Baške s Bežákovcom cez kopcovatinu okolia. Krásna kombinácia lesných single-trackov a asfaltových ciest s peknými výhľadmi na okolitné dediny. Ideálne pre rodinné výjazdy a stredne pokročilých bikérov.",
+  "sport": "cycling",
+  "distance": "42.8 km",
+  "distanceValue": 42.8,
+  "difficulty": "moderate",
+  "location": "Trenčiansky kraj, Slovensko",
+  "locationRegion": "slovakia",
+  "duration": "3h 30m",
+  "elevation": "↑1170 m / ↓1170 m",
+  "previewImage": "./preview.png",
+  "gpxFile": "./track.gpx",
+  "mapUrl": "https://mapy.com/s/lazahahohe",
+  "tags": [
+    "cyklistika",
+    "bicykel",
+    "stredné",
+    "dediny"
+  ],
+  "createdAt": "2025-10-13",
+  "stats": {
+    "distance": {
+      "icon": "📏",
+      "label": "Vzdialenosť",
+      "value": "42.8 km"
+    },
+    "elevation": {
+      "icon": "⛰️",
+      "label": "Prevýšenie",
+      "value": "↑1170 m / ↓1170 m"
+    },
+    "startPoint": {
+      "icon": "📍",
+      "label": "START",
+      "value": "Trenčiansky kraj, Slovensko"
+    }
+  }
+}
