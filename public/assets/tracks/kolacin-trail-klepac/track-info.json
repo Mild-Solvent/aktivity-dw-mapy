@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "kolacin-trail-klepac",
   "name": "KOLAČIN TRAIL + KLEPÁČ",
   "description": "Náročná turistická trasa s krásnym výhľadom na okolité vrcholy v regióne Slovensko.",
@@ -6,7 +6,7 @@
   "distance": "29.3 km",
   "distanceValue": 29.3,
   "difficulty": "hard",
-  "location": "Slovensko",
+  "location": "Trenčiansky kraj, Slovensko",
   "locationRegion": "slovakia",
   "duration": "8h 24m",
   "elevation": "↑844 m / ↓852 m",
@@ -34,7 +34,7 @@
     "startPoint": {
       "icon": "📍",
       "label": "START",
-      "value": "Slovensko"
+      "value": "Trenčiansky kraj, Slovensko"
     }
   }
 }

@@ -11,7 +11,7 @@ export const tracks = [
     distance: "81.7 km",
     distanceValue: 81.7,
     difficulty: "hard",
-    location: "Slovensko",
+    location: "Trenčiansky kraj, Slovensko",
     locationRegion: "slovakia",
     duration: "5h 32m",
     elevation: "↑1,735 m / ↓1,728 m",
@@ -35,7 +35,7 @@ export const tracks = [
       startPoint: {
         icon: "📍",
         label: "START",
-        value: "Slovensko"
+        value: "Trenčiansky kraj, Slovensko"
       }
     }
   },
@@ -47,7 +47,7 @@ export const tracks = [
     distance: "29.3 km",
     distanceValue: 29.3,
     difficulty: "hard",
-    location: "Slovensko",
+    location: "Trenčiansky kraj, Slovensko",
     locationRegion: "slovakia",
     duration: "8h 24m",
     elevation: "↑844 m / ↓852 m",
@@ -71,7 +71,7 @@ export const tracks = [
       startPoint: {
         icon: "📍",
         label: "START",
-        value: "Slovensko"
+        value: "Trenčiansky kraj, Slovensko"
       }
     }
   },
@@ -155,7 +155,7 @@ export const tracks = [
     distance: "40.5 km",
     distanceValue: 40.5,
     difficulty: "hard",
-    location: "Slovensko",
+    location: "Trenčiansky kraj, Slovensko",
     locationRegion: "slovakia",
     duration: "11h 36m",
     elevation: "↑1,034 m / ↓1,029 m",
@@ -179,7 +179,7 @@ export const tracks = [
       startPoint: {
         icon: "📍",
         label: "START",
-        value: "Slovensko"
+        value: "Trenčiansky kraj, Slovensko"
       }
     }
   },
@@ -191,7 +191,7 @@ export const tracks = [
     distance: "51.7 km",
     distanceValue: 51.7,
     difficulty: "hard",
-    location: "Slovensko",
+    location: "Trenčiansky kraj, Slovensko",
     locationRegion: "slovakia",
     duration: "13h 12m",
     elevation: "↑524 m / ↓516 m",
@@ -215,7 +215,7 @@ export const tracks = [
       startPoint: {
         icon: "📍",
         label: "START",
-        value: "Slovensko"
+        value: "Trenčiansky kraj, Slovensko"
       }
     }
   },
@@ -227,7 +227,7 @@ export const tracks = [
     distance: "69.8 km",
     distanceValue: 69.8,
     difficulty: "hard",
-    location: "Slovensko",
+    location: "Trenčiansky kraj, Slovensko",
     locationRegion: "slovakia",
     duration: "17h 46m",
     elevation: "↑586 m / ↓592 m",
@@ -251,7 +251,7 @@ export const tracks = [
       startPoint: {
         icon: "📍",
         label: "START",
-        value: "Slovensko"
+        value: "Trenčiansky kraj, Slovensko"
       }
     }
   },
@@ -263,7 +263,7 @@ export const tracks = [
     distance: "59.4 km",
     distanceValue: 59.4,
     difficulty: "hard",
-    location: "Slovensko",
+    location: "Trenčiansky kraj, Slovensko",
     locationRegion: "slovakia",
     duration: "4h 15m",
     elevation: "↑872 m / ↓873 m",
@@ -287,7 +287,7 @@ export const tracks = [
       startPoint: {
         icon: "📍",
         label: "START",
-        value: "Slovensko"
+        value: "Trenčiansky kraj, Slovensko"
       }
     }
   },
@@ -299,7 +299,7 @@ export const tracks = [
     distance: "87 km",
     distanceValue: 87,
     difficulty: "hard",
-    location: "Slovensko",
+    location: "Trenčiansky kraj, Slovensko",
     locationRegion: "slovakia",
     duration: "7h 45m",
     elevation: "↑2748 m / ↓2796 m",
@@ -323,7 +323,7 @@ export const tracks = [
       startPoint: {
         icon: "📍",
         label: "START",
-        value: "Slovensko"
+        value: "Trenčiansky kraj, Slovensko"
       }
     }
   },
@@ -335,7 +335,7 @@ export const tracks = [
     distance: "42.8 km",
     distanceValue: 42.8,
     difficulty: "moderate",
-    location: "Slovensko",
+    location: "Trenčiansky kraj, Slovensko",
     locationRegion: "slovakia",
     duration: "3h 30m",
     elevation: "↑1170 m / ↓1170 m",
@@ -359,7 +359,7 @@ export const tracks = [
       startPoint: {
         icon: "📍",
         label: "START",
-        value: "Slovensko"
+        value: "Trenčiansky kraj, Slovensko"
       }
     }
   }

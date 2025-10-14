@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "suca-sanov-stitna",
   "name": "SUCA SANOV STITNA",
   "description": "Náročná a výzyvná turistická trasa cez krásnu prirodzenú krajinu v regióne Slovensko.",
@@ -6,7 +6,7 @@
   "distance": "69.8 km",
   "distanceValue": 69.8,
   "difficulty": "hard",
-  "location": "Slovensko",
+  "location": "Trenčiansky kraj, Slovensko",
   "locationRegion": "slovakia",
   "duration": "17h 46m",
   "elevation": "↑586 m / ↓592 m",
@@ -33,7 +33,7 @@
     "startPoint": {
       "icon": "📍",
       "label": "START",
-      "value": "Slovensko"
+      "value": "Trenčiansky kraj, Slovensko"
     }
   }
 }

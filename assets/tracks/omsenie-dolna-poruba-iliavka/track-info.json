@@ -6,7 +6,7 @@
   "distance": "40.5 km",
   "distanceValue": 40.5,
   "difficulty": "hard",
-  "location": "Slovensko",
+  "location": "Trenčiansky kraj, Slovensko",
   "locationRegion": "slovakia",
   "duration": "11h 36m",
   "elevation": "↑1,034 m / ↓1,029 m",
@@ -34,7 +34,7 @@
     "startPoint": {
       "icon": "📍",
       "label": "START",
-      "value": "Slovensko"
+      "value": "Trenčiansky kraj, Slovensko"
     }
   }
 }
