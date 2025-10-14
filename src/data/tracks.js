@@ -254,6 +254,114 @@ export const tracks = [
         value: "Slovensko"
       }
     }
+  },
+  {
+    id: "jesenny-vrsatec",
+    name: "Jesenný Vršatec",
+    description: "Náročná turistická trasa vedúca cez malebné vrcholy a údolia s krásnym jesenným výhľadom v regióne Slovensko.",
+    sport: "cycling",
+    distance: "59.4 km",
+    distanceValue: 59.4,
+    difficulty: "hard",
+    location: "Slovensko",
+    locationRegion: "slovakia",
+    duration: "4h 15m",
+    elevation: "↑872 m / ↓873 m",
+    previewImage: "/assets/tracks/jesenny-vršatec/preview.png",
+    profileImage: "/assets/tracks/jesenny-vršatec/profil.png",
+    gpxFile: "/assets/tracks/jesenny-vršatec/track.gpx",
+    mapUrl: "https://mapy.com/s/jesenny-vrsatec",
+    tags: ["turistika", "cyklistika", "náročné", "vrcholy", "jeseň"],
+    createdAt: "2025-10-13",
+    stats: {
+      distance: {
+        icon: "📏",
+        label: "Vzdialenosť",
+        value: "59.4 km"
+      },
+      elevation: {
+        icon: "⛰️",
+        label: "Prevýšenie",
+        value: "↑872 m / ↓873 m"
+      },
+      startPoint: {
+        icon: "📍",
+        label: "START",
+        value: "Slovensko"
+      }
+    }
+  },
+  {
+    id: "novodubnicky-maraton",
+    name: "NOVODUBNICKÝ MARATON",
+    description: "Náročná a výzyvná maratónska trasa cez krásnu prirodzenú krajinu v regióne Slovensko.",
+    sport: "cycling",
+    distance: "87 km",
+    distanceValue: 87,
+    difficulty: "hard",
+    location: "Slovensko",
+    locationRegion: "slovakia",
+    duration: "7h 45m",
+    elevation: "↑2748 m / ↓2796 m",
+    previewImage: "/assets/tracks/novodubnicky-maraton/preview.png",
+    profileImage: "/assets/tracks/novodubnicky-maraton/profil.png",
+    gpxFile: "/assets/tracks/novodubnicky-maraton/track.gpx",
+    mapUrl: "https://mapy.com/s/novodubnicky-maraton",
+    tags: ["cyklistika", "bicykel", "náročné", "maraton"],
+    createdAt: "2025-10-13",
+    stats: {
+      distance: {
+        icon: "📏",
+        label: "Vzdialenosť",
+        value: "87 km"
+      },
+      elevation: {
+        icon: "⛰️",
+        label: "Prevýšenie",
+        value: "↑2748 m / ↓2796 m"
+      },
+      startPoint: {
+        icon: "📍",
+        label: "START",
+        value: "Slovensko"
+      }
+    }
+  },
+  {
+    id: "baske-cez-bezakovcov",
+    name: "BAŠKE CEZ BEŽÁKOVCOV",
+    description: "Stredne náročná cyklistická trasa vedúca cez malebné dediny a kopce v regióne Slovensko.",
+    sport: "cycling",
+    distance: "42.8 km",
+    distanceValue: 42.8,
+    difficulty: "moderate",
+    location: "Slovensko",
+    locationRegion: "slovakia",
+    duration: "3h 30m",
+    elevation: "↑1170 m / ↓1170 m",
+    previewImage: "/assets/tracks/baske-cez-bežákovcov/preview.png",
+    profileImage: "/assets/tracks/baske-cez-bežákovcov/profil.png",
+    gpxFile: "/assets/tracks/baske-cez-bežákovcov/track.gpx",
+    mapUrl: "https://mapy.com/s/baske-cez-bezakovcov",
+    tags: ["cyklistika", "bicykel", "stredné", "dediny"],
+    createdAt: "2025-10-13",
+    stats: {
+      distance: {
+        icon: "📏",
+        label: "Vzdialenosť",
+        value: "42.8 km"
+      },
+      elevation: {
+        icon: "⛰️",
+        label: "Prevýšenie",
+        value: "↑1170 m / ↓1170 m"
+      },
+      startPoint: {
+        icon: "📍",
+        label: "START",
+        value: "Slovensko"
+      }
+    }
   }
 ];
 
