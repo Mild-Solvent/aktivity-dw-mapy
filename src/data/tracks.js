@@ -6,7 +6,7 @@ export const tracks = [
   {
     id: "inovec-mitice-ostry-vrch",
     name: "Inovec Mitice Ostrý vrch",
-    description: "Náročná cyklistická trasa vedúca cez horské oblasti s úžasnými výhľadmi v regióne Slovensko.",
+    description: "Náročná MTB trasa cez Inovecké pohorie s výzvovými stúpaniami na Ostrý vrch. Technické single-tracky striedajú lesné cesty s výhľadmi na celé Považie. Ideálne pre pokročilých bikérov hľadajúcich adrenalínový zážitok v srdci Slovenska.",
     sport: "cycling",
     distance: "81.7 km",
     distanceValue: 81.7,
@@ -42,7 +42,7 @@ export const tracks = [
   {
     id: "kolacin-trail-klepac",
     name: "KOLAČIN TRAIL + KLEPÁČ",
-    description: "Náročná turistická trasa s krásnym výhľadom na okolité vrcholy v regióne Slovensko.",
+    description: "Technicky náročná MTB trasa kombinújúca Kolačín trail s výstupom na Klepáč. Úzke single-tracky a lesné chodníčky s krásnymi panoramatickými výhľadmi. Pre bikérov milujúcich výzvu technických úsekôv a hľadás slovenských vrchov.",
     sport: "cycling",
     distance: "29.3 km",
     distanceValue: 29.3,
@@ -78,7 +78,7 @@ export const tracks = [
   {
     id: "nedasov-brumov-trencin",
     name: "NEDASOV BRUMOV TRENCIN",
-    description: "Náročná a výzyvná cyklistická trasa cez krásnu prirodzenú krajinu v regióne Trenčiansky kraj, Slovensko.",
+    description: "Dlhá vytrvalostná MTB trasa spájajúca obce Nedašov, Brumov a Trenčín cez malebný Trenčiansky kraj. Kombinácia asfaltových ciest, makadamov a lesných single-trackov. Perfektná pre bikérov milujúcich dlhé výjazdy a objavovanie okamlžitých miest.",
     sport: "cycling",
     distance: "82.9 km",
     distanceValue: 82.9,
@@ -114,7 +114,7 @@ export const tracks = [
   {
     id: "nemsova-ibovka-tn-kolacin",
     name: "NEMSOVA - IBOVKA - TN - KOLAČIN",
-    description: "Stredne náročná cyklistická trasa vedúca cez malebné mestečká a dediny v regióne Trenčiansky kraj, Slovensko.",
+    description: "Pokojná XC MTB trasa spájajúca úrokmlé obce Nemsová, Ibovka a Kolačín cez Trenčín. Ideálna pre rodinné výjazdy a začínajúcich bikérov. Kombinuje pohodlné asfalty s jednoduchými lesnými trailmi, ponúka krásne výhľady na Trenčiansky hrad a okolitné kopce.",
     sport: "cycling",
     distance: "51.3 km",
     distanceValue: 51.3,
@@ -150,7 +150,7 @@ export const tracks = [
   {
     id: "omsenie-dolna-poruba-iliavka",
     name: "OMSENIE - DOLNÁ PORUBA - HORNÁ PORUBA - ILIAVKA",
-    description: "Náročná turistická trasa vedúca cez malebné dediny a kopce v regióne Slovensko.",
+    description: "Náročná MTB trasa cez malebné slovenské dediny Omsenie, Dolnú a Hornú Porubu až po Iliavku. Výzva pre pokročilých s peknými kopcovatymi úsekmi a technickými single-trackmi. Ponúka autentický pohľad slovenského vidieka s tradičnými dediničkami.",
     sport: "cycling",
     distance: "40.5 km",
     distanceValue: 40.5,
@@ -186,7 +186,7 @@ export const tracks = [
   {
     id: "soblahov-cez-brezinu",
     name: "SOBLAHOV CEZ BREZINU",
-    description: "Náročná a výzyvná turistická trasa cez krásnu prirodzenú krajinu v regióne Slovensko.",
+    description: "Náročná MTB trasa vedúca z obce Soblahov cez Brezinu do okolitej prirodzenej krajiny. Kombinácia lesných single-trackov a turistických chodníčkov s umierneným prevýšením. Perfektná pre milovníkov pokojných výjazov do slovenského lesa.",
     sport: "cycling",
     distance: "51.7 km",
     distanceValue: 51.7,
@@ -222,7 +222,7 @@ export const tracks = [
   {
     id: "suca-sanov-stitna",
     name: "SUCA SANOV STITNA",
-    description: "Náročná a výzyvná turistická trasa cez krásnu prirodzenú krajinu v regióne Slovensko.",
+    description: "Dlhá vytrvalostná MTB trasa spájajúca obce Suča, Šanov a Štitná. Výzva pre bikérov s kondicíou - takmer 70km lesných ciest a single-trackov s umierneným stúpaním. Ideálne pre milovníkov dlhých enduro výjazov cez slovenskú prírodu.",
     sport: "cycling",
     distance: "69.8 km",
     distanceValue: 69.8,
@@ -258,7 +258,7 @@ export const tracks = [
   {
     id: "jesenny-vrsatec",
     name: "Jesenný Vršatec",
-    description: "Náročná turistická trasa vedúca cez malebné vrcholy a údolia s krásnym jesenným výhľadom v regióne Slovensko.",
+    description: "Náročná MTB trasa okolo malebného Vršatca s nádhernými jesennými výhľadmi. Kombinácia lesných single-trackov a makadamových ciest s umierneným stúpaním. Ideálne na jesenň pre fotografických bikérov a milovníkov farebných korun stromov.",
     sport: "cycling",
     distance: "59.4 km",
     distanceValue: 59.4,
@@ -294,7 +294,7 @@ export const tracks = [
   {
     id: "novodubnicky-maraton",
     name: "NOVODUBNICKÝ MARATON",
-    description: "Náročná a výzyvná maratónska trasa cez krásnu prirodzenú krajinu v regióne Slovensko.",
+    description: "Náročný MTB maratón s imponujúcimi 2748m prevýšenia na 87km. Jedna z najnáročnejších tras pre pokročilých bikérov hľadajúcich absolútnu výzvu. Kombinácia technických single-trackov, prudkých stúpaní a dlhých zjazdôv. Iba pre zdatných a odporúčame s podporou.",
     sport: "cycling",
     distance: "87 km",
     distanceValue: 87,
@@ -330,7 +330,7 @@ export const tracks = [
   {
     id: "baske-cez-bezakovcov",
     name: "BAŠKE CEZ BEŽÁKOVCOV",
-    description: "Stredne náročná cyklistická trasa vedúca cez malebné dediny a kopce v regióne Slovensko.",
+    description: "Stredne náročná MTB trasa spájajúca Baške s Bežákovcom cez kopcovatinu okolia. Krásna kombinácia lesných single-trackov a asfaltových ciest s peknými výhľadmi na okolitné dediny. Ideálne pre rodinné výjazdy a stredne pokročilých bikérov.",
     sport: "cycling",
     distance: "42.8 km",
     distanceValue: 42.8,
