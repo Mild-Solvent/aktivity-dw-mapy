@@ -270,7 +270,7 @@ export const tracks = [
     previewImage: "/assets/tracks/jesenny-vršatec/preview.png",
     profileImage: "/assets/tracks/jesenny-vršatec/profil.png",
     gpxFile: "/assets/tracks/jesenny-vršatec/track.gpx",
-    mapUrl: "https://mapy.com/s/jesenny-vrsatec",
+    mapUrl: "https://mapy.com/s/nafanobabu",
     tags: ["turistika", "cyklistika", "náročné", "vrcholy", "jeseň"],
     createdAt: "2025-10-13",
     stats: {
@@ -306,7 +306,7 @@ export const tracks = [
     previewImage: "/assets/tracks/novodubnicky-maraton/preview.png",
     profileImage: "/assets/tracks/novodubnicky-maraton/profil.png",
     gpxFile: "/assets/tracks/novodubnicky-maraton/track.gpx",
-    mapUrl: "https://mapy.com/s/novodubnicky-maraton",
+    mapUrl: "https://mapy.com/s/josesuvufa",
     tags: ["cyklistika", "bicykel", "náročné", "maraton"],
     createdAt: "2025-10-13",
     stats: {
@@ -342,7 +342,7 @@ export const tracks = [
     previewImage: "/assets/tracks/baske-cez-bežákovcov/preview.png",
     profileImage: "/assets/tracks/baske-cez-bežákovcov/profil.png",
     gpxFile: "/assets/tracks/baske-cez-bežákovcov/track.gpx",
-    mapUrl: "https://mapy.com/s/baske-cez-bezakovcov",
+    mapUrl: "https://mapy.com/s/lazahahohe",
     tags: ["cyklistika", "bicykel", "stredné", "dediny"],
     createdAt: "2025-10-13",
     stats: {
