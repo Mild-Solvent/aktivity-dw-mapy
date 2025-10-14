@@ -632,6 +632,12 @@ body {
   text-align: left;
   padding-left: 0;
   margin-left: 0;
+  /* Limit to 2 lines with ellipsis */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .track-stats {
@@ -1192,6 +1198,12 @@ body {
     padding-left: 0;
     position: relative;
     left: 0;
+    /* Preserve ellipsis truncation on desktop */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
