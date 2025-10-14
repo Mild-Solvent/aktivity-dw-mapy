@@ -53,22 +53,24 @@
         <div class="track-info">
           <p class="track-description">{{ track.description }}</p>
           
-          <div class="track-stats-grid">
-            <div class="stat-item">
+          <div class="track-stats-unified">
+            <div class="unified-stat-item">
               <img class="stat-icon" src="/assets/icons/lenght-of-track.jpg" alt="Distance" />
               <div class="stat-content">
                 <div class="stat-label">Vzdialenosť</div>
                 <div class="stat-value">{{ track.distance }}</div>
               </div>
             </div>
-            <div class="stat-item">
+            <div class="stat-separator"></div>
+            <div class="unified-stat-item">
               <img class="stat-icon" src="/assets/icons/duration.jpg" alt="Duration" />
               <div class="stat-content">
                 <div class="stat-label">Trvanie</div>
                 <div class="stat-value">{{ track.duration }}</div>
               </div>
             </div>
-            <div class="stat-item">
+            <div class="stat-separator"></div>
+            <div class="unified-stat-item">
               <img class="stat-icon" src="/assets/icons/profil-elevation.jpg" alt="Elevation" />
               <div class="stat-content">
                 <div class="stat-label">Prevýšenie</div>
