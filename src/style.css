@@ -848,7 +848,7 @@ body {
 }
 
 .track-stats-unified {
-  background: white;
+  background: transparent;
   border-radius: 0;
   padding: 1.5rem;
   margin-bottom: 2rem;
