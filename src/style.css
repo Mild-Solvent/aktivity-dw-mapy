@@ -665,9 +665,27 @@ body {
 .track-location {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.25rem;
   color: #666;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  margin-left: auto;
+}
+
+.location-icon {
+  font-size: 0.8rem;
+}
+
+.location-text {
+  font-weight: 500;
+}
+
+/* Location within badges container */
+.track-badges .track-location {
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
 /* No results */
@@ -1824,7 +1842,9 @@ html {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+  justify-content: flex-start;
+  flex-wrap: wrap;
 }
 
 /* Track stats layout */
@@ -1911,5 +1931,14 @@ html {
     width: 18px;
     height: 18px;
     margin-right: 6px;
+  }
+  
+  .track-location {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+  }
+  
+  .location-icon {
+    font-size: 0.75rem;
   }
 }

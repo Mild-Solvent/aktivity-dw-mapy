@@ -76,6 +76,10 @@
               <div class="track-badges">
                 <img class="sport-icon" :src="getSportIcon(track.sport)" :alt="getSportTitle(track.sport)" :title="getSportTitle(track.sport)" />
                 <img class="difficulty-icon" :src="getDifficultyIcon(track.difficulty)" :alt="getDifficultyTitle(track.difficulty)" :title="getDifficultyTitle(track.difficulty)" />
+                <div class="track-location">
+                  <span class="location-icon">📍</span>
+                  <span class="location-text">{{ track.location }}</span>
+                </div>
               </div>
               <h3 class="track-title">{{ track.name }}</h3>
               <p class="track-description">{{ track.description }}</p>
@@ -93,11 +97,6 @@
                   <img class="stat-icon" src="/assets/icons/profil-elevation.jpg" alt="Elevation" />
                   <span class="stat-value">{{ track.elevation }}</span>
                 </div>
-              </div>
-              
-              <div class="track-location">
-                <span class="location-icon">📍</span>
-                <span class="location-text">{{ track.location }}</span>
               </div>
             </div>
           </div>
