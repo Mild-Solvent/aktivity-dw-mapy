@@ -1,0 +1,41 @@
+{
+  "id": "jesenny-vrsatec",
+  "name": "Jesenný Vršatec",
+  "description": "Náročná MTB trasa okolo malebného Vršatca s nádhernými jesennými výhľadmi. Kombinácia lesných single-trackov a makadamových ciest s umierneným stúpaním. Ideálne na jesenň pre fotografických bikérov a milovníkov farebných korun stromov.",
+  "sport": "cycling",
+  "distance": "59.4 km",
+  "distanceValue": 59.4,
+  "difficulty": "hard",
+  "location": "Slovensko",
+  "locationRegion": "slovakia",
+  "duration": "4h 15m",
+  "elevation": "↑872 m / ↓873 m",
+  "previewImage": "./preview.png",
+  "gpxFile": "./track.gpx",
+  "mapUrl": "https://mapy.com/s/nafanobabu",
+  "tags": [
+    "turistika",
+    "cyklistika",
+    "náročné",
+    "vrcholy",
+    "jeseň"
+  ],
+  "createdAt": "2025-10-13",
+  "stats": {
+    "distance": {
+      "icon": "📏",
+      "label": "Vzdialenosť",
+      "value": "59.4 km"
+    },
+    "elevation": {
+      "icon": "⛰️",
+      "label": "Prevýšenie",
+      "value": "↑872 m / ↓873 m"
+    },
+    "startPoint": {
+      "icon": "📍",
+      "label": "START",
+      "value": "Slovensko"
+    }
+  }
+}
