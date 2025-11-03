@@ -149,15 +149,10 @@ export default {
       }
 
       // Apply distance filter
-      if (this.filters.distance) {
+      if (this.filters.maxDistance && this.filters.maxDistance < 1000) {
         filtered = filtered.filter(track => {
           const distance = track.distanceValue
-          switch (this.filters.distance) {
-            case 'short': return distance < 10
-            case 'medium': return distance >= 10 && distance <= 20
-            case 'long': return distance > 20
-            default: return true
-          }
+          return distance <= this.filters.maxDistance
         })
       }
 

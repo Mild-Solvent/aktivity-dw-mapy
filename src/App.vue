@@ -33,32 +33,73 @@
                 <h3>Filtre</h3>
                 <div class="filter-group">
                   <label>Šport</label>
-                  <select v-model="filters.sport" @change="applyFilters">
-                    <option value="">Všetky športy</option>
-                    <option value="cycling">🚴 Cyklistika</option>
-                    <option value="running">🏃 Beh</option>
-                    <option value="hiking">🥾 Turistika</option>
-                  </select>
+                  <div class="sport-options">
+                    <button 
+                      class="sport-button"
+                      :class="{ active: filters.sport === '' }"
+                      @click="setSport('')"
+                    >
+                      <span>Všetky</span>
+                    </button>
+                    <button 
+                      class="sport-button"
+                      :class="{ active: filters.sport === 'cycling' }"
+                      @click="setSport('cycling')"
+                    >
+                      <img src="/assets/icons/icon-for-mtb.jpg" alt="MTB Cyklistika" />
+                    </button>
+                  </div>
                 </div>
                 
                 <div class="filter-group">
-                  <label>Vzdialenosť</label>
-                  <select v-model="filters.distance" @change="applyFilters">
-                    <option value="">Akákoľvek vzdialenosť</option>
-                    <option value="short">< 10 km</option>
-                    <option value="medium">10–20 km</option>
-                    <option value="long">> 20 km</option>
-                  </select>
+                  <label>Vzdialenosť ({{ filters.maxDistance }} km)</label>
+                  <input 
+                    type="range" 
+                    v-model.number="filters.maxDistance" 
+                    @input="applyFilters"
+                    min="0" 
+                    max="1000" 
+                    step="10"
+                    class="distance-slider"
+                  />
+                  <div class="slider-labels">
+                    <span>0 km</span>
+                    <span>1000 km</span>
+                  </div>
                 </div>
                 
                 <div class="filter-group">
                   <label>Náročnosť</label>
-                  <select v-model="filters.difficulty" @change="applyFilters">
-                    <option value="">Akákoľvek náročnosť</option>
-                    <option value="easy">🟢 Ľahká</option>
-                    <option value="moderate">🟡 Stredná</option>
-                    <option value="hard">🔴 Ťažká</option>
-                  </select>
+                  <div class="difficulty-options">
+                    <button 
+                      class="difficulty-button"
+                      :class="{ active: filters.difficulty === '' }"
+                      @click="setDifficulty('')"
+                    >
+                      <span>Všetky</span>
+                    </button>
+                    <button 
+                      class="difficulty-button"
+                      :class="{ active: filters.difficulty === 'easy' }"
+                      @click="setDifficulty('easy')"
+                    >
+                      <img src="/assets/icons/easy bike-track.jpg" alt="Ľahká" />
+                    </button>
+                    <button 
+                      class="difficulty-button"
+                      :class="{ active: filters.difficulty === 'moderate' }"
+                      @click="setDifficulty('moderate')"
+                    >
+                      <img src="/assets/icons/medium-bike-track.jpg" alt="Stredná" />
+                    </button>
+                    <button 
+                      class="difficulty-button"
+                      :class="{ active: filters.difficulty === 'hard' }"
+                      @click="setDifficulty('hard')"
+                    >
+                      <img src="/assets/icons/harb-bike-track.jpg" alt="Ťažká" />
+                    </button>
+                  </div>
                 </div>
                 
                 <div class="filter-group">
@@ -170,7 +211,7 @@ export default {
       searchQuery: '',
       filters: {
         sport: '',
-        distance: '',
+        maxDistance: 1000,
         difficulty: '',
         location: ''
       }
@@ -210,6 +251,14 @@ export default {
     },
     updateFilters(newFilters) {
       this.filters = { ...this.filters, ...newFilters }
+    },
+    setDifficulty(difficulty) {
+      this.filters.difficulty = difficulty
+      this.applyFilters()
+    },
+    setSport(sport) {
+      this.filters.sport = sport
+      this.applyFilters()
     },
     handleGlobalClick(event) {
       // Close menu if clicking outside of burger menu area
