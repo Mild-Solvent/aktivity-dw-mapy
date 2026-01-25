@@ -3,7 +3,7 @@
   <div v-if="loading" class="track-loading">
     <div class="loading-content">
       <div class="loading-spinner">⏳</div>
-      <p>Načítavanie trasy...</p>
+      <p>Načítavam trasu...</p>
     </div>
   </div>
   
@@ -13,7 +13,7 @@
       <div class="error-icon">❌</div>
       <h2>{{ error }}</h2>
       <button @click="goBack" class="back-button">
-← Späť na trasy
+← Späť na zoznam trás
       </button>
     </div>
   </div>
@@ -22,7 +22,7 @@
   <div class="track-detail" v-else-if="track">
     <div class="track-header">
       <button @click="goBack" class="back-button">
-← Späť na trasy
+← Späť na zoznam trás
       </button>
       <div class="track-title-section">
         <h1 class="track-title">{{ track.name }}</h1>
@@ -124,7 +124,7 @@
           </div>
         </div>
         <div class="no-images-message" v-else>
-          <p>Žiadne obrázky z tejto trasy</p>
+          <p>Žiadne fotografie z tejto trasy</p>
         </div>
       </div>
 
@@ -172,7 +172,7 @@ export default {
         this.loading = true
         this.track = getTrackById(this.id)
         if (!this.track) {
-          this.error = 'Trasa nebola nájdená'
+          this.error = 'Trasu sa nepodarilo nájsť'
         } else {
           this.error = null
           // No need for complex gallery loading - just set empty array
@@ -180,7 +180,7 @@ export default {
         }
       } catch (error) {
         console.error('Error loading track:', error)
-        this.error = 'Chyba pri načítaní trasy'
+        this.error = 'Nepodarilo sa načítať trasu'
       } finally {
         this.loading = false
       }

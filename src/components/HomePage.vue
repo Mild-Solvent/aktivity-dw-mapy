@@ -5,8 +5,8 @@
         <!-- Desktop layout - logos on sides -->
         <img src="/assets/icons/aktivity-dw-logo.png" alt="Activity DW Logo" class="hero-logo hero-logo-left hero-logo-desktop">
         <div class="hero-text">
-          <h1 class="hero-title">Objavte Úžasné Trasy</h1>
-          <p class="hero-subtitle">Nájdite perfektné bežecké, cyklistické alebo turistické trasy vo vašom okolí</p>
+          <h1 class="hero-title">Objavte úžasné trasy</h1>
+          <p class="hero-subtitle">Nájdite perfektnú bežeckú, cyklistickú alebo turistickú trasu vo vašom okolí</p>
         </div>
         <a href="https://www.ceaeurope.sk/" target="_blank" rel="noopener noreferrer" class="hero-logo-link hero-logo-desktop">
           <img src="/assets/icons/logo-cea.png" alt="CEA Logo" class="hero-logo hero-logo-right">
@@ -37,7 +37,7 @@
       <div v-if="loading" class="loading-state">
         <div class="loading-content">
           <div class="loading-spinner">⏳</div>
-          <p>Načítavanie trás...</p>
+          <p>Načítavam trasy...</p>
         </div>
       </div>
       
@@ -45,9 +45,9 @@
       <div v-else-if="error" class="error-state">
         <div class="error-content">
           <div class="error-icon">❌</div>
-          <h3>Chyba pri načítavaní</h3>
+          <h3>Ups, niečo sa pokazilo</h3>
           <p>{{ error }}</p>
-          <button @click="loadTracks" class="retry-button">Skúsiť znovu</button>
+          <button @click="loadTracks" class="retry-button">Skúsiť znova</button>
         </div>
       </div>
       
@@ -105,8 +105,8 @@
         <div v-if="filteredTracks.length === 0" class="no-results">
           <div class="no-results-content">
             <div class="no-results-icon">🔍</div>
-            <h3>Neboli nájdené žiadne trasy</h3>
-            <p>Skúste upraviť filtre alebo kritériá vyhľadávania</p>
+            <h3>Nenašli sme žiadne trasy</h3>
+            <p>Skúste zmeniť filtre alebo hľadaný výraz</p>
           </div>
         </div>
       </div>
@@ -188,7 +188,7 @@ export default {
         this.error = null
       } catch (error) {
         console.error('Error loading tracks:', error)
-        this.error = 'Chyba pri načítaní trás'
+        this.error = 'Nepodarilo sa načítať trasy'
       } finally {
         this.loading = false
       }

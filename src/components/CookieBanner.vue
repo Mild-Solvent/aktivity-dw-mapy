@@ -3,10 +3,10 @@
     <div class="cookie-content">
       <div class="cookie-text">
         <p>
-          <strong>🍪 Informácie o súboroch cookies</strong><br>
-          Táto stránka nezbiera žiadne používateľské údaje a je hostovaná na GitHub Pages. 
+          <strong>🍪 Informácie o cookies</strong><br>
+          Táto stránka nezbiera žiadne vaše údaje a je hostovaná na GitHub Pages. 
           Nepoužívame sledovacie cookies ani analytické nástroje. 
-          Váša súkromie je pre nás dôležité.
+          Vaše súkromie je pre nás dôležité.
         </p>
       </div>
       <div class="cookie-actions">

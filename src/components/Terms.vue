@@ -12,18 +12,18 @@
         <section class="section">
           <h2>1. Prijatie podmienok</h2>
           <p>
-            Prístupom a používaním webovej stránky <strong>ACTIVITY DW Club</strong> prijimate a súhlasi te s tým, že sa budete riadiť podmienkami a ustanoveniami týchto všeobecných podmienok.
+            Prístupom a používaním webovej stránky <strong>ACTIVITY DW Club</strong> prijimate a súhlasíte s tým, že sa budete riadiť podmienkami a ustanoveniami týchto všeobecných podmienok.
           </p>
         </section>
 
         <section class="section">
           <h2>2. Licencia na používanie</h2>
           <p>
-            <strong>ACTIVITY DW Club</strong> vám uděľuje povoleníue na používanie tejto webovej stránky na osobné, 
+            <strong>ACTIVITY DW Club</strong> vám udeľuje povolenie na používanie tejto webovej stránky na osobné, 
             nekomerčné účely. Jedná sa o udělenie licencie, nie o prenos vlastníctva. Pod touto licenciou nemôžete:
           </p>
           <ul>
-            <li>kopírovať alebo distribuíne obsah stránky bez súhlasu;</li>
+            <li>kopírovať alebo distribuovať obsah stránky bez súhlasu;</li>
             <li>používať obsah na komerčné účely;</li>
             <li>pokúšať sa dekompilovať alebo reverzne inžinyriť kód webovej stránky;</li>
             <li>odstrániť označenia autorských práv alebo iné vlastnícke označenia;</li>
@@ -34,7 +34,7 @@
         <section class="section">
           <h2>3. Informácie o trasách</h2>
           <p>
-            Všetky informácie o trasách, vrátane trás, úrovní obtiaznosti a popisov, sú poskytované iba na 
+            Všetky informácie o trasách, vrátane trás, úrovní náročnosti a popisov, sú poskytované iba na 
             informačné účely. Používatelia sú zodpovední za svoju vlastnú bezpečnosť a mali by si overiť všetky informácie pred začatím akejkoľvek aktivity.
           </p>
         </section>
@@ -44,7 +44,7 @@
           <p>
             Obsah na <strong>ACTIVITY DW Club</strong> je poskytovaný 'tak ako je'. 
             Neposkytujeme žiadne záruky, vyslovné ani implicitné, o presnosti, 
-            úplnosti alebo spolählivosti informácií o trasách.
+            úplnosti alebo spoľahlivosti informácií o trasách.
           </p>
         </section>
 

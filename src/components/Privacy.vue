@@ -33,11 +33,11 @@
         <section class="section">
           <h2>2. GitHub Pages Hosting</h2>
           <p>
-            Táto webová stránka je hostovaná na <strong>GitHub Pages</strong>, čo značí:
+            Táto webová stránka je hostovaná na <strong>GitHub Pages</strong>, čo znamená:
           </p>
           <ul>
             <li>Stránka je statická a nemá vlastný server na spracovanie údajov</li>
-            <li>Všetky údaje sú spracované lokalne vo vašom prehliadači</li>
+            <li>Všetky údaje sú spracované lokálne vo vašom prehliadači</li>
             <li>Nemôžeme zhromažďovať ani uchovávať údaje na serveri</li>
             <li>GitHub môže zachytiť základné informácie o návštevnosti (ako každá webová stránka), ale ACTIVITY DW Club k nim nemá prístup</li>
           </ul>
@@ -49,25 +49,25 @@
             Jedinou informáciou, ktorá sa uchováva, sú:
           </p>
           <ul>
-            <li><strong>Preferences filtrov:</strong> Ukladané lokalne vo vašom prehliadači pre lepšú užívateľskú skúdosť</li>
+            <li><strong>Predvoľby filtrov:</strong> Ukladané lokálne vo vašom prehliadači pre lepšiu užívateľskú skúsenosť</li>
             <li><strong>Súhlas s cookies:</strong> Informácia o tom, že ste si prečítali túto poznámku</li>
           </ul>
           <p>
-            Tieto údaje sú ukladané iba lokalne vo vašom prehliadači a nikdy sa neposielajna server.
+            Tieto údaje sú ukladané iba lokálne vo vašom prehliadači a nikdy sa neposielajú na server.
           </p>
         </section>
 
         <section class="section">
           <h2>4. Cookies</h2>
           <p>
-            <strong>Nepoužívame žiadne sledovacie cookies.</strong> Jediné cookies, ktoré používame sú:
+            <strong>Nepoužívame žiadne sledovacie cookies.</strong> Jediné cookies, ktoré používame, sú:
           </p>
           <ul>
             <li>Lokálne úložisko prehliadača na zapamätanie vašich preferencií</li>
             <li>Session storage na dočasné údaje počas používania stránky</li>
           </ul>
           <p>
-            Žiadne z týchto údajov nie sú odosielané na externé servery.
+            Žiadne z týchto údajov sa neodosielajú na externé servery.
           </p>
         </section>
 
@@ -87,7 +87,7 @@
           <ul>
             <li>Môžete vymazať lokálne údaje prehliadača kedykoľvek</li>
             <li>Môžete vypnúť JavaScript a stránka bude štále fungovať</li>
-            <li>Môžete používať režim inkognito/súkromné prehliadače</li>
+            <li>Môžete používať režim inkognito alebo súkromné prehliadače</li>
             <li>Nemáme žiadne údaje na vymazanie ani prenos</li>
           </ul>
         </section>
