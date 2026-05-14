@@ -121,12 +121,13 @@
           </router-link>
         </div>
 
-        <!-- Search Bar -->
-        <div 
-          class="search-container" 
-          :class="{ 'search-expanded': isSearchExpanded }"
-          ref="searchContainer"
-        >
+        <div class="header-actions" ref="authMenu">
+          <!-- Search Bar -->
+          <div 
+            class="search-container" 
+            :class="{ 'search-expanded': isSearchExpanded }"
+            ref="searchContainer"
+          >
           <input
             v-model="searchQuery"
             @input="handleSearch"
@@ -139,12 +140,116 @@
             class="search-icon"
             @click="toggleSearch"
             :class="{ 'search-icon-active': isSearchExpanded }"
+            aria-label="Search"
           >
             🔍
           </button>
+          </div>
+
+          <button
+            class="login-button"
+            type="button"
+            @click="toggleAuthMenu"
+            :aria-expanded="isAuthMenuOpen"
+            aria-controls="auth-menu"
+          >
+            {{ authUser ? 'Account' : 'Login' }}
+          </button>
+
         </div>
       </div>
     </header>
+
+    <div
+      v-if="isAuthMenuOpen"
+      class="auth-popup-overlay"
+      @click="closeAuthMenu"
+    >
+      <section
+        id="auth-menu"
+        class="auth-popup"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="auth-popup-title"
+        @click.stop
+      >
+        <div class="auth-menu-header">
+          <h2 id="auth-popup-title">{{ authPopupTitle }}</h2>
+          <button
+            class="auth-close"
+            type="button"
+            @click="closeAuthMenu"
+            aria-label="Close login menu"
+          >
+            x
+          </button>
+        </div>
+
+        <div v-if="authUser" class="auth-account">
+          <p class="auth-user-email">{{ authUser.email }}</p>
+          <button class="auth-option-button auth-option-secondary" type="button" @click="signOut" :disabled="authLoading">
+            Sign out
+          </button>
+        </div>
+
+        <template v-else>
+          <div class="auth-tabs" role="tablist" aria-label="Authentication mode">
+            <button
+              class="auth-tab"
+              type="button"
+              :class="{ active: authMode === 'login' }"
+              @click="setAuthMode('login')"
+            >
+              Login
+            </button>
+            <button
+              class="auth-tab"
+              type="button"
+              :class="{ active: authMode === 'register' }"
+              @click="setAuthMode('register')"
+            >
+              Register
+            </button>
+          </div>
+
+          <form class="auth-form" @submit.prevent="submitAuth">
+            <label class="auth-field">
+              <span>Email</span>
+              <input
+                v-model.trim="authEmail"
+                type="email"
+                autocomplete="email"
+                required
+                placeholder="you@example.com"
+              />
+            </label>
+
+            <label class="auth-field">
+              <span>Password</span>
+              <input
+                v-model="authPassword"
+                type="password"
+                :autocomplete="authMode === 'register' ? 'new-password' : 'current-password'"
+                required
+                minlength="6"
+                placeholder="Minimum 6 characters"
+              />
+            </label>
+
+            <button class="auth-option-button" type="submit" :disabled="authLoading">
+              {{ authLoading ? 'Working...' : authSubmitLabel }}
+            </button>
+          </form>
+        </template>
+
+        <p v-if="authError" class="auth-message auth-message-error">
+          {{ authError }}
+        </p>
+        <p v-if="authMessage" class="auth-message auth-message-success">
+          {{ authMessage }}
+        </p>
+      </section>
+    </div>
 
     <!-- Menu Overlay -->
     <div 
@@ -198,6 +303,7 @@
 
 <script>
 import CookieBanner from './components/CookieBanner.vue'
+import { isSupabaseConfigured, supabase } from './lib/supabase'
 
 export default {
   name: 'App',
@@ -207,7 +313,16 @@ export default {
   data() {
     return {
       isMenuOpen: false,
+      isAuthMenuOpen: false,
       isSearchExpanded: false,
+      authMode: 'login',
+      authEmail: '',
+      authPassword: '',
+      authLoading: false,
+      authMessage: '',
+      authError: '',
+      authUser: null,
+      authSubscription: null,
       searchQuery: '',
       filters: {
         sport: '',
@@ -217,12 +332,107 @@ export default {
       }
     }
   },
+  computed: {
+    authPopupTitle() {
+      if (this.authUser) {
+        return 'Account'
+      }
+
+      return this.authMode === 'register' ? 'Create account' : 'Login'
+    },
+    authSubmitLabel() {
+      return this.authMode === 'register' ? 'Create account' : 'Login with email'
+    }
+  },
   methods: {
     toggleMenu() {
       this.isMenuOpen = !this.isMenuOpen
     },
     closeMenu() {
       this.isMenuOpen = false
+    },
+    toggleAuthMenu() {
+      this.isAuthMenuOpen = !this.isAuthMenuOpen
+      if (this.isAuthMenuOpen) {
+        this.closeMenu()
+        this.collapseSearch()
+      }
+    },
+    closeAuthMenu() {
+      this.isAuthMenuOpen = false
+    },
+    setAuthMode(mode) {
+      this.authMode = mode
+      this.authError = ''
+      this.authMessage = ''
+    },
+    async submitAuth() {
+      this.authError = ''
+      this.authMessage = ''
+
+      if (!isSupabaseConfigured || !supabase) {
+        this.authError = 'Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY.'
+        return
+      }
+
+      this.authLoading = true
+
+      try {
+        const credentials = {
+          email: this.authEmail,
+          password: this.authPassword
+        }
+
+        const { data, error } = this.authMode === 'register'
+          ? await supabase.auth.signUp(credentials)
+          : await supabase.auth.signInWithPassword(credentials)
+
+        if (error) {
+          throw error
+        }
+
+        if (this.authMode === 'register' && !data.session) {
+          this.authMessage = 'Account created. Check your email to confirm registration.'
+          return
+        }
+
+        this.authUser = data.user
+        this.authMessage = this.authMode === 'register' ? 'Account created.' : 'Logged in.'
+        this.authPassword = ''
+        this.closeAuthMenu()
+      } catch (error) {
+        this.authError = error.message || 'Authentication failed. Please try again.'
+      } finally {
+        this.authLoading = false
+      }
+    },
+    async signOut() {
+      this.authError = ''
+      this.authMessage = ''
+
+      if (!supabase) {
+        this.authError = 'Supabase is not configured.'
+        return
+      }
+
+      this.authLoading = true
+
+      try {
+        const { error } = await supabase.auth.signOut()
+
+        if (error) {
+          throw error
+        }
+
+        this.authUser = null
+        this.authEmail = ''
+        this.authPassword = ''
+        this.authMessage = 'Signed out.'
+      } catch (error) {
+        this.authError = error.message || 'Sign out failed. Please try again.'
+      } finally {
+        this.authLoading = false
+      }
     },
     handleMenuClick(event) {
       // Prevent the menu from closing when clicking inside it
@@ -270,17 +480,39 @@ export default {
       if (this.isSearchExpanded && !this.$refs.searchContainer?.contains(event.target)) {
         this.collapseSearch()
       }
+
+    },
+    handleKeydown(event) {
+      if (event.key === 'Escape') {
+        this.closeAuthMenu()
+      }
     }
   },
   mounted() {
     document.addEventListener('click', this.handleGlobalClick)
+    document.addEventListener('keydown', this.handleKeydown)
+
+    if (supabase) {
+      supabase.auth.getSession().then(({ data }) => {
+        this.authUser = data.session?.user || null
+      })
+
+      const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+        this.authUser = session?.user || null
+      })
+
+      this.authSubscription = data.subscription
+    }
   },
   unmounted() {
     document.removeEventListener('click', this.handleGlobalClick)
+    document.removeEventListener('keydown', this.handleKeydown)
+    this.authSubscription?.unsubscribe()
   },
   watch: {
     $route() {
       this.closeMenu()
+      this.closeAuthMenu()
     }
   }
 }
