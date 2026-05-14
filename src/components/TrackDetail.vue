@@ -27,8 +27,8 @@
       <div class="track-title-section">
         <h1 class="track-title">{{ track.name }}</h1>
         <div class="track-meta-badges">
-          <span class="meta-badge sport-meta" :title="getSportTitle(track.sport)">
-            <img class="meta-icon" :src="getSportIcon(track.sport)" :alt="getSportTitle(track.sport)" /> {{ getSportTitle(track.sport) }}
+          <span class="meta-badge sport-meta" :title="getSportTitle(track)">
+            <img class="meta-icon" :src="getSportIcon(track)" :alt="getSportTitle(track)" /> {{ getSportTitle(track) }}
           </span>
           <span class="meta-badge difficulty-meta" :title="getDifficultyTitle(track.difficulty)">
             <img class="meta-icon" :src="getDifficultyIcon(track.difficulty)" :alt="getDifficultyTitle(track.difficulty)" /> {{ getDifficultyTitle(track.difficulty) }}
@@ -55,7 +55,7 @@
           
           <div class="track-stats-unified">
             <div class="unified-stat-item">
-              <img class="stat-icon" src="/assets/icons/lenght-of-track.jpg" alt="Distance" />
+              <img class="stat-icon" src="/assets/icons/lenght-of-track.jpg" alt="Vzdialenosť" />
               <div class="stat-content">
                 <div class="stat-label">Vzdialenosť</div>
                 <div class="stat-value">{{ track.distance }}</div>
@@ -63,7 +63,7 @@
             </div>
             <div class="stat-separator"></div>
             <div class="unified-stat-item">
-              <img class="stat-icon" src="/assets/icons/duration.jpg" alt="Duration" />
+              <img class="stat-icon" src="/assets/icons/duration.jpg" alt="Trvanie" />
               <div class="stat-content">
                 <div class="stat-label">Trvanie</div>
                 <div class="stat-value">{{ track.duration }}</div>
@@ -71,7 +71,7 @@
             </div>
             <div class="stat-separator"></div>
             <div class="unified-stat-item">
-              <img class="stat-icon" src="/assets/icons/profil-elevation.jpg" alt="Elevation" />
+              <img class="stat-icon" src="/assets/icons/profil-elevation.jpg" alt="Prevýšenie" />
               <div class="stat-content">
                 <div class="stat-label">Prevýšenie</div>
                 <div class="stat-value">{{ track.elevation }}</div>
@@ -79,11 +79,22 @@
             </div>
           </div>
 
+          <div class="track-map-action" v-if="track.mapUrl">
+            <a
+              :href="track.mapUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="action-button primary"
+            >
+              Otvoriť trasu na Mapy.com
+            </a>
+          </div>
+
         </div>
       </div>
       
-      <!-- GPX Download Button -->
-      <div class="action-buttons">
+      <!-- Tlačidlo na stiahnutie GPX -->
+      <div class="action-buttons" v-if="track.gpxFile">
         <button 
           @click="downloadGPX" 
           class="action-button secondary"
@@ -134,6 +145,7 @@
 
 <script>
 import { getTrackById } from '../data/tracks.js'
+import { getAdminTrailById } from '../data/customTrails'
 
 export default {
   name: 'TrackDetail',
@@ -167,16 +179,15 @@ export default {
     }
   },
   methods: {
-    loadTrack() {
+    async loadTrack() {
       try {
         this.loading = true
-        this.track = getTrackById(this.id)
+        this.track = getTrackById(this.id) || await getAdminTrailById(this.id)
         if (!this.track) {
           this.error = 'Trasu sa nepodarilo nájsť'
         } else {
           this.error = null
-          // No need for complex gallery loading - just set empty array
-          this.validGalleryImages = []
+          this.validGalleryImages = this.track.galleryImages || []
         }
       } catch (error) {
         console.error('Error loading track:', error)
@@ -188,27 +199,41 @@ export default {
     goBack() {
       this.$router.push('/')
     },
-    getSportIcon(sport) {
+    getSportIcon(track) {
       // All tracks are MTB tracks now
       return '/assets/icons/icon-for-mtb.jpg'
     },
     getDifficultyIcon(difficulty) {
       const icons = {
+        beginner: '/assets/icons/easy bike-track.jpg',
         easy: '/assets/icons/easy bike-track.jpg',
         moderate: '/assets/icons/medium-bike-track.jpg',
-        hard: '/assets/icons/harb-bike-track.jpg'
+        hard: '/assets/icons/harb-bike-track.jpg',
+        expert: '/assets/icons/harb-bike-track.jpg'
       }
       return icons[difficulty] || '/assets/icons/medium-bike-track.jpg'
     },
-    getSportTitle(sport) {
-      // All tracks are MTB tracks now
-      return 'MTB Cyklistika'
+    getSportTitle(track) {
+      const titles = {
+        mtb: 'MTB trasa',
+        'cross-country': 'Cross-country / XC',
+        enduro: 'Enduro',
+        downhill: 'Zjazd',
+        gravel: 'Gravel',
+        road: 'Cestná cyklistika',
+        trekking: 'Trek / turistická',
+        'e-bike': 'E-bike'
+      }
+
+      return titles[track?.bikeType] || 'MTB Cyklistika'
     },
     getDifficultyTitle(difficulty) {
       const titles = {
+        beginner: 'Začiatočník',
         easy: 'Ľahká',
         moderate: 'Stredná',
-        hard: 'Náročná'
+        hard: 'Ťažká',
+        expert: 'Expertná'
       }
       return titles[difficulty] || 'Náročnosť'
     },

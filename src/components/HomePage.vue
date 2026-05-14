@@ -74,7 +74,7 @@
             
             <div class="track-content">
               <div class="track-badges">
-                <img class="sport-icon" :src="getSportIcon(track.sport)" :alt="getSportTitle(track.sport)" :title="getSportTitle(track.sport)" />
+                <img class="sport-icon" :src="getSportIcon(track)" :alt="getSportTitle(track)" :title="getSportTitle(track)" />
                 <img class="difficulty-icon" :src="getDifficultyIcon(track.difficulty)" :alt="getDifficultyTitle(track.difficulty)" :title="getDifficultyTitle(track.difficulty)" />
                 <div class="track-location">
                   <span class="location-icon">📍</span>
@@ -90,11 +90,11 @@
                   <span class="stat-value">{{ track.distance }}</span>
                 </div>
                 <div class="stat">
-                  <img class="stat-icon" src="/assets/icons/duration.jpg" alt="Duration" />
+                  <img class="stat-icon" src="/assets/icons/duration.jpg" alt="Trvanie" />
                   <span class="stat-value">{{ track.duration }}</span>
                 </div>
                 <div class="stat">
-                  <img class="stat-icon" src="/assets/icons/profil-elevation.jpg" alt="Elevation" />
+                  <img class="stat-icon" src="/assets/icons/profil-elevation.jpg" alt="Prevýšenie" />
                   <span class="stat-value">{{ track.elevation }}</span>
                 </div>
               </div>
@@ -116,6 +116,7 @@
 
 <script>
 import { getAllTracks } from '../data/tracks.js'
+import { getAdminTrails } from '../data/customTrails'
 
 export default {
   name: 'HomePage',
@@ -173,7 +174,7 @@ export default {
           track.name.toLowerCase().includes(query) ||
           track.description.toLowerCase().includes(query) ||
           track.location.toLowerCase().includes(query) ||
-          track.tags.some(tag => tag.toLowerCase().includes(query))
+          (track.tags || []).some(tag => tag.toLowerCase().includes(query))
         )
       }
 
@@ -181,42 +182,64 @@ export default {
     }
   },
   methods: {
-    loadTracks() {
+    async loadTracks() {
+      const staticTracks = getAllTracks()
+
+      this.tracks = staticTracks
+      this.loading = false
+      this.error = null
+
       try {
-        this.loading = true
-        this.tracks = getAllTracks()
+        const adminTrails = await getAdminTrails()
+        const adminTrailIds = new Set(adminTrails.map(track => track.id))
+        this.tracks = [
+          ...adminTrails,
+          ...staticTracks.filter(track => !adminTrailIds.has(track.id))
+        ]
         this.error = null
       } catch (error) {
-        console.error('Error loading tracks:', error)
-        this.error = 'Nepodarilo sa načítať trasy'
-      } finally {
-        this.loading = false
+        console.error('Error loading edited trails:', error)
+        this.tracks = staticTracks
       }
     },
     goToTrack(trackId) {
       this.$router.push({ name: 'TrackDetail', params: { id: trackId } })
     },
-    getSportIcon(sport) {
+    getSportIcon(track) {
       // All tracks are MTB tracks now
       return '/assets/icons/icon-for-mtb.jpg'
     },
-    getSportTitle(sport) {
-      // All tracks are MTB tracks now
-      return 'MTB Cyklistika'
+    getSportTitle(track) {
+      const titles = {
+        mtb: 'MTB trasa',
+        'cross-country': 'Cross-country / XC',
+        enduro: 'Enduro',
+        downhill: 'Zjazd',
+        gravel: 'Gravel',
+        road: 'Cestná cyklistika',
+        trekking: 'Trek / turistická',
+        'e-bike': 'E-bike'
+      }
+
+      return titles[track?.bikeType] || 'MTB Cyklistika'
     },
     getDifficultyIcon(difficulty) {
       const icons = {
+        beginner: '/assets/icons/easy bike-track.jpg',
         easy: '/assets/icons/easy bike-track.jpg',
         moderate: '/assets/icons/medium-bike-track.jpg',
-        hard: '/assets/icons/harb-bike-track.jpg'
+        hard: '/assets/icons/harb-bike-track.jpg',
+        expert: '/assets/icons/harb-bike-track.jpg'
       }
       return icons[difficulty] || '/assets/icons/medium-bike-track.jpg'
     },
     getDifficultyTitle(difficulty) {
       const titles = {
+        beginner: 'Začiatočník',
         easy: 'Ľahká',
         moderate: 'Stredná',
-        hard: 'Náročná'
+        hard: 'Ťažká',
+        expert: 'Expertná'
       }
       return titles[difficulty] || 'Náročnosť'
     },

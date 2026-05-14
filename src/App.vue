@@ -28,6 +28,21 @@
                 </router-link>
               </div>
               
+              <div v-if="canAddTrails || isAdmin" class="menu-admin">
+                <router-link v-if="canAddTrails" to="/admin/trails/new" @click="closeMenu" class="menu-item">
+                  + Pridať trasu
+                </router-link>
+                <router-link v-if="canAddTrails" to="/admin/trail-drafts" @click="closeMenu" class="menu-item">
+                  Rozpracované trasy
+                </router-link>
+                <router-link v-if="isAdmin" to="/admin/manage-trails" @click="closeMenu" class="menu-item">
+                  Správa trás
+                </router-link>
+                <router-link v-if="isAdmin" to="/admin/roles" @click="closeMenu" class="menu-item">
+                  Správa rolí
+                </router-link>
+              </div>
+
               <!-- Filters (only show on home page) -->
               <div v-if="$route.name === 'Home'" class="filters">
                 <h3>Filtre</h3>
@@ -146,6 +161,17 @@
           </button>
           </div>
 
+          <router-link
+            v-if="canAddTrails"
+            to="/admin/trails/new"
+            class="admin-add-button"
+            title="Pridať trasu"
+            aria-label="Pridať trasu"
+            @click="closeMenu"
+          >
+            + Trasa
+          </router-link>
+
           <button
             class="login-button"
             type="button"
@@ -153,7 +179,7 @@
             :aria-expanded="isAuthMenuOpen"
             aria-controls="auth-menu"
           >
-            {{ authUser ? 'Account' : 'Login' }}
+            {{ authUser ? 'Účet' : 'Prihlásiť' }}
           </button>
 
         </div>
@@ -187,8 +213,9 @@
 
         <div v-if="authUser" class="auth-account">
           <p class="auth-user-email">{{ authUser.email }}</p>
+          <p v-if="roleLabel" class="auth-admin-badge">{{ roleLabel }}</p>
           <button class="auth-option-button auth-option-secondary" type="button" @click="signOut" :disabled="authLoading">
-            Sign out
+            Odhlásiť sa
           </button>
         </div>
 
@@ -200,7 +227,7 @@
               :class="{ active: authMode === 'login' }"
               @click="setAuthMode('login')"
             >
-              Login
+              Prihlásenie
             </button>
             <button
               class="auth-tab"
@@ -208,7 +235,7 @@
               :class="{ active: authMode === 'register' }"
               @click="setAuthMode('register')"
             >
-              Register
+              Registrácia
             </button>
           </div>
 
@@ -232,12 +259,12 @@
                 :autocomplete="authMode === 'register' ? 'new-password' : 'current-password'"
                 required
                 minlength="6"
-                placeholder="Minimum 6 characters"
+                placeholder="Minimálne 6 znakov"
               />
             </label>
 
             <button class="auth-option-button" type="submit" :disabled="authLoading">
-              {{ authLoading ? 'Working...' : authSubmitLabel }}
+              {{ authLoading ? 'Pracujem...' : authSubmitLabel }}
             </button>
           </form>
         </template>
@@ -261,6 +288,10 @@
       <router-view 
         :filters="filters" 
         :search-query="searchQuery"
+        :auth-user="authUser"
+        :is-admin="isAdmin"
+        :can-add-trails="canAddTrails"
+        :user-role="userRole"
         @update-filters="updateFilters"
       />
     </main>
@@ -303,6 +334,8 @@
 
 <script>
 import CookieBanner from './components/CookieBanner.vue'
+import { ROLE_LABELS, ROLES, canAddTrails as roleCanAddTrails, isAdminEmail } from './config/admin'
+import { getRoleForEmail } from './data/roles'
 import { isSupabaseConfigured, supabase } from './lib/supabase'
 
 export default {
@@ -323,6 +356,7 @@ export default {
       authError: '',
       authUser: null,
       authSubscription: null,
+      userRole: ROLES.USER,
       searchQuery: '',
       filters: {
         sport: '',
@@ -335,13 +369,22 @@ export default {
   computed: {
     authPopupTitle() {
       if (this.authUser) {
-        return 'Account'
+        return 'Účet'
       }
 
-      return this.authMode === 'register' ? 'Create account' : 'Login'
+      return this.authMode === 'register' ? 'Vytvoriť účet' : 'Prihlásenie'
     },
     authSubmitLabel() {
-      return this.authMode === 'register' ? 'Create account' : 'Login with email'
+      return this.authMode === 'register' ? 'Vytvoriť účet' : 'Prihlásiť emailom'
+    },
+    isAdmin() {
+      return this.userRole === ROLES.ADMIN || isAdminEmail(this.authUser?.email)
+    },
+    canAddTrails() {
+      return roleCanAddTrails(this.userRole)
+    },
+    roleLabel() {
+      return this.authUser ? ROLE_LABELS[this.userRole] : ''
     }
   },
   methods: {
@@ -371,7 +414,7 @@ export default {
       this.authMessage = ''
 
       if (!isSupabaseConfigured || !supabase) {
-        this.authError = 'Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY.'
+        this.authError = 'Supabase nie je nastavený. Doplň VITE_SUPABASE_URL a VITE_SUPABASE_PUBLISHABLE_KEY.'
         return
       }
 
@@ -392,16 +435,17 @@ export default {
         }
 
         if (this.authMode === 'register' && !data.session) {
-          this.authMessage = 'Account created. Check your email to confirm registration.'
+          this.authMessage = 'Účet bol vytvorený. Skontroluj email a potvrď registráciu.'
           return
         }
 
         this.authUser = data.user
-        this.authMessage = this.authMode === 'register' ? 'Account created.' : 'Logged in.'
+        await this.refreshUserRole()
+        this.authMessage = this.authMode === 'register' ? 'Účet bol vytvorený.' : 'Prihlásenie prebehlo úspešne.'
         this.authPassword = ''
         this.closeAuthMenu()
       } catch (error) {
-        this.authError = error.message || 'Authentication failed. Please try again.'
+        this.authError = error.message || 'Prihlásenie zlyhalo. Skús to znova.'
       } finally {
         this.authLoading = false
       }
@@ -411,7 +455,7 @@ export default {
       this.authMessage = ''
 
       if (!supabase) {
-        this.authError = 'Supabase is not configured.'
+        this.authError = 'Supabase nie je nastavený.'
         return
       }
 
@@ -425,11 +469,12 @@ export default {
         }
 
         this.authUser = null
+        this.userRole = ROLES.USER
         this.authEmail = ''
         this.authPassword = ''
-        this.authMessage = 'Signed out.'
+        this.authMessage = 'Odhlásenie prebehlo úspešne.'
       } catch (error) {
-        this.authError = error.message || 'Sign out failed. Please try again.'
+        this.authError = error.message || 'Odhlásenie zlyhalo. Skús to znova.'
       } finally {
         this.authLoading = false
       }
@@ -486,6 +531,11 @@ export default {
       if (event.key === 'Escape') {
         this.closeAuthMenu()
       }
+    },
+    async refreshUserRole() {
+      this.userRole = this.authUser?.email
+        ? await getRoleForEmail(this.authUser.email)
+        : ROLES.USER
     }
   },
   mounted() {
@@ -495,10 +545,12 @@ export default {
     if (supabase) {
       supabase.auth.getSession().then(({ data }) => {
         this.authUser = data.session?.user || null
+        this.refreshUserRole()
       })
 
       const { data } = supabase.auth.onAuthStateChange((_event, session) => {
         this.authUser = session?.user || null
+        this.refreshUserRole()
       })
 
       this.authSubscription = data.subscription
