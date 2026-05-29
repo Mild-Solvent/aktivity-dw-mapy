@@ -66,6 +66,7 @@ vite.config.ts.timestamp-*
 
 # Local development
 .cache/
+.supabase-home/
 
 # Temporary folders
 tmp/
