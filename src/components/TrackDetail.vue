@@ -246,15 +246,33 @@ export default {
       // In a real implementation, you'd want to use the embed URL
       return this.track?.mapUrl || 'https://mapy.com/s/gokolovofa'
     },
-    downloadGPX() {
+    async downloadGPX() {
       if (this.track && this.track.gpxFile) {
-        // Create a temporary anchor element for download
+        const fileName = this.track.gpxFileName || `${this.track.name}.gpx`
         const link = document.createElement('a')
-        link.href = this.track.gpxFile
-        link.download = `${this.track.name}.gpx`
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
+        let objectUrl = ''
+
+        try {
+          const response = await fetch(this.track.gpxFile)
+          if (!response.ok) {
+            throw new Error('Download failed')
+          }
+
+          const blob = await response.blob()
+          objectUrl = window.URL.createObjectURL(blob)
+          link.href = objectUrl
+        } catch (error) {
+          link.href = this.track.gpxFile
+        } finally {
+          link.download = fileName
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
+
+          if (objectUrl) {
+            window.URL.revokeObjectURL(objectUrl)
+          }
+        }
       }
     },
     getDifficultyText(difficulty) {

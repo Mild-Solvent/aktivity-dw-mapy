@@ -138,6 +138,15 @@
               <img v-if="photoPreview" :src="photoPreview" alt="Vybraná fotka trasy" class="photo-preview" />
             </div>
 
+            <div class="form-field form-field-wide">
+              <span>GPX súbor trasy</span>
+              <label class="photo-dropzone">
+                <input :required="!form.gpxFile" accept=".gpx,application/gpx+xml,application/xml,text/xml" type="file" @change="handleGpxSelected" />
+                <span>{{ gpxFile ? gpxFile.name : (form.gpxFileName || 'Vybrať GPX súbor z počítača') }}</span>
+              </label>
+              <p v-if="form.gpxFile" class="file-status">GPX súbor je pripravený na stiahnutie pri detaile trasy.</p>
+            </div>
+
             <label class="form-field">
               <span>Štítky</span>
               <input v-model.trim="tagText" type="text" placeholder="cyklistika, narocne, trail" />
@@ -201,6 +210,8 @@ const emptyForm = () => ({
   elevationUp: '',
   elevationDown: '',
   mapUrl: '',
+  gpxFile: '',
+  gpxFileName: '',
   createdAt: new Date().toISOString().slice(0, 10)
 })
 
@@ -229,6 +240,7 @@ export default {
       form: emptyForm(),
       tagText: '',
       photoFile: null,
+      gpxFile: null,
       photoPreview: '',
       saving: false,
       message: '',
@@ -284,6 +296,26 @@ export default {
         this.photoPreview = dataUrl
       })
     },
+    handleGpxSelected(event) {
+      const [file] = event.target.files || []
+      this.gpxFile = file || null
+
+      if (!file) {
+        this.form.gpxFile = ''
+        this.form.gpxFileName = ''
+        return
+      }
+
+      if (!file.name.toLowerCase().endsWith('.gpx')) {
+        this.error = 'Vyber súbor vo formáte .gpx.'
+        this.gpxFile = null
+        event.target.value = ''
+        return
+      }
+
+      this.error = ''
+      this.form.gpxFileName = file.name
+    },
     readFileAsDataUrl(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader()
@@ -330,6 +362,53 @@ export default {
 
       return data.publicUrl
     },
+    async uploadGpx() {
+      if (!this.gpxFile && this.form.gpxFile) {
+        return {
+          url: this.form.gpxFile,
+          name: this.form.gpxFileName
+        }
+      }
+
+      if (!this.gpxFile) {
+        throw new Error('Najprv vyber GPX súbor trasy.')
+      }
+
+      if (!isSupabaseConfigured || !supabase) {
+        return {
+          url: await this.readFileAsDataUrl(this.gpxFile),
+          name: this.gpxFile.name
+        }
+      }
+
+      const filePath = `${this.form.id || Date.now()}/track-${Date.now()}.gpx`
+      const { error } = await this.withTimeout(
+        supabase.storage
+          .from('trail-files')
+          .upload(filePath, this.gpxFile, {
+            cacheControl: '3600',
+            contentType: 'application/gpx+xml',
+            upsert: true
+          }),
+        12000,
+        'Nahrávanie GPX súboru trvá príliš dlho.'
+      )
+
+      if (error) {
+        throw new Error(error.message === 'Bucket not found'
+          ? 'Chýba Supabase Storage bucket "trail-files".'
+          : error.message)
+      }
+
+      const { data } = supabase.storage
+        .from('trail-files')
+        .getPublicUrl(filePath)
+
+      return {
+        url: data.publicUrl,
+        name: this.gpxFile.name
+      }
+    },
     withTimeout(promise, timeoutMs, message) {
       let timeoutId
       const timeout = new Promise((_, reject) => {
@@ -340,7 +419,7 @@ export default {
         window.clearTimeout(timeoutId)
       })
     },
-    buildTrail(photoUrl) {
+    buildTrail(photoUrl, gpx = {}) {
       const tags = this.tagText
         .split(',')
         .map(tag => tag.trim())
@@ -350,6 +429,8 @@ export default {
         ...this.form,
         previewImage: photoUrl,
         galleryImages: photoUrl ? [photoUrl] : [],
+        gpxFile: gpx.url || this.form.gpxFile || '',
+        gpxFileName: gpx.name || this.form.gpxFileName || '',
         distance: this.formattedDistance,
         distanceValue: Number(this.form.distanceKm),
         duration: this.formattedDuration,
@@ -392,7 +473,8 @@ export default {
 
       try {
         const photoUrl = await this.uploadPhoto()
-        trail = this.buildTrail(photoUrl)
+        const gpx = await this.uploadGpx()
+        trail = this.buildTrail(photoUrl, gpx)
 
         if (isSupabaseConfigured && supabase) {
           await this.withTimeout(
@@ -409,10 +491,23 @@ export default {
         this.form = emptyForm()
         this.tagText = ''
         this.photoFile = null
+        this.gpxFile = null
         this.photoPreview = ''
       } catch (error) {
         const fallbackPhoto = this.photoPreview || ''
-        trail = trail || this.buildTrail(fallbackPhoto)
+        const fallbackGpx = this.gpxFile
+          ? {
+              url: await this.readFileAsDataUrl(this.gpxFile),
+              name: this.gpxFile.name
+            }
+          : {
+              url: this.form.gpxFile,
+              name: this.form.gpxFileName
+            }
+        trail = trail || this.buildTrail(fallbackPhoto, {
+          url: fallbackGpx.url,
+          name: fallbackGpx.name
+        })
         this.saveLocalDraft(trail)
         this.error = `${error.message || 'Nepodarilo sa uložiť do Supabase.'} Uložené ako lokálny rozpracovaný návrh.`
       } finally {
@@ -447,6 +542,7 @@ export default {
       }
       this.tagText = (trail.tags || []).join(', ')
       this.photoPreview = trail.previewImage || ''
+      this.gpxFile = null
     }
   },
   mounted() {

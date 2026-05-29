@@ -825,6 +825,13 @@ body {
   width: 1px;
 }
 
+.file-status {
+  color: #475569;
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin: 0;
+}
+
 .photo-preview,
 .trail-preview-image {
   border-radius: 8px;
