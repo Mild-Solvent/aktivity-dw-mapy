@@ -71,6 +71,22 @@
       }
     }
     </script>
+  <!--
+    Single Page App: restore the URL that was encoded by 404.html.
+    This runs before Vue mounts, so the router sees the correct path.
+  -->
+  <script>
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      var p = params.get('p');
+      if (p) {
+        var q = params.get('q');
+        var hash = window.location.hash;
+        var url = p + (q ? '?' + q.replace(/~and~/g, '&') : '') + hash;
+        window.history.replaceState(null, null, url);
+      }
+    })();
+  </script>
 </head>
 
 <body>
