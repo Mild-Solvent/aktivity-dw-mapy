@@ -145,7 +145,7 @@
 
 <script>
 import { getTrackById } from '../data/tracks.js'
-import { getAdminTrailById } from '../data/customTrails'
+import { getAdminTrailById, getAdminTrailState } from '../data/customTrails'
 
 export default {
   name: 'TrackDetail',
@@ -182,7 +182,10 @@ export default {
     async loadTrack() {
       try {
         this.loading = true
-        this.track = getTrackById(this.id) || await getAdminTrailById(this.id)
+        const { deletedTrailIds } = await getAdminTrailState()
+        this.track = deletedTrailIds.has(this.id)
+          ? null
+          : await getAdminTrailById(this.id) || getTrackById(this.id)
         if (!this.track) {
           this.error = 'Trasu sa nepodarilo nájsť'
         } else {

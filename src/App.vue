@@ -35,7 +35,7 @@
                 <router-link v-if="canAddTrails" to="/admin/trail-drafts" @click="closeMenu" class="menu-item">
                   Rozpracované trasy
                 </router-link>
-                <router-link v-if="isAdmin" to="/admin/manage-trails" @click="closeMenu" class="menu-item">
+                <router-link v-if="canAddTrails" to="/admin/manage-trails" @click="closeMenu" class="menu-item">
                   Správa trás
                 </router-link>
                 <router-link v-if="isAdmin" to="/admin/roles" @click="closeMenu" class="menu-item">

@@ -846,6 +846,40 @@ body {
   width: 100%;
 }
 
+.mapy-preview-title {
+  color: #1f2937;
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 0.85rem;
+}
+
+.mapy-preview-loading {
+  background: #e2e8f0;
+  border-radius: 999px;
+  height: 8px;
+  margin-top: 0.9rem;
+  overflow: hidden;
+  width: min(320px, 100%);
+}
+
+.mapy-preview-loading-bar {
+  animation: mapy-preview-loading 1.1s ease-in-out infinite;
+  background: var(--primary);
+  border-radius: inherit;
+  height: 100%;
+  width: 45%;
+}
+
+@keyframes mapy-preview-loading {
+  0% {
+    transform: translateX(-110%);
+  }
+
+  100% {
+    transform: translateX(230%);
+  }
+}
+
 .trail-preview-image {
   flex: 0 0 160px;
   height: 110px;
@@ -902,6 +936,7 @@ body {
 
 .form-actions {
   display: flex;
+  gap: 0.75rem;
   justify-content: flex-end;
 }
 
@@ -958,6 +993,21 @@ body {
   font-weight: 800;
   padding: 0.7rem 1rem;
   text-decoration: none;
+}
+
+.admin-item-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.action-button.danger {
+  background: #dc2626;
+  color: white;
+}
+
+.action-button.danger:hover {
+  background: #b91c1c;
 }
 
 .role-form {

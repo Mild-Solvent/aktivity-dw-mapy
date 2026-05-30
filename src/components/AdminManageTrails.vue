@@ -1,9 +1,9 @@
 <template>
   <div class="admin-page">
     <div class="container">
-      <section v-if="!isAdmin" class="admin-access-panel">
-        <h1>Iba pre administrátora</h1>
-        <p>Všetky trasy môže spravovať iba administrátor.</p>
+      <section v-if="!canAddTrails" class="admin-access-panel">
+        <h1>Iba pre editorov trás</h1>
+        <p>Trasy môže spravovať iba administrátor alebo editor trás.</p>
       </section>
 
       <section v-else class="admin-form-shell">
@@ -24,9 +24,11 @@
               <h2>{{ trail.name }}</h2>
               <p>{{ trail.distance }} · {{ trail.duration }}</p>
             </div>
-            <router-link class="admin-inline-button" :to="`/admin/trails/${trail.id}/edit`">
-              Upraviť
-            </router-link>
+            <div class="admin-item-actions">
+              <router-link class="admin-inline-button" :to="`/admin/trails/${trail.id}/edit`">
+                Upraviť
+              </router-link>
+            </div>
           </article>
         </div>
       </section>
@@ -36,12 +38,16 @@
 
 <script>
 import { getAllTracks } from '../data/tracks'
-import { getAdminTrails } from '../data/customTrails'
+import { getAdminTrailState } from '../data/customTrails'
 
 export default {
   name: 'AdminManageTrails',
   props: {
     isAdmin: {
+      type: Boolean,
+      default: false
+    },
+    canAddTrails: {
       type: Boolean,
       default: false
     }
@@ -52,11 +58,11 @@ export default {
     }
   },
   async mounted() {
-    const adminTrails = await getAdminTrails()
+    const { trails: adminTrails, deletedTrailIds } = await getAdminTrailState()
     const adminIds = new Set(adminTrails.map(trail => trail.id))
     this.trails = [
       ...adminTrails,
-      ...getAllTracks().filter(trail => !adminIds.has(trail.id))
+      ...getAllTracks().filter(trail => !adminIds.has(trail.id) && !deletedTrailIds.has(trail.id))
     ]
   }
 }

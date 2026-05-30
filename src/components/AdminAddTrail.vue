@@ -126,15 +126,18 @@
 
             <label class="form-field form-field-wide">
               <span>Odkaz na Mapy</span>
-              <input v-model.trim="form.mapUrl" type="url" placeholder="https://mapy.com/s/..." />
+              <input v-model.trim="form.mapUrl" type="url" placeholder="https://mapy.com/s/..." @blur="generateMapyPreview(true)" />
             </label>
 
             <div class="form-field form-field-wide">
-              <span>Fotka trasy</span>
+              <span>Fotka trasy z Mapy</span>
               <label class="photo-dropzone">
-                <input :required="!photoPreview" accept="image/*" type="file" @change="handlePhotoSelected" />
-                <span>{{ photoFile ? photoFile.name : 'Vybrať fotku z počítača' }}</span>
+                <strong class="mapy-preview-title">Vlož link na Mapy</strong>
+                <div v-if="generatingPreview" class="mapy-preview-loading" aria-live="polite">
+                  <div class="mapy-preview-loading-bar"></div>
+                </div>
               </label>
+              <p class="file-status">Ak je vyplnený odkaz na Mapy, uloží sa vždy tento orezaný náhľad trasy.</p>
               <img v-if="photoPreview" :src="photoPreview" alt="Vybraná fotka trasy" class="photo-preview" />
             </div>
 
@@ -180,8 +183,17 @@
           <p v-if="error" class="auth-message auth-message-error">{{ error }}</p>
 
           <div class="form-actions">
+            <button
+              v-if="isEditing"
+              class="action-button danger"
+              type="button"
+              :disabled="saving"
+              @click="removeTrail"
+            >
+              Remove
+            </button>
             <button class="action-button primary" type="submit" :disabled="saving">
-              {{ saving ? 'Ukladám...' : (isEditing ? 'Uložiť trasu' : 'Pridať trasu') }}
+              {{ submitButtonLabel }}
             </button>
           </div>
         </form>
@@ -193,7 +205,7 @@
 <script>
 import { isSupabaseConfigured, supabase } from '../lib/supabase'
 import { getAllTracks } from '../data/tracks'
-import { getAdminTrailById, saveAdminTrail, saveLocalAdminTrail } from '../data/customTrails'
+import { getAdminTrailById, removeAdminTrail, saveAdminTrail, saveLocalAdminTrail } from '../data/customTrails'
 
 const emptyForm = () => ({
   id: '',
@@ -242,7 +254,12 @@ export default {
       photoFile: null,
       gpxFile: null,
       photoPreview: '',
+      generatedMapPreviewUrl: '',
+      lastGeneratedMapPreviewKey: '',
+      mapyPreviewTimer: null,
+      generatingPreview: false,
       saving: false,
+      savingStep: '',
       message: '',
       error: ''
     }
@@ -263,6 +280,13 @@ export default {
       const up = Number(this.form.elevationUp) || 0
       const down = Number(this.form.elevationDown) || 0
       return `up ${up} m / down ${down} m`
+    },
+    submitButtonLabel() {
+      if (this.savingStep) {
+        return this.savingStep
+      }
+
+      return this.isEditing ? 'Uložiť trasu' : 'Pridať trasu'
     }
   },
   methods: {
@@ -324,7 +348,134 @@ export default {
         reader.readAsDataURL(file)
       })
     },
+    getMapyPreviewKey() {
+      return `${this.form.id || ''}|${this.form.mapUrl || ''}`
+    },
+    getMapyPreviewId() {
+      return String(this.form.id || this.form.name || `trail-${Date.now()}`)
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9-]+/g, '-')
+        .replace(/^-+|-+$/g, '') || `trail-${Date.now()}`
+    },
+    isMapyUrl(value) {
+      try {
+        return new URL(value).hostname.includes('mapy.')
+      } catch {
+        return false
+      }
+    },
+    scheduleMapyPreview() {
+      window.clearTimeout(this.mapyPreviewTimer)
+
+      if (!this.isMapyUrl(this.form.mapUrl)) {
+        return
+      }
+
+      this.mapyPreviewTimer = window.setTimeout(() => {
+        this.generateMapyPreview(false, true)
+      }, 900)
+    },
+    async generateMapyPreview(force = false, silent = false) {
+      if (!this.form.mapUrl || this.generatingPreview) {
+        return this.generatedMapPreviewUrl || this.photoPreview || ''
+      }
+
+      if (!this.isMapyUrl(this.form.mapUrl)) {
+        if (!silent) {
+          this.error = 'Najprv vlož platný odkaz na Mapy.'
+        }
+        return ''
+      }
+
+      const previewKey = this.getMapyPreviewKey()
+      if (!force && this.generatedMapPreviewUrl && this.lastGeneratedMapPreviewKey === previewKey) {
+        return this.generatedMapPreviewUrl
+      }
+
+      this.generatingPreview = true
+      this.error = ''
+
+      try {
+        const response = await fetch('/api/mapy-preview', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            id: this.getMapyPreviewId(),
+            mapUrl: this.form.mapUrl
+          })
+        })
+        const data = await response.json()
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Nepodarilo sa vygenerovať náhľad z Mapy.')
+        }
+
+        this.generatedMapPreviewUrl = data.previewImage
+        this.lastGeneratedMapPreviewKey = previewKey
+        this.photoFile = null
+        this.photoPreview = data.previewImage
+        return data.previewImage
+      } catch (error) {
+        if (!silent) {
+          this.error = error.message || 'Nepodarilo sa vygenerovať náhľad z Mapy.'
+        }
+        return ''
+      } finally {
+        this.generatingPreview = false
+      }
+    },
+    async uploadGeneratedMapPreview(previewUrl) {
+      if (!previewUrl) {
+        return ''
+      }
+
+      if (!isSupabaseConfigured || !supabase) {
+        return previewUrl
+      }
+
+      const response = await fetch(previewUrl)
+      if (!response.ok) {
+        throw new Error('Nepodarilo sa načítať vygenerovaný náhľad z Mapy.')
+      }
+
+      const previewBlob = await response.blob()
+      const filePath = `${this.form.id || Date.now()}/mapy-preview-${Date.now()}.webp`
+      const { error } = await this.withTimeout(
+        supabase.storage
+          .from('trail-photos')
+          .upload(filePath, previewBlob, {
+            cacheControl: '31536000',
+            contentType: 'image/webp',
+            upsert: true
+          }),
+        12000,
+        'Nahrávanie náhľadu z Mapy trvá príliš dlho.'
+      )
+
+      if (error) {
+        throw new Error(error.message === 'Bucket not found'
+          ? 'Chýba Supabase Storage bucket "trail-photos".'
+          : error.message)
+      }
+
+      const { data } = supabase.storage
+        .from('trail-photos')
+        .getPublicUrl(filePath)
+
+      return data.publicUrl
+    },
     async uploadPhoto() {
+      if (this.form.mapUrl) {
+        const generatedPreview = await this.generateMapyPreview(true)
+        if (generatedPreview) {
+          return await this.uploadGeneratedMapPreview(generatedPreview)
+        }
+        throw new Error('Nepodarilo sa vygenerovať náhľad z Mapy.')
+      }
+
       if (!this.photoFile && this.form.previewImage) {
         return this.form.previewImage
       }
@@ -457,7 +608,47 @@ export default {
       }
     },
     saveLocalDraft(trail) {
-      saveLocalAdminTrail(trail)
+      try {
+        saveLocalAdminTrail(trail)
+      } catch (error) {
+        console.warn('Could not save local trail draft:', error)
+      }
+    },
+    async removeTrail() {
+      this.error = ''
+      this.message = ''
+
+      if (!this.canAddTrails || !this.id) {
+        this.error = 'Vyžaduje sa prístup editora trás.'
+        return
+      }
+
+      const confirmed = window.confirm(`Remove trail "${this.form.name || this.id}"?`)
+      if (!confirmed) {
+        return
+      }
+
+      this.saving = true
+      this.savingStep = 'Odstraňujem trasu...'
+
+      try {
+        await this.withTimeout(
+          removeAdminTrail({
+            trailId: this.id,
+            isStaticTrail: getAllTracks().some(track => track.id === this.id),
+            deletedBy: this.authUser?.email || null
+          }),
+          12000,
+          'Odstránenie trasy trvá príliš dlho.'
+        )
+        this.message = 'Trasa bola odstránená.'
+        this.$router.push('/admin/manage-trails')
+      } catch (error) {
+        this.error = error.message || 'Trasu sa nepodarilo odstrániť.'
+      } finally {
+        this.saving = false
+        this.savingStep = ''
+      }
     },
     async submitTrail() {
       this.error = ''
@@ -469,11 +660,14 @@ export default {
       }
 
       this.saving = true
+      this.savingStep = 'Nahrávam fotku...'
       let trail = null
 
       try {
         const photoUrl = await this.uploadPhoto()
+        this.savingStep = 'Nahrávam GPX...'
         const gpx = await this.uploadGpx()
+        this.savingStep = 'Ukladám trasu...'
         trail = this.buildTrail(photoUrl, gpx)
 
         if (isSupabaseConfigured && supabase) {
@@ -493,6 +687,9 @@ export default {
         this.photoFile = null
         this.gpxFile = null
         this.photoPreview = ''
+        this.generatedMapPreviewUrl = ''
+        this.lastGeneratedMapPreviewKey = ''
+        this.mapyPreviewTimer = null
       } catch (error) {
         const fallbackPhoto = this.photoPreview || ''
         const fallbackGpx = this.gpxFile
@@ -512,6 +709,7 @@ export default {
         this.error = `${error.message || 'Nepodarilo sa uložiť do Supabase.'} Uložené ako lokálny rozpracovaný návrh.`
       } finally {
         this.saving = false
+        this.savingStep = ''
       }
     },
     async loadTrailForEdit() {
@@ -542,11 +740,21 @@ export default {
       }
       this.tagText = (trail.tags || []).join(', ')
       this.photoPreview = trail.previewImage || ''
+      this.generatedMapPreviewUrl = trail.previewImage || ''
+      this.lastGeneratedMapPreviewKey = this.getMapyPreviewKey()
       this.gpxFile = null
     }
   },
   mounted() {
     this.loadTrailForEdit()
+  },
+  unmounted() {
+    window.clearTimeout(this.mapyPreviewTimer)
+  },
+  watch: {
+    'form.mapUrl'() {
+      this.scheduleMapyPreview()
+    }
   }
 }
 </script>

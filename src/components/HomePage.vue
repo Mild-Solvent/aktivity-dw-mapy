@@ -68,6 +68,7 @@
               <img 
                 :src="track.previewImage" 
                 :alt="track.name" 
+                :class="{ 'generated-map-preview': track.isGeneratedMapPreview }"
                 @error="handleImageError($event, track)"
               />
             </div>
@@ -116,7 +117,7 @@
 
 <script>
 import { getAllTracks } from '../data/tracks.js'
-import { getAdminTrails } from '../data/customTrails'
+import { getAdminTrailState } from '../data/customTrails'
 
 export default {
   name: 'HomePage',
@@ -190,11 +191,11 @@ export default {
       this.error = null
 
       try {
-        const adminTrails = await getAdminTrails()
+        const { trails: adminTrails, deletedTrailIds } = await getAdminTrailState()
         const adminTrailIds = new Set(adminTrails.map(track => track.id))
         this.tracks = [
           ...adminTrails,
-          ...staticTracks.filter(track => !adminTrailIds.has(track.id))
+          ...staticTracks.filter(track => !adminTrailIds.has(track.id) && !deletedTrailIds.has(track.id))
         ]
         this.error = null
       } catch (error) {

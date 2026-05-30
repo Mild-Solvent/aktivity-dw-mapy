@@ -2,7 +2,9 @@
 // All data taken directly from the track-info.json files in assets/tracks
 // Updated to use custom MTB icons and bike track difficulty icons
 
-export const tracks = [
+import { generatedPreviewImages } from './generatedPreviews.js'
+
+const baseTracks = [
   {
     id: "inovec-mitice-ostry-vrch",
     name: "Inovec Mitice Ostrý vrch",
@@ -364,6 +366,12 @@ export const tracks = [
     }
   }
 ];
+
+export const tracks = baseTracks.map(track => ({
+  ...track,
+  previewImage: generatedPreviewImages[track.id] || track.previewImage,
+  isGeneratedMapPreview: Boolean(generatedPreviewImages[track.id])
+}));
 
 // Simple helper functions
 export const getTrackById = (trackId) => {
