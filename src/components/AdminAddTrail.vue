@@ -397,7 +397,8 @@ export default {
       this.error = ''
 
       try {
-        const response = await fetch('/api/mapy-preview', {
+        const previewEndpoint = import.meta.env.VITE_MAPY_PREVIEW_ENDPOINT || '/api/mapy-preview'
+        const response = await fetch(previewEndpoint, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -407,6 +408,11 @@ export default {
             mapUrl: this.form.mapUrl
           })
         })
+        const contentType = response.headers.get('content-type') || ''
+        if (!contentType.includes('application/json')) {
+          throw new Error('Generovanie náhľadu z Mapy nie je dostupné na live statickej stránke. Treba nasadiť backend endpoint pre screenshoty.')
+        }
+
         const data = await response.json()
 
         if (!response.ok) {

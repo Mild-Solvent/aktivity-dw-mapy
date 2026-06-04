@@ -2,6 +2,52 @@ import { isSupabaseConfigured, supabase } from '../lib/supabase'
 
 const TRAIL_STORAGE_KEY = 'adminTrailDrafts'
 
+const firstString = (...values) => {
+  return values.find(value => typeof value === 'string' && value.trim()) || ''
+}
+
+const normalizeTrail = (trail) => {
+  if (!trail || typeof trail !== 'object') {
+    return trail
+  }
+
+  const gpxFile = firstString(
+    trail.gpxFile,
+    trail.gpxUrl,
+    trail.gpx_url,
+    trail.gpx?.url,
+    trail.gpx?.publicUrl,
+    trail.gpx?.publicURL
+  )
+  const gpxFileName = firstString(
+    trail.gpxFileName,
+    trail.gpxName,
+    trail.gpx_name,
+    trail.gpx?.name,
+    gpxFile ? decodeURIComponent(gpxFile.split('/').pop().split('?')[0]) : ''
+  )
+
+  return {
+    ...trail,
+    gpxFile,
+    gpxFileName
+  }
+}
+
+const mergeTrail = (currentTrail, nextTrail) => {
+  const current = normalizeTrail(currentTrail) || {}
+  const next = normalizeTrail(nextTrail) || {}
+
+  return {
+    ...current,
+    ...next,
+    previewImage: next.previewImage || current.previewImage || '',
+    galleryImages: next.galleryImages?.length ? next.galleryImages : current.galleryImages || [],
+    gpxFile: next.gpxFile || current.gpxFile || '',
+    gpxFileName: next.gpxFileName || current.gpxFileName || ''
+  }
+}
+
 export const getLocalAdminTrails = () => {
   if (typeof window === 'undefined') {
     return []
@@ -9,7 +55,7 @@ export const getLocalAdminTrails = () => {
 
   try {
     const trails = JSON.parse(window.localStorage.getItem(TRAIL_STORAGE_KEY) || '[]')
-    return Array.isArray(trails) ? trails : []
+    return Array.isArray(trails) ? trails.map(normalizeTrail) : []
   } catch (error) {
     console.warn('Could not read local admin trail drafts:', error)
     return []
@@ -46,7 +92,7 @@ export const getRemoteAdminTrails = async () => {
     }
 
     return (data || [])
-      .map(row => row.payload)
+      .map(row => normalizeTrail(row.payload))
       .filter(Boolean)
   } catch (error) {
     console.warn('Could not load Supabase trails:', error)
@@ -64,7 +110,7 @@ export const getAdminTrailState = async () => {
         deletedTrailIds.add(trail.id)
         trailsById.delete(trail.id)
       } else {
-        trailsById.set(trail.id, trail)
+        trailsById.set(trail.id, mergeTrail(trailsById.get(trail.id), trail))
         deletedTrailIds.delete(trail.id)
       }
     }
@@ -81,7 +127,7 @@ export const getAdminTrailState = async () => {
         deletedTrailIds.add(trail.id)
         trailsById.delete(trail.id)
       } else {
-        trailsById.set(trail.id, trail)
+        trailsById.set(trail.id, mergeTrail(trailsById.get(trail.id), trail))
         deletedTrailIds.delete(trail.id)
       }
     }
