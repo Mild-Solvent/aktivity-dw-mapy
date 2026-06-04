@@ -146,6 +146,7 @@
 <script>
 import { getTrackById } from '../data/tracks.js'
 import { getAdminTrailById, getAdminTrailState } from '../data/customTrails'
+import { isSupabaseConfigured, supabase } from '../lib/supabase'
 
 export default {
   name: 'TrackDetail',
@@ -249,14 +250,62 @@ export default {
       // In a real implementation, you'd want to use the embed URL
       return this.track?.mapUrl || 'https://mapy.com/s/gokolovofa'
     },
+    getTrailStorageId() {
+      return String(this.track?.id || this.id || '')
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9-]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+    },
+    async findStoredGpxUrl() {
+      if (!isSupabaseConfigured || !supabase) {
+        return ''
+      }
+
+      const storageTrailId = this.getTrailStorageId()
+      if (!storageTrailId) {
+        return ''
+      }
+
+      const { data, error } = await supabase.storage
+        .from('trail-files')
+        .list(storageTrailId, {
+          limit: 20,
+          sortBy: { column: 'created_at', order: 'desc' }
+        })
+
+      if (error) {
+        return ''
+      }
+
+      const gpxFile = (data || []).find(file => file.name?.toLowerCase().endsWith('.gpx'))
+      if (!gpxFile) {
+        return ''
+      }
+
+      const { data: publicUrlData } = supabase.storage
+        .from('trail-files')
+        .getPublicUrl(`${storageTrailId}/${gpxFile.name}`)
+
+      return publicUrlData.publicUrl || ''
+    },
     async downloadGPX() {
       if (this.track && this.track.gpxFile) {
         const fileName = this.track.gpxFileName || `${this.track.name}.gpx`
         const link = document.createElement('a')
         let objectUrl = ''
+        let gpxUrl = this.track.gpxFile
 
         try {
-          const response = await fetch(this.track.gpxFile)
+          let response = await fetch(gpxUrl)
+          if (!response.ok) {
+            const storedGpxUrl = await this.findStoredGpxUrl()
+            if (storedGpxUrl) {
+              gpxUrl = storedGpxUrl
+              response = await fetch(gpxUrl)
+            }
+          }
+
           if (!response.ok) {
             throw new Error('Download failed')
           }
@@ -265,7 +314,7 @@ export default {
           objectUrl = window.URL.createObjectURL(blob)
           link.href = objectUrl
         } catch (error) {
-          link.href = this.track.gpxFile
+          link.href = gpxUrl
         } finally {
           link.download = fileName
           document.body.appendChild(link)

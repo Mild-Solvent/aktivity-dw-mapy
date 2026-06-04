@@ -6,6 +6,27 @@ const firstString = (...values) => {
   return values.find(value => typeof value === 'string' && value.trim()) || ''
 }
 
+const getStorageTrailId = (value) => {
+  return String(value || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9-]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+const getDefaultGpxUrl = (trail) => {
+  const storageTrailId = getStorageTrailId(trail?.id)
+  if (!isSupabaseConfigured || !supabase || !storageTrailId) {
+    return ''
+  }
+
+  const { data } = supabase.storage
+    .from('trail-files')
+    .getPublicUrl(`${storageTrailId}/track.gpx`)
+
+  return data.publicUrl || ''
+}
+
 const normalizeTrail = (trail) => {
   if (!trail || typeof trail !== 'object') {
     return trail
@@ -17,7 +38,8 @@ const normalizeTrail = (trail) => {
     trail.gpx_url,
     trail.gpx?.url,
     trail.gpx?.publicUrl,
-    trail.gpx?.publicURL
+    trail.gpx?.publicURL,
+    getDefaultGpxUrl(trail)
   )
   const gpxFileName = firstString(
     trail.gpxFileName,

@@ -832,6 +832,109 @@ body {
   margin: 0;
 }
 
+/* GPX upload section */
+.gpx-section > span {
+  display: block;
+}
+
+.field-hint {
+  color: #94a3b8;
+  font-size: 0.78rem;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.gpx-banner {
+  align-items: flex-start;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+}
+
+.gpx-banner--warn {
+  background: #fffbeb;
+  border: 1.5px solid #fbbf24;
+}
+
+.gpx-banner--loaded {
+  background: #f0fdf4;
+  border: 1.5px solid #4ade80;
+}
+
+.gpx-banner--skipped {
+  background: #fff7ed;
+  border: 1.5px solid #fb923c;
+}
+
+.gpx-banner-text {
+  color: #374151;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.gpx-banner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.gpx-action-btn {
+  align-items: center;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.5rem 0.9rem;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.gpx-action-btn--primary {
+  background: var(--primary);
+  border: none;
+  color: white;
+}
+
+.gpx-action-btn--primary:hover {
+  filter: brightness(0.9);
+  transform: translateY(-1px);
+}
+
+.gpx-action-btn--skip {
+  background: transparent;
+  border: 1.5px solid #9ca3af;
+  color: #6b7280;
+}
+
+.gpx-action-btn--skip:hover {
+  background: #f3f4f6;
+  border-color: #6b7280;
+}
+
+.gpx-action-btn--secondary {
+  background: transparent;
+  border: 1.5px solid var(--primary);
+  color: var(--primary);
+}
+
+.gpx-action-btn--secondary:hover {
+  background: rgba(195, 34, 36, 0.06);
+  transform: translateY(-1px);
+}
+
+.gpx-status {
+  color: #374151;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.gpx-status--error {
+  color: #b91c1c;
+}
+
 .photo-preview,
 .trail-preview-image {
   border-radius: 8px;
@@ -1366,6 +1469,33 @@ body {
 .track-card:hover .track-image img {
   transform: scale(1.05);
 }
+
+.track-image-placeholder {
+  align-items: center;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 60%, #1e293b 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+  justify-content: center;
+  width: 100%;
+}
+
+.track-image-placeholder-icon {
+  filter: grayscale(0.3);
+  font-size: 2.5rem;
+  line-height: 1;
+  opacity: 0.55;
+}
+
+.track-image-placeholder-label {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
 
 
 .track-card .track-content {

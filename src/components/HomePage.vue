@@ -11,7 +11,7 @@
         <a href="https://www.ceaeurope.sk/" target="_blank" rel="noopener noreferrer" class="hero-logo-link hero-logo-desktop">
           <img src="/assets/icons/logo-cea.png" alt="CEA Logo" class="hero-logo hero-logo-right">
         </a>
-        
+
         <!-- Mobile layout - logos together -->
         <div class="hero-logos-container hero-logo-mobile">
           <img src="/assets/icons/aktivity-dw-logo.png" alt="Activity DW Logo" class="hero-logo hero-logo-left">
@@ -21,15 +21,15 @@
         </div>
       </div>
       <div class="footer-image">
-              <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
-              <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
-              <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
-              <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
-              <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
-              <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
-              <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
-              <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
-            </div>
+        <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
+        <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
+        <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
+        <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
+        <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
+        <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
+        <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
+        <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
+      </div>
     </div>
 
     <div class="container">
@@ -40,7 +40,7 @@
           <p>Načítavam trasy...</p>
         </div>
       </div>
-      
+
       <!-- Error State -->
       <div v-else-if="error" class="error-state">
         <div class="error-content">
@@ -50,7 +50,7 @@
           <button @click="loadTracks" class="retry-button">Skúsiť znova</button>
         </div>
       </div>
-      
+
       <!-- Main Content -->
       <div v-else>
         <div class="results-info">
@@ -58,21 +58,26 @@
         </div>
 
         <div class="tracks-grid">
-          <div 
-            v-for="track in filteredTracks" 
+          <div
+            v-for="track in filteredTracks"
             :key="track.id"
             class="track-card"
             @click="goToTrack(track.id)"
           >
             <div class="track-image">
-              <img 
-                :src="track.previewImage" 
-                :alt="track.name" 
+              <img
+                v-if="track.previewImage"
+                :src="track.previewImage"
+                :alt="track.name"
                 :class="{ 'generated-map-preview': track.isGeneratedMapPreview }"
                 @error="handleImageError($event, track)"
               />
+              <div v-else class="track-image-placeholder">
+                <span class="track-image-placeholder-icon">🗺</span>
+                <span class="track-image-placeholder-label">Bez náhľadu</span>
+              </div>
             </div>
-            
+
             <div class="track-content">
               <div class="track-badges">
                 <img class="sport-icon" :src="getSportIcon(track)" :alt="getSportTitle(track)" :title="getSportTitle(track)" />
@@ -84,7 +89,7 @@
               </div>
               <h3 class="track-title">{{ track.name }}</h3>
               <p class="track-description">{{ track.description }}</p>
-              
+
               <div class="track-stats">
                 <div class="stat">
                   <img class="stat-icon" src="/assets/icons/lenght-of-track.jpg" alt="Length" />
@@ -171,7 +176,7 @@ export default {
       // Apply search query
       if (this.searchQuery) {
         const query = this.searchQuery.toLowerCase()
-        filtered = filtered.filter(track => 
+        filtered = filtered.filter(track =>
           track.name.toLowerCase().includes(query) ||
           track.description.toLowerCase().includes(query) ||
           track.location.toLowerCase().includes(query) ||
@@ -207,7 +212,6 @@ export default {
       this.$router.push({ name: 'TrackDetail', params: { id: trackId } })
     },
     getSportIcon(track) {
-      // All tracks are MTB tracks now
       return '/assets/icons/icon-for-mtb.jpg'
     },
     getSportTitle(track) {
@@ -221,7 +225,6 @@ export default {
         trekking: 'Trek / turistická',
         'e-bike': 'E-bike'
       }
-
       return titles[track?.bikeType] || 'MTB Cyklistika'
     },
     getDifficultyIcon(difficulty) {

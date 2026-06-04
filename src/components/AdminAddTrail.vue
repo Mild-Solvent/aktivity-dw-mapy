@@ -129,25 +129,64 @@
               <input v-model.trim="form.mapUrl" type="url" placeholder="https://mapy.com/s/..." @blur="generateMapyPreview(true)" />
             </label>
 
-            <div class="form-field form-field-wide">
-              <span>Fotka trasy z Mapy</span>
-              <label class="photo-dropzone">
-                <strong class="mapy-preview-title">Vlož link na Mapy</strong>
-                <div v-if="generatingPreview" class="mapy-preview-loading" aria-live="polite">
-                  <div class="mapy-preview-loading-bar"></div>
+            <!-- GPX Upload — three-state banner -->
+            <div class="form-field form-field-wide gpx-section">
+              <span>GPX súbor trasy</span>
+
+              <!-- State 1: no GPX yet -->
+              <div v-if="!gpxFile && !gpxSkipped" class="gpx-banner gpx-banner--warn">
+                <span class="gpx-banner-text">🗺 GPX súbor je potrebný na automatické generovanie náhľadu mapy trasy.</span>
+                <div class="gpx-banner-actions">
+                  <label class="gpx-action-btn gpx-action-btn--primary">
+                    Nahrať GPX
+                    <input type="file" accept=".gpx" @change="handleGpxSelected" hidden />
+                  </label>
+                  <button type="button" class="gpx-action-btn gpx-action-btn--skip" @click="skipGpx">
+                    Nevadí mi to
+                  </button>
                 </div>
-              </label>
-              <p class="file-status">Ak je vyplnený odkaz na Mapy, uloží sa vždy tento orezaný náhľad trasy.</p>
-              <img v-if="photoPreview" :src="photoPreview" alt="Vybraná fotka trasy" class="photo-preview" />
+              </div>
+
+              <!-- State 2: GPX loaded -->
+              <div v-if="gpxFile" class="gpx-banner gpx-banner--loaded">
+                <span class="gpx-banner-text">✅ {{ gpxFile.name }}</span>
+                <div class="gpx-banner-actions">
+                  <label class="gpx-action-btn gpx-action-btn--secondary">
+                    Zmeniť GPX
+                    <input type="file" accept=".gpx" @change="handleGpxSelected" hidden />
+                  </label>
+                  <button
+                    v-if="gpxPreview && !gpxGenerating"
+                    type="button"
+                    class="gpx-action-btn gpx-action-btn--secondary"
+                    @click="regenerateGpxPreview"
+                  >
+                    🔄 Regenerovať
+                  </button>
+                </div>
+                <p v-if="gpxGenerating" class="gpx-status">⏳ Generujem náhľad mapy...</p>
+                <p v-if="gpxError" class="gpx-status gpx-status--error">⚠ {{ gpxError }}</p>
+              </div>
+
+              <!-- State 3: skipped -->
+              <div v-if="gpxSkipped && !gpxFile" class="gpx-banner gpx-banner--skipped">
+                <span class="gpx-banner-text">⚠ Bez GPX — trasa bude bez náhľadu mapy.</span>
+                <label class="gpx-action-btn gpx-action-btn--secondary">
+                  Pridať GPX
+                  <input type="file" accept=".gpx" @change="handleGpxSelected" hidden />
+                </label>
+              </div>
             </div>
 
+            <!-- Manual photo upload (optional override) -->
             <div class="form-field form-field-wide">
-              <span>GPX súbor trasy</span>
+              <span>Fotka trasy <em class="field-hint">(nepovinné — prepíše GPX náhľad)</em></span>
               <label class="photo-dropzone">
-                <input :required="!form.gpxFile" accept=".gpx,application/gpx+xml,application/xml,text/xml" type="file" @change="handleGpxSelected" />
-                <span>{{ gpxFile ? gpxFile.name : (form.gpxFileName || 'Vybrať GPX súbor z počítača') }}</span>
+                <input accept="image/*" type="file" @change="handlePhotoSelected" />
+                <span>{{ photoFile ? photoFile.name : 'Vybrať fotku z počítača' }}</span>
               </label>
-              <p v-if="form.gpxFile" class="file-status">GPX súbor je pripravený na stiahnutie pri detaile trasy.</p>
+              <p class="file-status">Ak je vyplnený odkaz na Mapy, uloží sa orezaný náhľad z Mapy. Inak sa použije GPX náhľad alebo vybraná fotka.</p>
+              <img v-if="photoPreview" :src="photoPreview" alt="Vybraná fotka trasy" class="photo-preview" />
             </div>
 
             <label class="form-field">
@@ -206,6 +245,7 @@
 import { isSupabaseConfigured, supabase } from '../lib/supabase'
 import { getAllTracks } from '../data/tracks'
 import { getAdminTrailById, removeAdminTrail, saveAdminTrail, saveLocalAdminTrail } from '../data/customTrails'
+import { gpxFileToPreviewPng, dataUrlToBlob } from '../utils/gpxMapCapture'
 
 const emptyForm = () => ({
   id: '',
@@ -258,6 +298,10 @@ export default {
       lastGeneratedMapPreviewKey: '',
       mapyPreviewTimer: null,
       generatingPreview: false,
+      gpxPreview: '',
+      gpxGenerating: false,
+      gpxError: '',
+      gpxSkipped: false,
       saving: false,
       savingStep: '',
       message: '',
@@ -320,25 +364,30 @@ export default {
         this.photoPreview = dataUrl
       })
     },
-    handleGpxSelected(event) {
+    async handleGpxSelected(event) {
       const [file] = event.target.files || []
       this.gpxFile = file || null
 
       if (!file) {
         this.form.gpxFile = ''
         this.form.gpxFileName = ''
+        this.gpxPreview = ''
         return
       }
 
       if (!file.name.toLowerCase().endsWith('.gpx')) {
         this.error = 'Vyber súbor vo formáte .gpx.'
         this.gpxFile = null
+        this.gpxPreview = ''
         event.target.value = ''
         return
       }
 
       this.error = ''
+      this.gpxError = ''
+      this.gpxSkipped = false
       this.form.gpxFileName = file.name
+      await this.generateGpxPreview()
     },
     readFileAsDataUrl(file) {
       return new Promise((resolve, reject) => {
@@ -473,6 +522,41 @@ export default {
 
       return data.publicUrl
     },
+    skipGpx() {
+      this.gpxSkipped = true
+      this.gpxFile = null
+      this.gpxPreview = ''
+      if (!this.photoFile) {
+        this.photoPreview = ''
+      }
+    },
+    async regenerateGpxPreview() {
+      if (!this.gpxFile) return
+      await this.generateGpxPreview()
+    },
+    async generateGpxPreview() {
+      this.gpxGenerating = true
+      this.gpxError = ''
+      try {
+        const dataUrl = await gpxFileToPreviewPng(this.gpxFile)
+        this.gpxPreview = dataUrl
+        if (!this.photoFile) {
+          this.photoPreview = dataUrl
+        }
+      } catch (err) {
+        this.gpxError = err.message || 'Nepodarilo sa vygenerovať náhľad.'
+        this.gpxPreview = ''
+      } finally {
+        this.gpxGenerating = false
+      }
+    },
+    getTrailStorageId() {
+      return String(this.form.id || this.form.name || `trail-${Date.now()}`)
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9-]+/g, '-')
+        .replace(/^-+|-+$/g, '') || `trail-${Date.now()}`
+    },
     async uploadPhoto() {
       if (this.form.mapUrl) {
         const generatedPreview = await this.generateMapyPreview(true)
@@ -482,24 +566,31 @@ export default {
         throw new Error('Nepodarilo sa vygenerovať náhľad z Mapy.')
       }
 
-      if (!this.photoFile && this.form.previewImage) {
+      if (!this.photoFile && !this.gpxPreview && this.form.previewImage) {
         return this.form.previewImage
       }
 
-      if (!this.photoFile) {
-        throw new Error('Najprv vyber fotku trasy.')
+      const hasManualPhoto = Boolean(this.photoFile)
+      const hasGpxPreview = Boolean(this.gpxPreview)
+
+      if (!hasManualPhoto && !hasGpxPreview) {
+        return ''
       }
 
       if (!isSupabaseConfigured || !supabase) {
-        return this.photoPreview || await this.readFileAsDataUrl(this.photoFile)
+        if (hasManualPhoto) {
+          return this.photoPreview || await this.readFileAsDataUrl(this.photoFile)
+        }
+        return this.gpxPreview
       }
 
-      const extension = this.photoFile.name.split('.').pop() || 'jpg'
-      const filePath = `${this.form.id || Date.now()}/preview-${Date.now()}.${extension}`
+      const fileBlob = hasManualPhoto ? this.photoFile : dataUrlToBlob(this.gpxPreview)
+      const extension = hasManualPhoto ? this.photoFile.name.split('.').pop() || 'jpg' : 'png'
+      const filePath = `${this.getTrailStorageId()}/preview-${Date.now()}.${extension}`
       const { error } = await this.withTimeout(
         supabase.storage
           .from('trail-photos')
-          .upload(filePath, this.photoFile, {
+          .upload(filePath, fileBlob, {
             cacheControl: '3600',
             upsert: true
           }),
@@ -538,7 +629,7 @@ export default {
         }
       }
 
-      const filePath = `${this.form.id || Date.now()}/track-${Date.now()}.gpx`
+      const filePath = `${this.getTrailStorageId()}/track.gpx`
       const { error } = await this.withTimeout(
         supabase.storage
           .from('trail-files')
@@ -696,6 +787,10 @@ export default {
         this.generatedMapPreviewUrl = ''
         this.lastGeneratedMapPreviewKey = ''
         this.mapyPreviewTimer = null
+        this.gpxPreview = ''
+        this.gpxGenerating = false
+        this.gpxError = ''
+        this.gpxSkipped = false
       } catch (error) {
         const fallbackPhoto = this.photoPreview || ''
         const fallbackGpx = this.gpxFile
