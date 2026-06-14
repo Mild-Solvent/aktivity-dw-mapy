@@ -14,7 +14,6 @@
     "db:stop": "npx supabase stop",
     "db:reset": "npx supabase db reset",
     "db:status": "npx supabase status",
-    "previews:mapy": "node scripts/generate-mapy-previews.js",
     "tracks:scan": "node scripts/generate-track-index.js",
     "generate:static": "node scripts/generate-static-pages.js"
   },
@@ -26,8 +25,6 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.0",
     "gh-pages": "^6.1.0",
-    "playwright": "^1.60.0",
-    "sharp": "^0.34.5",
     "supabase": "^2.101.0",
     "vite": "^5.0.0"
   },
