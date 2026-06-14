@@ -672,8 +672,13 @@ export default {
         .map(tag => tag.trim())
         .filter(Boolean)
 
+      // When editing, always keep the original id so the upsert targets the
+      // same DB row even if the user changed the "ID / slug" field in the form.
+      const trailId = this.isEditing ? this.id : this.form.id
+
       return {
         ...this.form,
+        id: trailId,
         previewImage: photoUrl,
         galleryImages: photoUrl ? [photoUrl] : [],
         gpxFile: gpx.url || this.form.gpxFile || '',
@@ -777,18 +782,7 @@ export default {
         }
 
         this.saveLocalDraft(trail)
-        this.form = emptyForm()
-        this.tagText = ''
-        this.photoFile = null
-        this.gpxFile = null
-        this.photoPreview = ''
-        this.generatedMapPreviewUrl = ''
-        this.lastGeneratedMapPreviewKey = ''
-        this.mapyPreviewTimer = null
-        this.gpxPreview = ''
-        this.gpxGenerating = false
-        this.gpxError = ''
-        this.gpxSkipped = false
+        this.$router.push('/admin/manage-trails')
       } catch (error) {
         const fallbackPhoto = this.photoPreview || ''
         const fallbackGpx = this.gpxFile
