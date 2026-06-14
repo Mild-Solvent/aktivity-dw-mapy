@@ -144,7 +144,6 @@
 </template>
 
 <script>
-import { getTrackById } from '../data/tracks.js'
 import { getAdminTrailById, getAdminTrailState } from '../data/customTrails'
 import { isSupabaseConfigured, supabase } from '../lib/supabase'
 
@@ -186,7 +185,7 @@ export default {
         const { deletedTrailIds } = await getAdminTrailState()
         this.track = deletedTrailIds.has(this.id)
           ? null
-          : await getAdminTrailById(this.id) || getTrackById(this.id)
+          : await getAdminTrailById(this.id)
         if (!this.track) {
           this.error = 'Trasu sa nepodarilo nájsť'
         } else {

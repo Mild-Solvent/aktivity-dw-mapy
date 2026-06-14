@@ -243,7 +243,6 @@
 
 <script>
 import { isSupabaseConfigured, supabase } from '../lib/supabase'
-import { getAllTracks } from '../data/tracks'
 import { getAdminTrailById, removeAdminTrail, saveAdminTrail, saveLocalAdminTrail } from '../data/customTrails'
 import { gpxFileToPreviewPng, dataUrlToBlob } from '../utils/gpxMapCapture'
 
@@ -563,7 +562,7 @@ export default {
         if (generatedPreview) {
           return await this.uploadGeneratedMapPreview(generatedPreview)
         }
-        throw new Error('Nepodarilo sa vygenerovať náhľad z Mapy.')
+        // Preview endpoint unavailable — fall through to GPX/manual photo below
       }
 
       if (!this.photoFile && !this.gpxPreview && this.form.previewImage) {
@@ -732,7 +731,6 @@ export default {
         await this.withTimeout(
           removeAdminTrail({
             trailId: this.id,
-            isStaticTrail: getAllTracks().some(track => track.id === this.id),
             deletedBy: this.authUser?.email || null
           }),
           12000,
@@ -818,8 +816,7 @@ export default {
         return
       }
 
-      const staticTrail = getAllTracks().find(track => track.id === this.id)
-      const trail = await getAdminTrailById(this.id) || staticTrail
+      const trail = await getAdminTrailById(this.id)
 
       if (!trail) {
         this.error = 'Trasa sa nenašla.'

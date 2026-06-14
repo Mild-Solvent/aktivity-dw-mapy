@@ -37,7 +37,6 @@
 </template>
 
 <script>
-import { getAllTracks } from '../data/tracks'
 import { getAdminTrailState } from '../data/customTrails'
 
 export default {
@@ -58,12 +57,8 @@ export default {
     }
   },
   async mounted() {
-    const { trails: adminTrails, deletedTrailIds } = await getAdminTrailState()
-    const adminIds = new Set(adminTrails.map(trail => trail.id))
-    this.trails = [
-      ...adminTrails,
-      ...getAllTracks().filter(trail => !adminIds.has(trail.id) && !deletedTrailIds.has(trail.id))
-    ]
+    const { trails } = await getAdminTrailState()
+    this.trails = trails
   }
 }
 </script>

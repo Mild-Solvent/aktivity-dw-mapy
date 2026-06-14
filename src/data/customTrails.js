@@ -227,13 +227,7 @@ export const markLocalAdminTrailDeleted = (trailId, deletedBy = null) => {
   })
 }
 
-export const removeAdminTrail = async ({ trailId, isStaticTrail = false, deletedBy = null }) => {
-  if (isStaticTrail) {
-    await markRemoteAdminTrailDeleted(trailId, deletedBy)
-    markLocalAdminTrailDeleted(trailId, deletedBy)
-    return
-  }
-
+export const removeAdminTrail = async ({ trailId }) => {
   await deleteRemoteAdminTrail(trailId)
   deleteLocalAdminTrail(trailId)
 }

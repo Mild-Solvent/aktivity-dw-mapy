@@ -121,7 +121,6 @@
 </template>
 
 <script>
-import { getAllTracks } from '../data/tracks.js'
 import { getAdminTrailState } from '../data/customTrails'
 
 export default {
@@ -189,23 +188,19 @@ export default {
   },
   methods: {
     async loadTracks() {
-      const staticTracks = getAllTracks()
-
-      this.tracks = staticTracks
-      this.loading = false
+      this.loading = true
       this.error = null
 
       try {
-        const { trails: adminTrails, deletedTrailIds } = await getAdminTrailState()
-        const adminTrailIds = new Set(adminTrails.map(track => track.id))
-        this.tracks = [
-          ...adminTrails,
-          ...staticTracks.filter(track => !adminTrailIds.has(track.id) && !deletedTrailIds.has(track.id))
-        ]
+        const { trails } = await getAdminTrailState()
+        this.tracks = trails
         this.error = null
       } catch (error) {
-        console.error('Error loading edited trails:', error)
-        this.tracks = staticTracks
+        console.error('Error loading trails:', error)
+        this.error = 'Nepodarilo sa načítať trasy.'
+        this.tracks = []
+      } finally {
+        this.loading = false
       }
     },
     goToTrack(trackId) {
