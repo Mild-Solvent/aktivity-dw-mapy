@@ -60,8 +60,25 @@
                       class="sport-button"
                       :class="{ active: filters.sport === 'cycling' }"
                       @click="setSport('cycling')"
+                      title="Cyklistika"
                     >
-                      <img src="/assets/icons/icon-for-mtb.jpg" alt="MTB Cyklistika" />
+                      <img src="/assets/icons/icon-for-mtb.jpg" alt="Cyklistika" />
+                    </button>
+                    <button
+                      class="sport-button sport-button--emoji"
+                      :class="{ active: filters.sport === 'hiking' }"
+                      @click="setSport('hiking')"
+                      title="Turistika"
+                    >
+                      🥾
+                    </button>
+                    <button
+                      class="sport-button sport-button--emoji"
+                      :class="{ active: filters.sport === 'running' }"
+                      @click="setSport('running')"
+                      title="Beh"
+                    >
+                      🏃
                     </button>
                   </div>
                 </div>

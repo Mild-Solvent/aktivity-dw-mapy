@@ -37,17 +37,61 @@
               <textarea v-model.trim="form.description" required rows="4" placeholder="Krátky popis trasy"></textarea>
             </label>
 
+            <div class="form-field form-field-wide">
+              <span>Šport</span>
+              <div class="sport-picker">
+                <button
+                  type="button"
+                  class="sport-picker-btn"
+                  :class="{ active: form.sport === 'cycling' }"
+                  @click="setSport('cycling')"
+                >
+                  🚵 Cyklistika
+                </button>
+                <button
+                  type="button"
+                  class="sport-picker-btn"
+                  :class="{ active: form.sport === 'hiking' }"
+                  @click="setSport('hiking')"
+                >
+                  🥾 Turistika
+                </button>
+                <button
+                  type="button"
+                  class="sport-picker-btn"
+                  :class="{ active: form.sport === 'running' }"
+                  @click="setSport('running')"
+                >
+                  🏃 Beh
+                </button>
+              </div>
+            </div>
+
             <label class="form-field">
-              <span>Typ cyklotrasy</span>
-              <select v-model="form.bikeType">
-                <option value="mtb">MTB trasa</option>
-                <option value="cross-country">Cross-country / XC</option>
-                <option value="enduro">Enduro</option>
-                <option value="downhill">Zjazd</option>
-                <option value="gravel">Gravel</option>
-                <option value="road">Cestná cyklistika</option>
-                <option value="trekking">Trek / turistická</option>
-                <option value="e-bike">E-bike</option>
+              <span>{{ activityTypeLabel }}</span>
+              <select v-model="form.activityType">
+                <template v-if="form.sport === 'cycling'">
+                  <option value="mtb">MTB trasa</option>
+                  <option value="cross-country">Cross-country / XC</option>
+                  <option value="enduro">Enduro</option>
+                  <option value="downhill">Zjazd</option>
+                  <option value="gravel">Gravel</option>
+                  <option value="road">Cestná cyklistika</option>
+                  <option value="trekking">Trek / turistická</option>
+                  <option value="e-bike">E-bike</option>
+                </template>
+                <template v-if="form.sport === 'hiking'">
+                  <option value="hiking">Pešia turistika</option>
+                  <option value="mountain-hiking">Horská turistika</option>
+                  <option value="via-ferrata">Via ferrata</option>
+                  <option value="snowshoeing">Snehová chôdza</option>
+                </template>
+                <template v-if="form.sport === 'running'">
+                  <option value="road-running">Cestný beh</option>
+                  <option value="trail-running">Trail beh</option>
+                  <option value="ultramarathon">Ultramaratón</option>
+                  <option value="track">Beh na dráhe</option>
+                </template>
               </select>
             </label>
 
@@ -246,12 +290,19 @@ import { isSupabaseConfigured, supabase } from '../lib/supabase'
 import { getAdminTrailById, removeAdminTrail, saveAdminTrail, saveLocalAdminTrail } from '../data/customTrails'
 import { gpxFileToPreviewPng, dataUrlToBlob } from '../utils/gpxMapCapture'
 
+const defaultActivityType = (sport) => {
+  if (sport === 'hiking') return 'hiking'
+  if (sport === 'running') return 'road-running'
+  return 'mtb'
+}
+
 const emptyForm = () => ({
   id: '',
   name: '',
   description: '',
   sport: 'cycling',
   bikeType: 'mtb',
+  activityType: 'mtb',
   distanceKm: '',
   difficulty: 'moderate',
   location: 'Trenciansky kraj, Slovensko',
@@ -330,11 +381,20 @@ export default {
       }
 
       return this.isEditing ? 'Uložiť trasu' : 'Pridať trasu'
+    },
+    activityTypeLabel() {
+      if (this.form.sport === 'hiking') return 'Typ turistiky'
+      if (this.form.sport === 'running') return 'Typ behu'
+      return 'Typ cyklotrasy'
     }
   },
   methods: {
     goHome() {
       this.$router.push('/')
+    },
+    setSport(sport) {
+      this.form.sport = sport
+      this.form.activityType = defaultActivityType(sport)
     },
     sanitizeDecimal(field) {
       const value = String(this.form[field] || '')
@@ -679,6 +739,9 @@ export default {
       return {
         ...this.form,
         id: trailId,
+        activityType: this.form.activityType,
+        // Keep bikeType on cycling trails so existing data stays compatible
+        bikeType: this.form.sport === 'cycling' ? this.form.activityType : undefined,
         previewImage: photoUrl,
         galleryImages: photoUrl ? [photoUrl] : [],
         gpxFile: gpx.url || this.form.gpxFile || '',
@@ -821,9 +884,12 @@ export default {
       const durationMatch = String(trail.duration || '').match(/(\d+)\s*h\s*(\d+)?/)
       const elevationMatch = String(trail.elevation || '').match(/(\d[\d,.]*)\s*m.*?(\d[\d,.]*)\s*m/)
 
+      const trailSport = trail.sport || 'cycling'
       this.form = {
         ...emptyForm(),
         ...trail,
+        sport: trailSport,
+        activityType: trail.activityType || trail.bikeType || defaultActivityType(trailSport),
         distanceKm: String(distanceValue || ''),
         durationHours: durationMatch?.[1] || '',
         durationMinutes: durationMatch?.[2] || '',

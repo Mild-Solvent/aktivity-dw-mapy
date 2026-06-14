@@ -80,7 +80,18 @@
 
             <div class="track-content">
               <div class="track-badges">
-                <img class="sport-icon" :src="getSportIcon(track)" :alt="getSportTitle(track)" :title="getSportTitle(track)" />
+                <img
+                  v-if="track.sport === 'cycling' || !track.sport"
+                  class="sport-icon"
+                  :src="getSportIcon(track)"
+                  :alt="getSportTitle(track)"
+                  :title="getSportTitle(track)"
+                />
+                <span
+                  v-else
+                  class="sport-icon sport-icon--emoji"
+                  :title="getSportTitle(track)"
+                >{{ getSportEmoji(track) }}</span>
                 <img class="difficulty-icon" :src="getDifficultyIcon(track.difficulty)" :alt="getDifficultyTitle(track.difficulty)" :title="getDifficultyTitle(track.difficulty)" />
                 <div class="track-location">
                   <span class="location-icon">📍</span>
@@ -207,10 +218,18 @@ export default {
       this.$router.push({ name: 'TrackDetail', params: { id: trackId } })
     },
     getSportIcon(track) {
+      // Only cycling has an existing icon image
       return '/assets/icons/icon-for-mtb.jpg'
     },
+    getSportEmoji(track) {
+      const emojis = {
+        hiking: '🥾',
+        running: '🏃'
+      }
+      return emojis[track?.sport] || '🚵'
+    },
     getSportTitle(track) {
-      const titles = {
+      const cyclingTitles = {
         mtb: 'MTB trasa',
         'cross-country': 'Cross-country / XC',
         enduro: 'Enduro',
@@ -220,7 +239,28 @@ export default {
         trekking: 'Trek / turistická',
         'e-bike': 'E-bike'
       }
-      return titles[track?.bikeType] || 'MTB Cyklistika'
+      const hikingTitles = {
+        hiking: 'Pešia turistika',
+        'mountain-hiking': 'Horská turistika',
+        'via-ferrata': 'Via ferrata',
+        snowshoeing: 'Snehová chôdza'
+      }
+      const runningTitles = {
+        'road-running': 'Cestný beh',
+        'trail-running': 'Trail beh',
+        ultramarathon: 'Ultramaratón',
+        track: 'Beh na dráhe'
+      }
+      const sportLabels = {
+        cycling: 'Cyklistika',
+        hiking: 'Turistika',
+        running: 'Beh'
+      }
+
+      const sub = track?.activityType || track?.bikeType
+      return cyclingTitles[sub] || hikingTitles[sub] || runningTitles[sub]
+        || sportLabels[track?.sport]
+        || 'Trasa'
     },
     getDifficultyIcon(difficulty) {
       const icons = {
