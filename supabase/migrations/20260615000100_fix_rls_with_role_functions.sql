@@ -108,5 +108,5 @@ using (public.is_admin());
 -- ---------------------------------------------------------------------------
 
 insert into public.user_roles (email, role)
-values ('adam.molnar6353@gmail.com', 'admin')
+values ('deletezajac@gmail.com', 'admin')
 on conflict (email) do update set role = 'admin';
