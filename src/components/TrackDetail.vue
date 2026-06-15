@@ -28,7 +28,14 @@
         <h1 class="track-title">{{ track.name }}</h1>
         <div class="track-meta-badges">
           <span class="meta-badge sport-meta" :title="getSportTitle(track)">
-            <img class="meta-icon" :src="getSportIcon(track)" :alt="getSportTitle(track)" /> {{ getSportTitle(track) }}
+            <img
+              v-if="track.sport === 'cycling' || !track.sport"
+              class="meta-icon"
+              :src="getSportIcon(track)"
+              :alt="getSportTitle(track)"
+            />
+            <span v-else class="meta-icon sport-icon--emoji">{{ getSportEmoji(track) }}</span>
+            {{ getSportTitle(track) }}
           </span>
           <span class="meta-badge difficulty-meta" :title="getDifficultyTitle(track.difficulty)">
             <img class="meta-icon" :src="getDifficultyIcon(track.difficulty)" :alt="getDifficultyTitle(track.difficulty)" /> {{ getDifficultyTitle(track.difficulty) }}
@@ -203,8 +210,47 @@ export default {
       this.$router.push('/')
     },
     getSportIcon(track) {
-      // All tracks are MTB tracks now
-      return '/assets/icons/icon-for-mtb.jpg'
+      const sport = track?.sport || 'cycling'
+      if (sport === 'cycling') return '/assets/icons/icon-for-mtb.jpg'
+      return '' // hiking and running use emoji spans instead
+    },
+    getSportEmoji(track) {
+      const emojis = { hiking: '🥾', running: '🏃' }
+      return emojis[track?.sport] || '🚵'
+    },
+    getSportTitle(track) {
+      const cyclingTitles = {
+        mtb: 'MTB trasa',
+        'cross-country': 'Cross-country / XC',
+        enduro: 'Enduro',
+        downhill: 'Zjazd',
+        gravel: 'Gravel',
+        road: 'Cestná cyklistika',
+        trekking: 'Trek / turistická',
+        'e-bike': 'E-bike'
+      }
+      const hikingTitles = {
+        hiking: 'Pešia turistika',
+        'mountain-hiking': 'Horská turistika',
+        'via-ferrata': 'Via ferrata',
+        snowshoeing: 'Snehová chôdza'
+      }
+      const runningTitles = {
+        'road-running': 'Cestný beh',
+        'trail-running': 'Trail beh',
+        ultramarathon: 'Ultramaratón',
+        track: 'Beh na dráhe'
+      }
+      const sportLabels = {
+        cycling: 'Cyklistika',
+        hiking: 'Turistika',
+        running: 'Beh'
+      }
+
+      const sub = track?.activityType || track?.bikeType
+      return cyclingTitles[sub] || hikingTitles[sub] || runningTitles[sub]
+        || sportLabels[track?.sport]
+        || 'Trasa'
     },
     getDifficultyIcon(difficulty) {
       const icons = {
@@ -215,20 +261,6 @@ export default {
         expert: '/assets/icons/harb-bike-track.jpg'
       }
       return icons[difficulty] || '/assets/icons/medium-bike-track.jpg'
-    },
-    getSportTitle(track) {
-      const titles = {
-        mtb: 'MTB trasa',
-        'cross-country': 'Cross-country / XC',
-        enduro: 'Enduro',
-        downhill: 'Zjazd',
-        gravel: 'Gravel',
-        road: 'Cestná cyklistika',
-        trekking: 'Trek / turistická',
-        'e-bike': 'E-bike'
-      }
-
-      return titles[track?.bikeType] || 'MTB Cyklistika'
     },
     getDifficultyTitle(difficulty) {
       const titles = {

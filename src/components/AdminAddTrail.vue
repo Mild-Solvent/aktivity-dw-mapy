@@ -237,6 +237,29 @@
               <span>Štítky</span>
               <input v-model.trim="tagText" type="text" placeholder="cyklistika, narocne, trail" />
             </label>
+
+            <div class="form-field form-field-wide">
+              <span>Stav trasy</span>
+              <div class="sport-picker">
+                <button
+                  type="button"
+                  class="sport-picker-btn"
+                  :class="{ active: form.status === 'published' }"
+                  @click="form.status = 'published'"
+                >
+                  📢 Zverejnená
+                </button>
+                <button
+                  type="button"
+                  class="sport-picker-btn"
+                  :class="{ active: form.status === 'draft' }"
+                  @click="form.status = 'draft'"
+                >
+                  📝 Koncept (draft)
+                </button>
+              </div>
+              <p class="file-status" v-if="form.status === 'draft'">⚠ Trasa nebude verejne viditeľná, kým ju nezverejníš.</p>
+            </div>
           </div>
 
           <div class="trail-preview-card">
@@ -314,6 +337,7 @@ const emptyForm = () => ({
   mapUrl: '',
   gpxFile: '',
   gpxFileName: '',
+  status: 'published',
   createdAt: new Date().toISOString().slice(0, 10)
 })
 
@@ -670,6 +694,11 @@ export default {
       return data.publicUrl
     },
     async uploadGpx() {
+      // User deliberately skipped GPX — return empty gracefully (no throw)
+      if (this.gpxSkipped && !this.gpxFile && !this.form.gpxFile) {
+        return { url: '', name: '' }
+      }
+
       if (!this.gpxFile && this.form.gpxFile) {
         return {
           url: this.form.gpxFile,
@@ -742,6 +771,7 @@ export default {
         activityType: this.form.activityType,
         // Keep bikeType on cycling trails so existing data stays compatible
         bikeType: this.form.sport === 'cycling' ? this.form.activityType : undefined,
+        status: this.form.status || 'published',
         previewImage: photoUrl,
         galleryImages: photoUrl ? [photoUrl] : [],
         gpxFile: gpx.url || this.form.gpxFile || '',

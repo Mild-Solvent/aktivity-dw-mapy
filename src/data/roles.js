@@ -67,6 +67,21 @@ export const saveRemoteRole = async (email, role) => {
   }
 }
 
+export const deleteRemoteRole = async (email) => {
+  if (!isSupabaseConfigured || !supabase) {
+    return
+  }
+
+  const { error } = await supabase
+    .from('user_roles')
+    .delete()
+    .eq('email', String(email || '').trim().toLowerCase())
+
+  if (error) {
+    throw error
+  }
+}
+
 export const getAllRoles = async () => {
   const rolesByEmail = new Map()
 

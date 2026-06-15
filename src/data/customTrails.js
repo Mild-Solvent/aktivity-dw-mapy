@@ -176,12 +176,15 @@ export const saveRemoteAdminTrail = async (trail) => {
     return
   }
 
+  // status must also live in the dedicated column so RLS SELECT policies
+  // (which filter on the column, not the JSONB) work correctly.
   const { error } = await supabase
     .from('trails')
     .upsert({
       id: trail.id,
       payload: trail,
-      created_by: trail.createdBy || null
+      created_by: trail.createdBy || null,
+      status: trail.status || 'published'
     }, { onConflict: 'id' })
 
   if (error) {
@@ -207,24 +210,6 @@ export const deleteRemoteAdminTrail = async (trailId) => {
   if (error) {
     throw error
   }
-}
-
-export const markRemoteAdminTrailDeleted = async (trailId, deletedBy = null) => {
-  await saveRemoteAdminTrail({
-    id: trailId,
-    deleted: true,
-    deletedBy,
-    deletedAt: new Date().toISOString()
-  })
-}
-
-export const markLocalAdminTrailDeleted = (trailId, deletedBy = null) => {
-  return saveLocalAdminTrail({
-    id: trailId,
-    deleted: true,
-    deletedBy,
-    deletedAt: new Date().toISOString()
-  })
 }
 
 export const removeAdminTrail = async ({ trailId }) => {

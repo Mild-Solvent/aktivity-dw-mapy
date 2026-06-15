@@ -2933,3 +2933,53 @@ html {
     font-size: 0.75rem;
   }
 }
+
+/* ======================================================
+   Status badges (AdminManageTrails, AdminAddTrail)
+   ====================================================== */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 99px;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+
+.status-badge--published {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-badge--draft {
+  background: #fef9c3;
+  color: #92400e;
+}
+
+/* Danger variant for admin inline buttons (delete role, delete trail) */
+.admin-inline-button.danger {
+  background: transparent;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+}
+
+.admin-inline-button.danger:hover:not(:disabled) {
+  background: #ef4444;
+  color: #fff;
+}
+
+.admin-inline-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Sport icon emoji in TrackDetail meta badges */
+.sport-icon--emoji {
+  font-size: 1rem;
+  line-height: 1;
+}
+
