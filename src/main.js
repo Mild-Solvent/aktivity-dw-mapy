@@ -5,7 +5,6 @@ import HomePage from './components/HomePage.vue'
 import TrackDetail from './components/TrackDetail.vue'
 import AdminAddTrail from './components/AdminAddTrail.vue'
 import AdminManageTrails from './components/AdminManageTrails.vue'
-import AdminTrailDrafts from './components/AdminTrailDrafts.vue'
 import AdminRoles from './components/AdminRoles.vue'
 import Terms from './components/Terms.vue'
 import Privacy from './components/Privacy.vue'
@@ -17,7 +16,6 @@ const routes = [
   { path: '/admin/trails/new', name: 'AdminAddTrail', component: AdminAddTrail },
   { path: '/admin/trails/:id/edit', name: 'AdminEditTrail', component: AdminAddTrail, props: true },
   { path: '/admin/manage-trails', name: 'AdminManageTrails', component: AdminManageTrails },
-  { path: '/admin/trail-drafts', name: 'AdminTrailDrafts', component: AdminTrailDrafts },
   { path: '/admin/roles', name: 'AdminRoles', component: AdminRoles },
   { path: '/terms', name: 'Terms', component: Terms },
   { path: '/privacy', name: 'Privacy', component: Privacy }

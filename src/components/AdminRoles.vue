@@ -61,7 +61,7 @@
 
 <script>
 import { ROLE_LABELS, ROLES } from '../config/admin'
-import { getAllRoles, saveLocalRole, saveRemoteRole, deleteRemoteRole } from '../data/roles'
+import { getAllRoles, saveRemoteRole, deleteRemoteRole } from '../data/roles'
 
 export default {
   name: 'AdminRoles',
@@ -95,14 +95,11 @@ export default {
 
       try {
         await saveRemoteRole(this.email, this.role)
-        saveLocalRole(this.email, this.role)
         this.message = 'Rola bola uložená.'
         this.email = ''
         await this.loadRoles()
       } catch (error) {
-        saveLocalRole(this.email, this.role)
-        this.error = `${error.message || 'Nepodarilo sa uložiť rolu do Supabase.'} Uložené lokálne.`
-        await this.loadRoles()
+        this.error = error.message || 'Nepodarilo sa uložiť rolu.'
       }
     },
     async removeRole(email) {

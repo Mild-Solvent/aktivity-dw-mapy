@@ -68,6 +68,7 @@ using (public.is_trail_manager())
 with check (public.is_trail_manager());
 
 drop policy if exists "Authenticated users can delete trails" on public.trails;
+drop policy if exists "Trail managers can delete trails" on public.trails;
 create policy "Trail managers can delete trails"
 on public.trails
 for delete
@@ -100,13 +101,4 @@ for delete
 to authenticated
 using (public.is_admin());
 
--- ---------------------------------------------------------------------------
--- Seed initial admin
--- The email here must match VITE_ADMIN_EMAILS in your .env.local / .env.prod
--- Without this seed no one can write to user_roles (bootstrap problem).
--- To change the admin after first deploy: update this value + run db push.
--- ---------------------------------------------------------------------------
-
-insert into public.user_roles (email, role)
-values ('deletezajac@gmail.com', 'admin')
-on conflict (email) do update set role = 'admin';
+-- Seed has been moved to: 20260615000400_seed_admin.sql

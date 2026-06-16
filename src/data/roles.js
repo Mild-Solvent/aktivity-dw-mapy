@@ -1,58 +1,25 @@
 import { ADMIN_EMAILS, ROLES, isAdminEmail } from '../config/admin'
 import { isSupabaseConfigured, supabase } from '../lib/supabase'
 
-const ROLE_STORAGE_KEY = 'adminUserRoles'
-
-export const getLocalRoles = () => {
-  if (typeof window === 'undefined') {
-    return []
-  }
-
-  try {
-    const roles = JSON.parse(window.localStorage.getItem(ROLE_STORAGE_KEY) || '[]')
-    return Array.isArray(roles) ? roles : []
-  } catch (error) {
-    console.warn('Could not read local roles:', error)
-    return []
-  }
-}
-
-export const saveLocalRole = (email, role) => {
-  const normalizedEmail = String(email || '').trim().toLowerCase()
-  const roles = getLocalRoles().filter(item => item.email !== normalizedEmail)
-  const nextRoles = [
-    { email: normalizedEmail, role },
-    ...roles
-  ]
-
-  window.localStorage.setItem(ROLE_STORAGE_KEY, JSON.stringify(nextRoles))
-  return nextRoles
-}
-
 export const getRemoteRoles = async () => {
   if (!isSupabaseConfigured || !supabase) {
     return []
   }
 
-  try {
-    const { data, error } = await supabase
-      .from('user_roles')
-      .select('email, role')
+  const { data, error } = await supabase
+    .from('user_roles')
+    .select('email, role')
 
-    if (error) {
-      throw error
-    }
-
-    return data || []
-  } catch (error) {
-    console.warn('Could not load user roles:', error)
-    return []
+  if (error) {
+    throw error
   }
+
+  return data || []
 }
 
 export const saveRemoteRole = async (email, role) => {
   if (!isSupabaseConfigured || !supabase) {
-    return
+    throw new Error('Supabase nie je nastavený. Rolu nie je možné uložiť.')
   }
 
   const { error } = await supabase
@@ -69,7 +36,7 @@ export const saveRemoteRole = async (email, role) => {
 
 export const deleteRemoteRole = async (email) => {
   if (!isSupabaseConfigured || !supabase) {
-    return
+    throw new Error('Supabase nie je nastavený. Rolu nie je možné odobrať.')
   }
 
   const { error } = await supabase
@@ -90,12 +57,6 @@ export const getAllRoles = async () => {
   }
 
   for (const item of await getRemoteRoles()) {
-    if (item?.email && !isAdminEmail(item.email)) {
-      rolesByEmail.set(item.email, item)
-    }
-  }
-
-  for (const item of getLocalRoles()) {
     if (item?.email && !isAdminEmail(item.email)) {
       rolesByEmail.set(item.email, item)
     }

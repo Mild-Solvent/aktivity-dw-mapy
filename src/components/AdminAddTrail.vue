@@ -310,7 +310,7 @@
 
 <script>
 import { isSupabaseConfigured, supabase } from '../lib/supabase'
-import { getAdminTrailById, removeAdminTrail, saveAdminTrail, saveLocalAdminTrail } from '../data/customTrails'
+import { getAdminTrailById, removeAdminTrail, saveAdminTrail } from '../data/customTrails'
 import { gpxFileToPreviewPng, dataUrlToBlob } from '../utils/gpxMapCapture'
 
 const defaultActivityType = (sport) => {
@@ -664,13 +664,7 @@ export default {
         }
       }
     },
-    saveLocalDraft(trail) {
-      try {
-        saveLocalAdminTrail(trail)
-      } catch (error) {
-        console.warn('Could not save local trail draft:', error)
-      }
-    },
+
     async removeTrail() {
       this.error = ''
       this.message = ''
@@ -717,45 +711,24 @@ export default {
 
       this.saving = true
       this.savingStep = 'Nahrávam fotku...'
-      let trail = null
 
       try {
         const photoUrl = await this.uploadPhoto()
         this.savingStep = 'Nahrávam GPX...'
         const gpx = await this.uploadGpx()
         this.savingStep = 'Ukladám trasu...'
-        trail = this.buildTrail(photoUrl, gpx)
+        const trail = this.buildTrail(photoUrl, gpx)
 
-        if (isSupabaseConfigured && supabase) {
-          await this.withTimeout(
-            saveAdminTrail(trail),
-            12000,
-            'Ukladanie trasy trvá príliš dlho.'
-          )
-          this.message = 'Trasa bola odoslaná do Supabase.'
-        } else {
-          this.message = 'Trasa bola uložená ako lokálny rozpracovaný návrh. Supabase nie je nastavený.'
-        }
+        await this.withTimeout(
+          saveAdminTrail(trail),
+          12000,
+          'Ukladanie trasy trvá príliš dlho.'
+        )
 
-        this.saveLocalDraft(trail)
+        this.message = 'Trasa bola uložená.'
         this.$router.push('/admin/manage-trails')
       } catch (error) {
-        const fallbackPhoto = this.photoPreview || ''
-        const fallbackGpx = this.gpxFile
-          ? {
-              url: await this.readFileAsDataUrl(this.gpxFile),
-              name: this.gpxFile.name
-            }
-          : {
-              url: this.form.gpxFile,
-              name: this.form.gpxFileName
-            }
-        trail = trail || this.buildTrail(fallbackPhoto, {
-          url: fallbackGpx.url,
-          name: fallbackGpx.name
-        })
-        this.saveLocalDraft(trail)
-        this.error = `${error.message || 'Nepodarilo sa uložiť do Supabase.'} Uložené ako lokálny rozpracovaný návrh.`
+        this.error = error.message || 'Nepodarilo sa uložiť trasu.'
       } finally {
         this.saving = false
         this.savingStep = ''

@@ -32,9 +32,7 @@
                 <router-link v-if="canAddTrails" to="/admin/trails/new" @click="closeMenu" class="menu-item">
                   + Pridať trasu
                 </router-link>
-                <router-link v-if="canAddTrails" to="/admin/trail-drafts" @click="closeMenu" class="menu-item">
-                  Rozpracované trasy
-                </router-link>
+
                 <router-link v-if="canAddTrails" to="/admin/manage-trails" @click="closeMenu" class="menu-item">
                   Správa trás
                 </router-link>

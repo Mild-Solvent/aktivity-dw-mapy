@@ -1,7 +1,5 @@
 import { isSupabaseConfigured, supabase } from '../lib/supabase'
 
-const TRAIL_STORAGE_KEY = 'adminTrailDrafts'
-
 const firstString = (...values) => {
   return values.find(value => typeof value === 'string' && value.trim()) || ''
 }
@@ -70,100 +68,34 @@ const mergeTrail = (currentTrail, nextTrail) => {
   }
 }
 
-export const getLocalAdminTrails = () => {
-  if (typeof window === 'undefined') {
-    return []
-  }
-
-  try {
-    const trails = JSON.parse(window.localStorage.getItem(TRAIL_STORAGE_KEY) || '[]')
-    return Array.isArray(trails) ? trails.map(normalizeTrail) : []
-  } catch (error) {
-    console.warn('Could not read local admin trail drafts:', error)
-    return []
-  }
-}
-
-const isDeletedTrail = (trail) => trail?.deleted === true
-
-export const saveLocalAdminTrail = (trail) => {
-  const existing = getLocalAdminTrails().filter(item => item.id !== trail.id)
-  const nextTrails = [trail, ...existing]
-  window.localStorage.setItem(TRAIL_STORAGE_KEY, JSON.stringify(nextTrails))
-  return nextTrails
-}
-
-export const deleteLocalAdminTrail = (trailId) => {
-  const nextTrails = getLocalAdminTrails().filter(item => item.id !== trailId)
-  window.localStorage.setItem(TRAIL_STORAGE_KEY, JSON.stringify(nextTrails))
-  return nextTrails
-}
-
 export const getRemoteAdminTrails = async () => {
   if (!isSupabaseConfigured || !supabase) {
     return []
   }
 
-  try {
-    const { data, error } = await supabase
-      .from('trails')
-      .select('payload')
+  const { data, error } = await supabase
+    .from('trails')
+    .select('payload')
 
-    if (error) {
-      throw error
-    }
-
-    return (data || [])
-      .map(row => normalizeTrail(row.payload))
-      .filter(Boolean)
-  } catch (error) {
-    console.warn('Could not load Supabase trails:', error)
-    return []
-  }
-}
-
-export const getAdminTrailState = async () => {
-  const trailsById = new Map()
-  const deletedTrailIds = new Set()
-
-  for (const trail of getLocalAdminTrails()) {
-    if (trail?.id) {
-      if (isDeletedTrail(trail)) {
-        deletedTrailIds.add(trail.id)
-        trailsById.delete(trail.id)
-      } else {
-        trailsById.set(trail.id, mergeTrail(trailsById.get(trail.id), trail))
-        deletedTrailIds.delete(trail.id)
-      }
-    }
+  if (error) {
+    throw error
   }
 
-  const remoteTrails = await Promise.race([
-    getRemoteAdminTrails(),
-    new Promise(resolve => window.setTimeout(() => resolve([]), 2500))
-  ])
-
-  for (const trail of remoteTrails) {
-    if (trail?.id) {
-      if (isDeletedTrail(trail)) {
-        deletedTrailIds.add(trail.id)
-        trailsById.delete(trail.id)
-      } else {
-        trailsById.set(trail.id, mergeTrail(trailsById.get(trail.id), trail))
-        deletedTrailIds.delete(trail.id)
-      }
-    }
-  }
-
-  return {
-    trails: Array.from(trailsById.values()),
-    deletedTrailIds
-  }
+  return (data || [])
+    .map(row => normalizeTrail(row.payload))
+    .filter(Boolean)
 }
 
 export const getAdminTrails = async () => {
-  const { trails } = await getAdminTrailState()
-  return trails
+  const trailsById = new Map()
+
+  for (const trail of await getRemoteAdminTrails()) {
+    if (trail?.id) {
+      trailsById.set(trail.id, mergeTrail(trailsById.get(trail.id), trail))
+    }
+  }
+
+  return Array.from(trailsById.values())
 }
 
 export const getAdminTrailById = async (id) => {
@@ -173,7 +105,7 @@ export const getAdminTrailById = async (id) => {
 
 export const saveRemoteAdminTrail = async (trail) => {
   if (!isSupabaseConfigured || !supabase) {
-    return
+    throw new Error('Supabase nie je nastavený. Trasu nie je možné uložiť.')
   }
 
   // status must also live in the dedicated column so RLS SELECT policies
@@ -192,14 +124,11 @@ export const saveRemoteAdminTrail = async (trail) => {
   }
 }
 
-export const saveAdminTrail = async (trail) => {
-  await saveRemoteAdminTrail(trail)
-  saveLocalAdminTrail(trail)
-}
+export const saveAdminTrail = (trail) => saveRemoteAdminTrail(trail)
 
 export const deleteRemoteAdminTrail = async (trailId) => {
   if (!isSupabaseConfigured || !supabase) {
-    return
+    throw new Error('Supabase nie je nastavený. Trasu nie je možné odstrániť.')
   }
 
   const { error } = await supabase
@@ -212,7 +141,4 @@ export const deleteRemoteAdminTrail = async (trailId) => {
   }
 }
 
-export const removeAdminTrail = async ({ trailId }) => {
-  await deleteRemoteAdminTrail(trailId)
-  deleteLocalAdminTrail(trailId)
-}
+export const removeAdminTrail = ({ trailId }) => deleteRemoteAdminTrail(trailId)
