@@ -170,7 +170,7 @@
 
             <label class="form-field form-field-wide">
               <span>Odkaz na Mapy</span>
-              <input v-model.trim="form.mapUrl" type="url" placeholder="https://mapy.com/s/..." @blur="generateMapyPreview(true)" />
+              <input v-model.trim="form.mapUrl" type="url" placeholder="https://mapy.com/s/..." />
             </label>
 
             <!-- GPX Upload — three-state banner -->
@@ -229,7 +229,7 @@
                 <input accept="image/*" type="file" @change="handlePhotoSelected" />
                 <span>{{ photoFile ? photoFile.name : 'Vybrať fotku z počítača' }}</span>
               </label>
-              <p class="file-status">Ak je vyplnený odkaz na Mapy, uloží sa orezaný náhľad z Mapy. Inak sa použije GPX náhľad alebo vybraná fotka.</p>
+              <p class="file-status">Náhľad sa vytvorí z GPX súboru. Vybraná fotka prepíše GPX náhľad.</p>
               <img v-if="photoPreview" :src="photoPreview" alt="Vybraná fotka trasy" class="photo-preview" />
             </div>
 
@@ -344,10 +344,6 @@ export default {
       photoFile: null,
       gpxFile: null,
       photoPreview: '',
-      generatedMapPreviewUrl: '',
-      lastGeneratedMapPreviewKey: '',
-      mapyPreviewTimer: null,
-      generatingPreview: false,
       gpxPreview: '',
       gpxGenerating: false,
       gpxError: '',
@@ -456,131 +452,6 @@ export default {
         reader.readAsDataURL(file)
       })
     },
-    getMapyPreviewKey() {
-      return `${this.form.id || ''}|${this.form.mapUrl || ''}`
-    },
-    getMapyPreviewId() {
-      return String(this.form.id || this.form.name || `trail-${Date.now()}`)
-        .trim()
-        .toLowerCase()
-        .replace(/[^a-z0-9-]+/g, '-')
-        .replace(/^-+|-+$/g, '') || `trail-${Date.now()}`
-    },
-    isMapyUrl(value) {
-      try {
-        return new URL(value).hostname.includes('mapy.')
-      } catch {
-        return false
-      }
-    },
-    scheduleMapyPreview() {
-      window.clearTimeout(this.mapyPreviewTimer)
-
-      if (!this.isMapyUrl(this.form.mapUrl)) {
-        return
-      }
-
-      this.mapyPreviewTimer = window.setTimeout(() => {
-        this.generateMapyPreview(false, true)
-      }, 900)
-    },
-    async generateMapyPreview(force = false, silent = false) {
-      if (!this.form.mapUrl || this.generatingPreview) {
-        return this.generatedMapPreviewUrl || this.photoPreview || ''
-      }
-
-      if (!this.isMapyUrl(this.form.mapUrl)) {
-        if (!silent) {
-          this.error = 'Najprv vlož platný odkaz na Mapy.'
-        }
-        return ''
-      }
-
-      const previewKey = this.getMapyPreviewKey()
-      if (!force && this.generatedMapPreviewUrl && this.lastGeneratedMapPreviewKey === previewKey) {
-        return this.generatedMapPreviewUrl
-      }
-
-      this.generatingPreview = true
-      this.error = ''
-
-      try {
-        const previewEndpoint = import.meta.env.VITE_MAPY_PREVIEW_ENDPOINT || '/api/mapy-preview'
-        const response = await fetch(previewEndpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            id: this.getMapyPreviewId(),
-            mapUrl: this.form.mapUrl
-          })
-        })
-        const contentType = response.headers.get('content-type') || ''
-        if (!contentType.includes('application/json')) {
-          throw new Error('Generovanie náhľadu z Mapy nie je dostupné na live statickej stránke. Treba nasadiť backend endpoint pre screenshoty.')
-        }
-
-        const data = await response.json()
-
-        if (!response.ok) {
-          throw new Error(data.error || 'Nepodarilo sa vygenerovať náhľad z Mapy.')
-        }
-
-        this.generatedMapPreviewUrl = data.previewImage
-        this.lastGeneratedMapPreviewKey = previewKey
-        this.photoFile = null
-        this.photoPreview = data.previewImage
-        return data.previewImage
-      } catch (error) {
-        if (!silent) {
-          this.error = error.message || 'Nepodarilo sa vygenerovať náhľad z Mapy.'
-        }
-        return ''
-      } finally {
-        this.generatingPreview = false
-      }
-    },
-    async uploadGeneratedMapPreview(previewUrl) {
-      if (!previewUrl) {
-        return ''
-      }
-
-      if (!isSupabaseConfigured || !supabase) {
-        return previewUrl
-      }
-
-      const response = await fetch(previewUrl)
-      if (!response.ok) {
-        throw new Error('Nepodarilo sa načítať vygenerovaný náhľad z Mapy.')
-      }
-
-      const previewBlob = await response.blob()
-      const filePath = `${this.form.id || Date.now()}/mapy-preview-${Date.now()}.webp`
-      const { error } = await this.withTimeout(
-        supabase.storage
-          .from('trail-photos')
-          .upload(filePath, previewBlob, {
-            cacheControl: '31536000',
-            contentType: 'image/webp',
-            upsert: true
-          }),
-        12000,
-        'Nahrávanie náhľadu z Mapy trvá príliš dlho.'
-      )
-
-      if (error) {
-        throw new Error(error.message === 'Bucket not found'
-          ? 'Chýba Supabase Storage bucket "trail-photos".'
-          : error.message)
-      }
-
-      const { data } = supabase.storage
-        .from('trail-photos')
-        .getPublicUrl(filePath)
-
-      return data.publicUrl
-    },
     skipGpx() {
       this.gpxSkipped = true
       this.gpxFile = null
@@ -617,14 +488,6 @@ export default {
         .replace(/^-+|-+$/g, '') || `trail-${Date.now()}`
     },
     async uploadPhoto() {
-      if (this.form.mapUrl) {
-        const generatedPreview = await this.generateMapyPreview(true)
-        if (generatedPreview) {
-          return await this.uploadGeneratedMapPreview(generatedPreview)
-        }
-        // Preview endpoint unavailable — fall through to GPX/manual photo below
-      }
-
       if (!this.photoFile && !this.gpxPreview && this.form.previewImage) {
         return this.form.previewImage
       }
@@ -898,21 +761,11 @@ export default {
       }
       this.tagText = (trail.tags || []).join(', ')
       this.photoPreview = trail.previewImage || ''
-      this.generatedMapPreviewUrl = trail.previewImage || ''
-      this.lastGeneratedMapPreviewKey = this.getMapyPreviewKey()
       this.gpxFile = null
     }
   },
   mounted() {
     this.loadTrailForEdit()
-  },
-  unmounted() {
-    window.clearTimeout(this.mapyPreviewTimer)
-  },
-  watch: {
-    'form.mapUrl'() {
-      this.scheduleMapyPreview()
-    }
   }
 }
 </script>
