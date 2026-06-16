@@ -98,6 +98,13 @@ export const getAdminTrails = async () => {
   return Array.from(trailsById.values())
 }
 
+export const getAdminTrailState = async () => {
+  const trails = await getAdminTrails()
+  // deletedTrailIds is no longer tracked client-side (deletion is handled server-side by RLS).
+  // Return an empty Set so existing callers that check deletedTrailIds.has() still work safely.
+  return { trails, deletedTrailIds: new Set() }
+}
+
 export const getAdminTrailById = async (id) => {
   const trails = await getAdminTrails()
   return trails.find(trail => trail.id === id) || null
