@@ -209,6 +209,7 @@
                   </button>
                 </div>
                 <p v-if="gpxGenerating" class="gpx-status">⏳ Generujem náhľad mapy...</p>
+                <p v-if="gpxSizeInfo" class="gpx-status">📦 {{ gpxSizeInfo }}</p>
                 <p v-if="gpxError" class="gpx-status gpx-status--error">⚠ {{ gpxError }}</p>
               </div>
 
@@ -289,6 +290,7 @@
 import { isSupabaseConfigured, supabase } from '../lib/supabase'
 import { getAdminTrailById, removeAdminTrail, saveAdminTrail, saveLocalAdminTrail } from '../data/customTrails'
 import { gpxFileToPreviewPng, dataUrlToBlob } from '../utils/gpxMapCapture'
+import { simplifyGpxFile } from '../utils/gpxSimplify'
 
 const defaultActivityType = (sport) => {
   if (sport === 'hiking') return 'hiking'
@@ -343,6 +345,8 @@ export default {
       tagText: '',
       photoFile: null,
       gpxFile: null,
+      optimizedGpxFile: null,
+      gpxSizeInfo: '',
       photoPreview: '',
       gpxPreview: '',
       gpxGenerating: false,
@@ -422,6 +426,8 @@ export default {
     async handleGpxSelected(event) {
       const [file] = event.target.files || []
       this.gpxFile = file || null
+      this.optimizedGpxFile = null
+      this.gpxSizeInfo = ''
 
       if (!file) {
         this.form.gpxFile = ''
@@ -443,6 +449,26 @@ export default {
       this.gpxSkipped = false
       this.form.gpxFileName = file.name
       await this.generateGpxPreview()
+      await this.optimizeGpx()
+    },
+    formatBytes(bytes) {
+      if (bytes >= 1024 * 1024) {
+        return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+      }
+      return `${Math.max(1, Math.round(bytes / 1024))} KB`
+    },
+    async optimizeGpx() {
+      if (!this.gpxFile) {
+        return
+      }
+      const result = await simplifyGpxFile(this.gpxFile)
+      if (result.simplified) {
+        this.optimizedGpxFile = result.file
+        this.gpxSizeInfo = `Optimalizované: ${this.formatBytes(result.originalSize)} → ${this.formatBytes(result.newSize)}`
+      } else {
+        this.optimizedGpxFile = null
+        this.gpxSizeInfo = ''
+      }
     },
     readFileAsDataUrl(file) {
       return new Promise((resolve, reject) => {
@@ -455,6 +481,8 @@ export default {
     skipGpx() {
       this.gpxSkipped = true
       this.gpxFile = null
+      this.optimizedGpxFile = null
+      this.gpxSizeInfo = ''
       this.gpxPreview = ''
       if (!this.photoFile) {
         this.photoPreview = ''
@@ -544,9 +572,15 @@ export default {
         throw new Error('Najprv vyber GPX súbor trasy.')
       }
 
+      // Shrink oversized GPX so it uploads quickly (esp. on slow connections).
+      if (!this.optimizedGpxFile) {
+        await this.optimizeGpx()
+      }
+      const gpxToUpload = this.optimizedGpxFile || this.gpxFile
+
       if (!isSupabaseConfigured || !supabase) {
         return {
-          url: await this.readFileAsDataUrl(this.gpxFile),
+          url: await this.readFileAsDataUrl(gpxToUpload),
           name: this.gpxFile.name
         }
       }
@@ -555,7 +589,7 @@ export default {
       const { error } = await this.withTimeout(
         supabase.storage
           .from('trail-files')
-          .upload(filePath, this.gpxFile, {
+          .upload(filePath, gpxToUpload, {
             cacheControl: '3600',
             contentType: 'application/gpx+xml',
             upsert: true
