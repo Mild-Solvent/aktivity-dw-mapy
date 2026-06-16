@@ -516,7 +516,7 @@ export default {
             cacheControl: '3600',
             upsert: true
           }),
-        12000,
+        120000,
         'Nahrávanie fotky trvá príliš dlho.'
       )
 
@@ -560,7 +560,7 @@ export default {
             contentType: 'application/gpx+xml',
             upsert: true
           }),
-        12000,
+        120000,
         'Nahrávanie GPX súboru trvá príliš dlho.'
       )
 
