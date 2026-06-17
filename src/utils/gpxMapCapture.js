@@ -316,6 +316,14 @@ export async function gpxFileToPreviewPng(file) {
   outCtx.imageSmoothingQuality = 'high'
   outCtx.drawImage(tileCanvas, 0, 0, outW, outH)
 
+  try {
+    const webpUrl = outCanvas.toDataURL('image/webp', 0.85)
+    if (webpUrl.startsWith('data:image/webp')) {
+      return webpUrl
+    }
+  } catch (e) {
+    // Ignore and fallback to png
+  }
   return outCanvas.toDataURL('image/png')
 }
 

@@ -233,6 +233,22 @@
               <img v-if="photoPreview" :src="photoPreview" alt="Vybraná fotka trasy" class="photo-preview" />
             </div>
 
+            <!-- Gallery images (optional, max 5 images, total max 300MB) -->
+            <div class="form-field form-field-wide">
+              <span>Galéria obrázkov <em class="field-hint">(nepovinné — max. 5 obrázkov, spolu max. 300MB)</em></span>
+              <label class="photo-dropzone">
+                <input accept="image/*" type="file" multiple @change="handleGallerySelected" />
+                <span>Vybrať fotky z počítača (aktuálne v galérii: {{ galleryPreviews.length }}/5)</span>
+              </label>
+              <div v-if="galleryPreviews.length > 0" class="gallery-previews-grid">
+                <div v-for="(preview, index) in galleryPreviews" :key="index" class="gallery-preview-item">
+                  <img :src="preview.url" alt="Náhľad galérie" class="gallery-preview-thumb" />
+                  <button type="button" class="remove-gallery-img-btn" @click="removeGalleryImage(index)">✕</button>
+                </div>
+              </div>
+              <p class="file-status">Môžeš pridať až 5 fotografií z trasy. Obrázky budú automaticky komprimované.</p>
+            </div>
+
             <label class="form-field">
               <span>Štítky</span>
               <input v-model.trim="tagText" type="text" placeholder="cyklistika, narocne, trail" />
@@ -312,6 +328,7 @@
 import { isSupabaseConfigured, supabase } from '../lib/supabase'
 import { getAdminTrailById, removeAdminTrail, saveAdminTrail } from '../data/customTrails'
 import { gpxFileToPreviewPng, dataUrlToBlob } from '../utils/gpxMapCapture'
+import { compressImageToWebp } from '../utils/imageCompressor'
 
 const defaultActivityType = (sport) => {
   if (sport === 'hiking') return 'hiking'
@@ -375,7 +392,8 @@ export default {
       saving: false,
       savingStep: '',
       message: '',
-      error: ''
+      error: '',
+      galleryPreviews: []
     }
   },
   computed: {
@@ -530,8 +548,17 @@ export default {
         return this.gpxPreview
       }
 
-      const fileBlob = hasManualPhoto ? this.photoFile : dataUrlToBlob(this.gpxPreview)
-      const extension = hasManualPhoto ? this.photoFile.name.split('.').pop() || 'jpg' : 'png'
+      let fileBlob
+      let extension
+      if (hasManualPhoto) {
+        const compressed = await compressImageToWebp(this.photoFile)
+        fileBlob = compressed
+        extension = 'webp'
+      } else {
+        fileBlob = dataUrlToBlob(this.gpxPreview)
+        extension = fileBlob.type.split('/')[1] || 'webp'
+      }
+
       const filePath = `${this.getTrailStorageId()}/preview-${Date.now()}.${extension}`
       const { error } = await this.withTimeout(
         supabase.storage
@@ -608,6 +635,48 @@ export default {
         name: this.gpxFile.name
       }
     },
+    async uploadGalleryImages(trailId) {
+      if (!isSupabaseConfigured || !supabase) {
+        return this.galleryPreviews.map(item => item.url)
+      }
+
+      const uploadedUrls = []
+      for (let i = 0; i < this.galleryPreviews.length; i++) {
+        const item = this.galleryPreviews[i]
+        if (item.file === null) {
+          uploadedUrls.push(item.url)
+          continue
+        }
+
+        const extension = item.file.type.split('/')[1] || 'webp'
+        const filePath = `${trailId}/gallery-${Date.now()}-${i}.${extension}`
+
+        const { error } = await this.withTimeout(
+          supabase.storage
+            .from('trail-photos')
+            .upload(filePath, item.file, {
+              cacheControl: '3600',
+              upsert: true
+            }),
+          120000,
+          `Nahrávanie fotky galérie (${i + 1}) trvá príliš dlho.`
+        )
+
+        if (error) {
+          throw new Error(error.message === 'Bucket not found'
+            ? 'Chýba Supabase Storage bucket "trail-photos".'
+            : error.message)
+        }
+
+        const { data } = supabase.storage
+          .from('trail-photos')
+          .getPublicUrl(filePath)
+
+        uploadedUrls.push(data.publicUrl)
+      }
+
+      return uploadedUrls
+    },
     withTimeout(promise, timeoutMs, message) {
       let timeoutId
       const timeout = new Promise((_, reject) => {
@@ -618,7 +687,56 @@ export default {
         window.clearTimeout(timeoutId)
       })
     },
-    buildTrail(photoUrl, gpx = {}) {
+    async handleGallerySelected(event) {
+      const files = Array.from(event.target.files || [])
+      if (files.length === 0) return
+
+      const currentCount = this.galleryPreviews.length
+      if (currentCount + files.length > 5) {
+        this.error = `Môžeš nahrať najviac 5 obrázkov do galérie. (Momentálne máš: ${currentCount})`
+        event.target.value = ''
+        return
+      }
+
+      let newFilesSize = 0
+      for (const file of files) {
+        newFilesSize += file.size
+      }
+      if (newFilesSize > 300 * 1024 * 1024) {
+        this.error = 'Celková veľkosť vybraných obrázkov presahuje limit 300 MB.'
+        event.target.value = ''
+        return
+      }
+
+      this.error = ''
+
+      for (const file of files) {
+        try {
+          const compressed = await compressImageToWebp(file)
+          const previewUrl = URL.createObjectURL(compressed)
+          this.galleryPreviews.push({
+            url: previewUrl,
+            file: compressed
+          })
+        } catch (err) {
+          console.error('Compression failed for file:', file.name, err)
+          const previewUrl = URL.createObjectURL(file)
+          this.galleryPreviews.push({
+            url: previewUrl,
+            file
+          })
+        }
+      }
+      event.target.value = ''
+    },
+    removeGalleryImage(index) {
+      const item = this.galleryPreviews[index]
+      if (item.file && item.url.startsWith('blob:')) {
+        URL.revokeObjectURL(item.url)
+      }
+      this.galleryPreviews.splice(index, 1)
+    },
+    buildTrail(photoUrl, gpx = {}, galleryUrls = []) {
       const tags = this.tagText
         .split(',')
         .map(tag => tag.trim())
@@ -636,7 +754,7 @@ export default {
         bikeType: this.form.sport === 'cycling' ? this.form.activityType : undefined,
         status: this.form.status || 'published',
         previewImage: photoUrl,
-        galleryImages: photoUrl ? [photoUrl] : [],
+        galleryImages: galleryUrls.length > 0 ? galleryUrls : (photoUrl ? [photoUrl] : []),
         gpxFile: gpx.url || this.form.gpxFile || '',
         gpxFileName: gpx.name || this.form.gpxFileName || '',
         distance: this.formattedDistance,
@@ -714,10 +832,16 @@ export default {
 
       try {
         const photoUrl = await this.uploadPhoto()
+        
+        this.savingStep = 'Nahrávam galériu...'
+        const trailId = this.getTrailStorageId()
+        const galleryUrls = await this.uploadGalleryImages(trailId)
+
         this.savingStep = 'Nahrávam GPX...'
         const gpx = await this.uploadGpx()
+
         this.savingStep = 'Ukladám trasu...'
-        const trail = this.buildTrail(photoUrl, gpx)
+        const trail = this.buildTrail(photoUrl, gpx, galleryUrls)
 
         await this.withTimeout(
           saveAdminTrail(trail),
@@ -765,6 +889,9 @@ export default {
       this.tagText = (trail.tags || []).join(', ')
       this.photoPreview = trail.previewImage || ''
       this.gpxFile = null
+
+      const existingImages = trail.galleryImages || []
+      this.galleryPreviews = existingImages.map(url => ({ url, file: null }))
     }
   },
   mounted() {

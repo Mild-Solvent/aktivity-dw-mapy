@@ -146,6 +146,16 @@
         </div>
       </div>
 
+      <!-- Image Modal / Lightbox -->
+      <div v-if="imageModal.show" class="image-modal-overlay" @click.self="closeImageModal">
+        <button class="modal-close" @click="closeImageModal" type="button">✕</button>
+        <button v-if="imageModal.currentIndex > 0" class="modal-nav prev" @click="prevImage" type="button">‹</button>
+        <div class="modal-content">
+          <img :src="imageModal.currentImage" :alt="`Obrázok ${imageModal.currentIndex + 1}`" class="modal-image" />
+        </div>
+        <button v-if="imageModal.currentIndex < validGalleryImages.length - 1" class="modal-nav next" @click="nextImage" type="button">›</button>
+      </div>
+
     </div>
   </div>
 </template>
