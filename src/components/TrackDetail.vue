@@ -21,112 +21,129 @@
   <!-- Track Content -->
   <div class="track-detail" v-else-if="track">
     <div class="track-header">
-      <button @click="goBack" class="back-button">
-← Späť na zoznam trás
-      </button>
-      <div class="track-title-section">
-        <h1 class="track-title">{{ track.name }}</h1>
-        <div class="track-meta-badges">
-          <span class="meta-badge sport-meta" :title="getSportTitle(track)">
-            <img
-              v-if="track.sport === 'cycling' || !track.sport"
-              class="meta-icon"
-              :src="getSportIcon(track)"
-              :alt="getSportTitle(track)"
-            />
-            <span v-else class="meta-icon sport-icon--emoji">{{ getSportEmoji(track) }}</span>
-            {{ getSportTitle(track) }}
-          </span>
-          <span class="meta-badge difficulty-meta" :title="getDifficultyTitle(track.difficulty)">
-            <img class="meta-icon" :src="getDifficultyIcon(track.difficulty)" :alt="getDifficultyTitle(track.difficulty)" /> {{ getDifficultyTitle(track.difficulty) }}
-          </span>
+      <div class="container">
+        <div class="header-nav-line">
+          <button @click="goBack" class="back-button">
+            ← Späť na zoznam trás
+          </button>
+          <button 
+            v-if="track.gpxFile"
+            @click="downloadGPX" 
+            class="header-gpx-button"
+          >
+            📥 Stiahnuť GPX
+          </button>
+        </div>
+        <div class="track-title-section">
+          <h1 class="track-title">{{ track.name }}</h1>
+          <div class="track-meta-badges">
+            <span class="meta-badge sport-meta" :title="getSportTitle(track)">
+              <img
+                v-if="track.sport === 'cycling' || !track.sport"
+                class="meta-icon"
+                :src="getSportIcon(track)"
+                :alt="getSportTitle(track)"
+              />
+              <span v-else class="meta-icon sport-icon--emoji">{{ getSportEmoji(track) }}</span>
+              {{ getSportTitle(track) }}
+            </span>
+            <span class="meta-badge difficulty-meta" :title="getDifficultyTitle(track.difficulty)">
+              <img class="meta-icon" :src="getDifficultyIcon(track.difficulty)" :alt="getDifficultyTitle(track.difficulty)" /> {{ getDifficultyTitle(track.difficulty) }}
+            </span>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="container">
       <div class="track-content">
-        <div class="track-image-section">
-          <a 
-            :href="track.mapUrl" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            class="track-image-link"
-          >
-            <img :src="track.previewImage" :alt="track.name" class="track-main-image" />
-          </a>
+        <!-- LEFT COLUMN: Visuals (Map Preview, GPX Download, Elevation Profile) -->
+        <div class="track-visuals-column">
+          <!-- Map Preview Card -->
+          <div class="track-image-section">
+            <a 
+              :href="track.mapUrl" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="track-image-link"
+              title="Otvoriť trasu na Mapy.com"
+            >
+              <img :src="track.previewImage" :alt="track.name" class="track-main-image" />
+              <div class="map-image-overlay">
+                <span class="overlay-text">🗺️ Zobraziť na Mapy.com</span>
+              </div>
+            </a>
+          </div>
+
+          <!-- Profile Image Section (Stacked under Map/GPX) -->
+          <div class="profile-section" v-if="track.profileImage && showProfileImage">
+            <h3>📈 Profil trasy</h3>
+            <div class="profile-image-container">
+              <img 
+                :src="track.profileImage" 
+                :alt="`Profil trasy ${track.name}`" 
+                class="profile-image"
+                @error="handleProfileImageError"
+              />
+            </div>
+          </div>
         </div>
 
-        <div class="track-info">
-          <p class="track-description">{{ track.description }}</p>
-          
-          <div class="track-stats-unified">
-            <div class="unified-stat-item">
-              <img class="stat-icon" src="/assets/icons/lenght-of-track.jpg" alt="Vzdialenosť" />
-              <div class="stat-content">
-                <div class="stat-label">Vzdialenosť</div>
-                <div class="stat-value">{{ track.distance }}</div>
+        <!-- RIGHT COLUMN: Info & Stats & Actions -->
+        <div class="track-info-column">
+          <!-- Description Card -->
+          <div class="track-description-section">
+            <h3>📝 O trase</h3>
+            <p class="track-description">{{ track.description }}</p>
+          </div>
+
+          <!-- Stats Dashboard -->
+          <div class="track-stats-section">
+            <h3>📊 Parametre</h3>
+            <div class="track-stats-unified">
+              <div class="unified-stat-item">
+                <img class="stat-icon" src="/assets/icons/lenght-of-track.jpg" alt="Vzdialenosť" />
+                <div class="stat-content">
+                  <div class="stat-label">Vzdialenosť</div>
+                  <div class="stat-value">{{ track.distance }}</div>
+                </div>
               </div>
-            </div>
-            <div class="stat-separator"></div>
-            <div class="unified-stat-item">
-              <img class="stat-icon" src="/assets/icons/duration.jpg" alt="Trvanie" />
-              <div class="stat-content">
-                <div class="stat-label">Trvanie</div>
-                <div class="stat-value">{{ track.duration }}</div>
+              <div class="stat-separator"></div>
+              <div class="unified-stat-item">
+                <img class="stat-icon" src="/assets/icons/duration.jpg" alt="Trvanie" />
+                <div class="stat-content">
+                  <div class="stat-label">Trvanie</div>
+                  <div class="stat-value">{{ track.duration }}</div>
+                </div>
               </div>
-            </div>
-            <div class="stat-separator"></div>
-            <div class="unified-stat-item">
-              <img class="stat-icon" src="/assets/icons/profil-elevation.jpg" alt="Prevýšenie" />
-              <div class="stat-content">
-                <div class="stat-label">Prevýšenie</div>
-                <div class="stat-value">{{ track.elevation }}</div>
+              <div class="stat-separator"></div>
+              <div class="unified-stat-item">
+                <img class="stat-icon" src="/assets/icons/profil-elevation.jpg" alt="Prevýšenie" />
+                <div class="stat-content">
+                  <div class="stat-label">Prevýšenie</div>
+                  <div class="stat-value">{{ track.elevation }}</div>
+                </div>
               </div>
             </div>
           </div>
 
+          <!-- Map Action Button -->
           <div class="track-map-action" v-if="track.mapUrl">
             <a
               :href="track.mapUrl"
               target="_blank"
               rel="noopener noreferrer"
-              class="action-button primary"
+              class="action-button primary map-link-btn"
             >
-              Otvoriť trasu na Mapy.com
+              🗺️ Otvoriť trasu na Mapy.com
             </a>
           </div>
-
-        </div>
-      </div>
-      
-      <!-- Tlačidlo na stiahnutie GPX -->
-      <div class="action-buttons" v-if="track.gpxFile">
-        <button 
-          @click="downloadGPX" 
-          class="action-button secondary"
-        >
-📥 Stiahnúť GPX
-        </button>
-      </div>
-
-
-      <!-- Profile Image Section -->
-      <div class="profile-section" v-if="track.profileImage && showProfileImage">
-        <h3>Profil trasy</h3>
-        <div class="profile-image-container">
-          <img 
-            :src="track.profileImage" 
-            :alt="`Profil trasy ${track.name}`" 
-            class="profile-image"
-            @error="handleProfileImageError"
-          />
         </div>
       </div>
 
-      <!-- Gallery Section -->
+      <!-- GALLERY SECTION: Always bottom, full width -->
       <div class="gallery-section">
-        <h3>Galéria obrázkov</h3>
+        <h3>📸 Galéria obrázkov</h3>
         <div class="gallery-container" v-if="validGalleryImages.length > 0">
           <div 
             v-for="(image, index) in validGalleryImages" 
@@ -139,6 +156,9 @@
               :alt="`Obrázok z trasy ${track.name} ${index + 1}`" 
               class="gallery-image"
             />
+            <div class="gallery-item-overlay">
+              <span class="zoom-icon">🔍 Zväčšiť</span>
+            </div>
           </div>
         </div>
         <div class="no-images-message" v-else>
