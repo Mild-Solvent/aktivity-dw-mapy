@@ -1,0 +1,73 @@
+/* Terms and Privacy pages */
+.terms-page,
+.privacy-page {
+  padding: 2rem 0 3rem;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  color: var(--text-primary);
+}
+
+.content {
+  background: white;
+  padding: 3rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  line-height: 1.7;
+}
+
+.section {
+  margin-bottom: 2rem;
+}
+
+.section h2 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.section p {
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+.section ul {
+  margin: 1rem 0;
+  padding-left: 2rem;
+}
+
+.section li {
+  margin-bottom: 0.5rem;
+  color: #555;
+}
+
+.last-updated {
+  font-style: italic;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Track not found */
+.track-not-found {
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.not-found-content {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.not-found-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+

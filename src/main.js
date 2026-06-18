@@ -8,7 +8,7 @@ import AdminManageTrails from './components/AdminManageTrails.vue'
 import AdminRoles from './components/AdminRoles.vue'
 import Terms from './components/Terms.vue'
 import Privacy from './components/Privacy.vue'
-import './style.css'
+import './styles/index.css'
 
 const routes = [
   { path: '/', name: 'Home', component: HomePage },

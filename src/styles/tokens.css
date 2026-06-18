@@ -1,0 +1,26 @@
+:root {
+  /* CEA-WEB Base color palette */
+  --licorice: #1e0b0b;
+  --fire-engine-red: #c32224;
+  --atomic-tangerine: rgba(255, 255, 255, 0.3);
+  --white: #ffffff;
+
+  /* Core theme variables */
+  --primary: var(--fire-engine-red);
+  --primary-hover: #9c1b1d;
+  --secondary: var(--atomic-tangerine);
+  --secondary-hover: rgba(255, 255, 255, 0.4);
+  --text-primary: var(--licorice);
+  --text-secondary: #4b2c2c;
+  --text-white: var(--white);
+  --background: var(--white);
+  --foreground: var(--licorice);
+
+  /* Responsive layout variables */
+  --container-max-width: 1400px;
+  --content-padding: 2rem;
+  --grid-gap: 2rem;
+  --card-min-width: 280px;
+  --card-max-width: 400px;
+}
+

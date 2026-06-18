@@ -1,0 +1,653 @@
+/* Desktop fixes for track cards */
+@media (min-width: 1024px) {
+  .track-card {
+    min-width: 320px;
+  }
+
+  .track-card .track-content {
+    padding: 1.5rem;
+    position: relative;
+  }
+
+  .track-card .track-description {
+    text-align: left;
+    margin-left: 0;
+    padding-left: 0;
+    position: relative;
+    left: 0;
+    /* Preserve ellipsis truncation on desktop */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* Large Desktop */
+@media (min-width: 1400px) {
+  .tracks-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 380px));
+    gap: 2.5rem;
+    padding: 0 3rem;
+  }
+
+  .results-info {
+    padding: 0 3rem;
+    font-size: 1.1rem;
+  }
+
+  .track-card {
+    max-width: 380px;
+  }
+
+  .hero-title {
+    font-size: 3.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.3rem;
+  }
+}
+
+/* MacBook Pro 14" and 16" */
+@media (min-width: 1024px) and (max-width: 1399px) {
+  .tracks-grid {
+    padding: 0 2.5rem;
+  }
+
+  .results-info {
+    padding: 0 2.5rem;
+  }
+}
+
+/* Desktop - Updated grid columns */
+@media (min-width: 1024px) and (max-width: 1399px) {
+  .tracks-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Tablet */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .tracks-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .header {
+    padding: 0.75rem 0;
+  }
+
+  .header-container {
+    gap: 0.5rem;
+    align-items: center;
+    min-height: auto;
+  }
+
+  .logo-link {
+    font-size: 1.2rem;
+  }
+
+  .header-actions {
+    gap: 0.5rem;
+  }
+
+  .login-button {
+    font-size: 0.85rem;
+    padding: 0.55rem 0.72rem;
+  }
+
+  .admin-add-button {
+    font-size: 0.85rem;
+    padding: 0.55rem 0.72rem;
+  }
+
+  .admin-form-header,
+  .trail-preview-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-list-item,
+  .role-form {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-list-item img {
+    height: 160px;
+    width: 100%;
+  }
+
+  /* Mobile search behavior */
+  .search-container {
+    min-width: 32px;
+    width: 32px;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 100;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .search-container.search-expanded {
+    width: min(190px, calc(100vw - 165px));
+    min-width: min(190px, calc(100vw - 165px));
+    max-width: calc(100vw - 165px);
+  }
+
+  .search-input {
+    opacity: 0;
+    width: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    transition: all 0.3s ease;
+  }
+
+  .search-container.search-expanded .search-input {
+    opacity: 1;
+    width: 100%;
+    padding: 0.75rem 3rem 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 25px;
+  }
+
+  .search-icon {
+    right: 0;
+    position: static;
+    transform: none;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0;
+  }
+
+  .search-container.search-expanded .search-icon {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: auto;
+    height: auto;
+    background: none;
+  }
+
+  /* Logo hiding on mobile when search is expanded */
+  .logo {
+    transition: all 0.3s ease;
+  }
+
+  .logo.logo-hidden {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.8);
+    pointer-events: none;
+  }
+
+  .hero-content {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 0 1rem;
+  }
+
+  /* Hide desktop logos on mobile */
+  .hero-logo-desktop {
+    display: none !important;
+  }
+
+  /* Show mobile logo container */
+  .hero-logo-mobile {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    order: 1;
+  }
+
+  .hero-logo {
+    height: 70px;
+  }
+
+  .hero-text {
+    order: 2;
+  }
+
+  .hero-logo-mobile .hero-logo-right {
+    height: 100px;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .tracks-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .track-detail .track-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .track-detail .track-title {
+    font-size: 2rem;
+  }
+
+  .track-stats-unified {
+    padding: 1rem;
+  }
+
+  .unified-stat-item {
+    padding: 0.75rem 0;
+  }
+
+  .gallery-container {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .gallery-image {
+    height: 100%;
+  }
+
+  .track-main-image {
+    max-height: 350px;
+  }
+
+  .header-nav-line {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+
+  .track-actions-container {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .track-header .back-button {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .action-button {
+    min-width: 250px;
+  }
+
+  .content {
+    padding: 1.5rem;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+  }
+
+  .menu {
+    width: 280px;
+  }
+
+  .track-stats {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-links {
+    gap: 1rem;
+  }
+
+  .footer-link {
+    font-size: 0.9rem;
+  }
+
+  .footer-info {
+    font-size: 1rem;
+    gap: 0.75rem;
+  }
+
+  .footer-logo {
+    height: 40px;
+  }
+
+  .footer-image {
+    max-width: none;
+    gap: 0;
+    justify-content: center;
+    flex-wrap: nowrap;
+  }
+
+  .copyright {
+    font-size: 1.1rem;
+  }
+
+  .cea-flower-logo {
+    height: 35px;
+  }
+}
+
+/* Small mobile screens */
+@media (max-width: 600px) {
+  .logo-link {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 0.75rem;
+  }
+
+  .hero-section {
+    padding: 2rem 0;
+  }
+
+  .hero-content {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 0 0.75rem;
+  }
+
+  /* Ensure mobile logo visibility on small screens */
+  .hero-logo-desktop {
+    display: none !important;
+  }
+
+  .hero-logo-mobile {
+    display: flex !important;
+    gap: 1.5rem;
+  }
+
+  .hero-logo {
+    height: 60px;
+  }
+
+  .hero-logo-mobile .hero-logo-right {
+    height: 80px;
+  }
+
+  .hero-title {
+    font-size: 1.75rem;
+  }
+
+  .header-actions {
+    gap: 0.4rem;
+  }
+
+  .logo-link {
+    font-size: 1rem;
+  }
+
+  .login-button {
+    font-size: 0.78rem;
+    padding: 0.5rem 0.58rem;
+  }
+
+  .admin-add-button {
+    font-size: 0.78rem;
+    padding: 0.5rem 0.58rem;
+  }
+
+  .auth-popup {
+    padding: 1rem;
+  }
+
+  /* Smaller mobile search adjustments */
+  .search-container {
+    min-width: 30px;
+    width: 30px;
+    height: 30px;
+  }
+
+  .search-container.search-expanded {
+    width: min(135px, calc(100vw - 145px));
+    min-width: min(135px, calc(100vw - 145px));
+    max-width: calc(100vw - 145px);
+  }
+
+  .search-icon {
+    width: 30px;
+    height: 30px;
+    font-size: 0.9rem;
+  }
+
+  .back-button {
+    position: static;
+    transform: none;
+    margin-bottom: 1rem;
+  }
+
+  .track-title-section {
+    text-align: center;
+  }
+
+  .track-detail .track-title {
+    font-size: 1.5rem;
+  }
+
+  .menu {
+    width: 90vw;
+  }
+
+  .action-button {
+    min-width: 100%;
+  }
+
+  .footer-links {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .footer-content {
+    gap: 1rem;
+  }
+
+  .footer {
+    padding: 2rem 0;
+  }
+
+  .footer-logo {
+    height: 35px;
+  }
+
+  .footer-image {
+    gap: 0;
+    flex-wrap: nowrap;
+  }
+
+  .copyright {
+    font-size: 1rem;
+  }
+
+  .cea-flower-logo {
+    height: 30px;
+  }
+
+  /* Even smaller screens - reduce logo font size further */
+  .logo-link {
+    font-size: 1rem;
+  }
+}
+
+/* Ultra-wide displays (1600px+) */
+@media (min-width: 1600px) {
+  .tracks-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 350px));
+    gap: 2.5rem;
+    max-width: 1800px;
+    padding: 0 4rem;
+  }
+
+  .results-info {
+    max-width: 1800px;
+    padding: 0 4rem;
+  }
+
+  .container {
+    max-width: 1800px;
+  }
+
+  .track-card {
+    max-width: 350px;
+  }
+
+  /* Track detail improvements */
+  .track-detail .track-content {
+    max-width: 1400px;
+    margin: 3rem auto;
+    padding: 0 2rem;
+  }
+
+  .track-main-image {
+    max-height: 500px;
+  }
+
+  .gallery-container {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+/* Extra wide displays (1920px+) */
+@media (min-width: 1920px) {
+  .tracks-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 340px));
+    gap: 3rem;
+    max-width: 2200px;
+    padding: 0 5rem;
+  }
+
+  .results-info {
+    max-width: 2200px;
+    padding: 0 5rem;
+  }
+
+  .container {
+    max-width: 2200px;
+  }
+
+  .header-container {
+    max-width: 2200px;
+    padding: 0 2rem;
+  }
+
+  .footer-container {
+    max-width: 2200px;
+  }
+
+  .track-card {
+    max-width: 340px;
+  }
+
+  /* Track detail improvements */
+  .track-detail .track-content {
+    max-width: 1600px;
+    margin: 3rem auto;
+    padding: 0 3rem;
+  }
+
+  .content {
+    padding: 4rem;
+  }
+
+  .gallery-container {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+}
+
+/* 4K and ultra-wide displays (2560px+) */
+@media (min-width: 2560px) {
+  .tracks-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 350px));
+    gap: 3rem;
+    max-width: 2800px;
+    padding: 0 6rem;
+  }
+
+  .results-info {
+    max-width: 2800px;
+    padding: 0 6rem;
+  }
+
+  .container {
+    max-width: 2800px;
+  }
+
+  .header-container {
+    max-width: 2800px;
+    padding: 0 3rem;
+  }
+
+  .footer-container {
+    max-width: 2800px;
+  }
+
+  .track-card {
+    max-width: 350px;
+  }
+
+  /* Track detail improvements */
+  .track-detail .track-content {
+    max-width: 2000px;
+    margin: 4rem auto;
+    padding: 0 4rem;
+  }
+
+  .track-main-image {
+    max-height: 600px;
+  }
+
+  .content {
+    padding: 5rem;
+  }
+
+  .gallery-container {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2.5rem;
+  }
+
+  .hero-section {
+    padding: 6rem 0;
+  }
+
+  .hero-title {
+    font-size: 4rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.4rem;
+  }
+}
+
