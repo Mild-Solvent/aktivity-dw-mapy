@@ -26,13 +26,6 @@
           <button @click="goBack" class="back-button">
             ← Späť na zoznam trás
           </button>
-          <button 
-            v-if="track.gpxFile"
-            @click="downloadGPX" 
-            class="header-gpx-button"
-          >
-            📥 Stiahnuť GPX
-          </button>
         </div>
         <div class="track-title-section">
           <h1 class="track-title">{{ track.name }}</h1>
@@ -76,7 +69,7 @@
           </div>
 
           <!-- Profile Image Section (Stacked under Map/GPX) -->
-          <div class="profile-section" v-if="track.profileImage && showProfileImage">
+          <!-- <div class="profile-section" v-if="track.profileImage && showProfileImage">
             <h3>📈 Profil trasy</h3>
             <div class="profile-image-container">
               <img 
@@ -86,7 +79,7 @@
                 @error="handleProfileImageError"
               />
             </div>
-          </div>
+          </div> -->
         </div>
 
         <!-- RIGHT COLUMN: Info & Stats & Actions -->
@@ -127,26 +120,37 @@
             </div>
           </div>
 
-          <!-- Map Action Button -->
-          <div class="track-map-action" v-if="track.mapUrl">
-            <a
-              :href="track.mapUrl"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="action-button primary map-link-btn"
-            >
-              🗺️ Otvoriť trasu na Mapy.com
-            </a>
+          <!-- Action Buttons (Separate but placed next to each other) -->
+          <div class="track-actions-container">
+            <div class="track-map-action" v-if="track.mapUrl">
+              <a
+                :href="track.mapUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="action-button primary map-link-btn"
+              >
+                🗺️ Otvoriť na Mapy.com
+              </a>
+            </div>
+            <div class="track-gpx-action" v-if="track.gpxFile">
+              <button 
+                @click="downloadGPX" 
+                class="action-button secondary gpx-download-btn"
+              >
+                📥 Stiahnuť GPX
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- GALLERY SECTION: Always bottom, full width -->
-      <div class="gallery-section">
-        <h3>📸 Galéria obrázkov</h3>
-        <div class="gallery-container" v-if="validGalleryImages.length > 0">
-          <div 
-            v-for="(image, index) in validGalleryImages" 
+      <div class="track-content">
+        <!-- GALLERY SECTION: Always bottom, full width -->
+        <div class="gallery-section">
+          <h3>📸 Galéria obrázkov</h3>
+          <div class="gallery-container" v-if="validGalleryImages.length > 0">
+            <div 
+              v-for="(image, index) in validGalleryImages" 
             :key="index" 
             class="gallery-item"
             @click="openImageModal(image, index)"
@@ -164,8 +168,8 @@
         <div class="no-images-message" v-else>
           <p>Žiadne fotografie z tejto trasy</p>
         </div>
+       </div>
       </div>
-
       <!-- Image Modal / Lightbox -->
       <div v-if="imageModal.show" class="image-modal-overlay" @click.self="closeImageModal">
         <button class="modal-close" @click="closeImageModal" type="button">✕</button>
@@ -228,6 +232,7 @@ export default {
         } else {
           this.error = null
           this.validGalleryImages = this.track.galleryImages || []
+          console.log('Loaded track object:', this.track)
         }
       } catch (error) {
         console.error('Error loading track:', error)
