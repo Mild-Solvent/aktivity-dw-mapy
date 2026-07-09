@@ -77,6 +77,21 @@
 }
 
 /* Mobile Responsive */
+@media (max-width: 1100px) {
+  .track-detail .track-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .track-visuals-column {
+    align-self: stretch;
+  }
+
+  .track-main-image {
+    max-height: 520px;
+  }
+}
+
 @media (max-width: 768px) {
   .header {
     padding: 0.75rem 0;
@@ -279,6 +294,12 @@
     flex-direction: column;
     gap: 0.75rem;
     align-items: stretch;
+  }
+
+  .track-header .container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.25rem;
   }
 
   .track-actions-container {
