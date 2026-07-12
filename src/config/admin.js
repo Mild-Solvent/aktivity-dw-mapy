@@ -1,16 +1,9 @@
-// Admin emails are configured via VITE_ADMIN_EMAILS env variable (comma-separated).
-// These act as UI-level super-admins (no DB round-trip needed to show admin nav).
-// The same emails MUST also be seeded into user_roles via the DB migration so that
-// Postgres RLS functions (is_admin, is_trail_manager) enforce writes at the DB level.
-const adminEmailsEnv = import.meta.env.VITE_ADMIN_EMAILS || ''
-export const ADMIN_EMAILS = adminEmailsEnv
-  .split(',')
-  .map(e => e.trim().toLowerCase())
-  .filter(Boolean)
-
-export const isAdminEmail = (email) => {
-  return ADMIN_EMAILS.includes(String(email || '').trim().toLowerCase())
-}
+// Role definitions for the SPA.
+//
+// The bootstrap admin (ADMIN_BOOTSTRAP_EMAIL) is resolved entirely server-side
+// by /api/auth/me — it never appears in the client bundle. The role returned
+// from the server is the single source of truth for UI gating. Client-side
+// role checks below are advisory (the /api handlers enforce them for real).
 
 export const ROLES = {
   ADMIN: 'admin',
@@ -27,3 +20,8 @@ export const ROLE_LABELS = {
 export const canAddTrails = (role) => {
   return role === ROLES.ADMIN || role === ROLES.TRAILS_ADDER
 }
+
+// Kept for legacy callers that imported isAdminEmail from here. With the server
+// authoritative, there is no separate "UI super-admin" concept — the role from
+// /api/auth/me already accounts for the bootstrap admin.
+export const isAdminEmail = () => false

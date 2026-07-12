@@ -349,9 +349,8 @@
 
 <script>
 import CookieBanner from './components/CookieBanner.vue'
-import { ROLE_LABELS, ROLES, canAddTrails as roleCanAddTrails, isAdminEmail } from './config/admin'
-import { getRoleForEmail } from './data/roles'
-import { isSupabaseConfigured, supabase } from './lib/supabase'
+import { ROLE_LABELS, ROLES, canAddTrails as roleCanAddTrails } from './config/admin'
+import { api } from './lib/api'
 
 export default {
   name: 'App',
@@ -370,7 +369,6 @@ export default {
       authMessage: '',
       authError: '',
       authUser: null,
-      authSubscription: null,
       userRole: ROLES.USER,
       searchQuery: '',
       filters: {
@@ -393,7 +391,7 @@ export default {
       return this.authMode === 'register' ? 'Vytvoriť účet' : 'Prihlásiť emailom'
     },
     isAdmin() {
-      return this.userRole === ROLES.ADMIN || isAdminEmail(this.authUser?.email)
+      return this.userRole === ROLES.ADMIN
     },
     canAddTrails() {
       return roleCanAddTrails(this.userRole)
@@ -427,35 +425,17 @@ export default {
     async submitAuth() {
       this.authError = ''
       this.authMessage = ''
-
-      if (!isSupabaseConfigured || !supabase) {
-        this.authError = 'Supabase nie je nastavený. Doplň VITE_SUPABASE_URL a VITE_SUPABASE_PUBLISHABLE_KEY.'
-        return
-      }
-
       this.authLoading = true
 
       try {
-        const credentials = {
+        const path = this.authMode === 'register' ? '/api/auth/register' : '/api/auth/login'
+        const me = await api.post(path, {
           email: this.authEmail,
           password: this.authPassword
-        }
+        })
 
-        const { data, error } = this.authMode === 'register'
-          ? await supabase.auth.signUp(credentials)
-          : await supabase.auth.signInWithPassword(credentials)
-
-        if (error) {
-          throw error
-        }
-
-        if (this.authMode === 'register' && !data.session) {
-          this.authMessage = 'Účet bol vytvorený. Skontroluj email a potvrď registráciu.'
-          return
-        }
-
-        this.authUser = data.user
-        await this.refreshUserRole()
+        this.authUser = { email: me.email }
+        this.userRole = me.role || ROLES.USER
         this.authMessage = this.authMode === 'register' ? 'Účet bol vytvorený.' : 'Prihlásenie prebehlo úspešne.'
         this.authPassword = ''
         this.closeAuthMenu()
@@ -468,21 +448,10 @@ export default {
     async signOut() {
       this.authError = ''
       this.authMessage = ''
-
-      if (!supabase) {
-        this.authError = 'Supabase nie je nastavený.'
-        return
-      }
-
       this.authLoading = true
 
       try {
-        const { error } = await supabase.auth.signOut()
-
-        if (error) {
-          throw error
-        }
-
+        await api.post('/api/auth/logout')
         this.authUser = null
         this.userRole = ROLES.USER
         this.authEmail = ''
@@ -535,7 +504,7 @@ export default {
       if (this.isMenuOpen && !this.$refs.burgerMenu?.contains(event.target)) {
         this.closeMenu()
       }
-      
+
       // Collapse search if clicking outside of search container on mobile
       if (this.isSearchExpanded && !this.$refs.searchContainer?.contains(event.target)) {
         this.collapseSearch()
@@ -547,34 +516,28 @@ export default {
         this.closeAuthMenu()
       }
     },
-    async refreshUserRole() {
-      this.userRole = this.authUser?.email
-        ? await getRoleForEmail(this.authUser.email)
-        : ROLES.USER
+    async bootstrapSession() {
+      // Replaces supabase.auth.getSession(). The httpOnly cookie is sent
+      // automatically; the server returns the current user or 401.
+      try {
+        const me = await api.get('/api/auth/me')
+        this.authUser = { email: me.email }
+        this.userRole = me.role || ROLES.USER
+      } catch (err) {
+        // 401 just means anonymous — clear state.
+        this.authUser = null
+        this.userRole = ROLES.USER
+      }
     }
   },
   mounted() {
     document.addEventListener('click', this.handleGlobalClick)
     document.addEventListener('keydown', this.handleKeydown)
-
-    if (supabase) {
-      supabase.auth.getSession().then(({ data }) => {
-        this.authUser = data.session?.user || null
-        this.refreshUserRole()
-      })
-
-      const { data } = supabase.auth.onAuthStateChange((_event, session) => {
-        this.authUser = session?.user || null
-        this.refreshUserRole()
-      })
-
-      this.authSubscription = data.subscription
-    }
+    this.bootstrapSession()
   },
   unmounted() {
     document.removeEventListener('click', this.handleGlobalClick)
     document.removeEventListener('keydown', this.handleKeydown)
-    this.authSubscription?.unsubscribe()
   },
   watch: {
     $route() {

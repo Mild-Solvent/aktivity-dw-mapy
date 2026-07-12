@@ -186,7 +186,7 @@
 
 <script>
 import { getAdminTrailById, getAdminTrailState } from '../data/customTrails'
-import { isSupabaseConfigured, supabase } from '../lib/supabase'
+import { api } from '../lib/api'
 
 export default {
   name: 'TrackDetail',
@@ -324,36 +324,15 @@ export default {
         .replace(/^-+|-+$/g, '')
     },
     async findStoredGpxUrl() {
-      if (!isSupabaseConfigured || !supabase) {
-        return ''
+      // Called as a fallback when the trail's stored gpxFile URL 404s.
+      // Re-fetch metadata from the API — it always has the current Blob URL.
+      try {
+        const trail = await api.get(`/api/trails/${encodeURIComponent(this.id)}`)
+        if (trail?.gpxFile) return trail.gpxFile
+      } catch {
+        // ignore — downloadGPX will use the original URL as last resort
       }
-
-      const storageTrailId = this.getTrailStorageId()
-      if (!storageTrailId) {
-        return ''
-      }
-
-      const { data, error } = await supabase.storage
-        .from('trail-files')
-        .list(storageTrailId, {
-          limit: 20,
-          sortBy: { column: 'created_at', order: 'desc' }
-        })
-
-      if (error) {
-        return ''
-      }
-
-      const gpxFile = (data || []).find(file => file.name?.toLowerCase().endsWith('.gpx'))
-      if (!gpxFile) {
-        return ''
-      }
-
-      const { data: publicUrlData } = supabase.storage
-        .from('trail-files')
-        .getPublicUrl(`${storageTrailId}/${gpxFile.name}`)
-
-      return publicUrlData.publicUrl || ''
+      return ''
     },
     async downloadGPX() {
       if (this.track && this.track.gpxFile) {

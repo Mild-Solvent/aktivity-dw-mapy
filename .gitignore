@@ -68,6 +68,9 @@ vite.config.ts.timestamp-*
 .cache/
 .supabase-home/
 
+# Vercel
+.vercel/
+
 # Temporary folders
 tmp/
 temp/

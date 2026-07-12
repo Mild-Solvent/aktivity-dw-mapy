@@ -1,76 +1,30 @@
-import { ADMIN_EMAILS, ROLES, isAdminEmail } from '../config/admin'
-import { isSupabaseConfigured, supabase } from '../lib/supabase'
+import { ROLES } from '../config/admin'
+import { api } from '../lib/api'
+
+// The bootstrap admin is resolved server-side via ADMIN_BOOTSTRAP_EMAIL and is
+// always returned by /api/roles as 'admin' — no client-side admin-email list
+// is needed anymore.
 
 export const getRemoteRoles = async () => {
-  if (!isSupabaseConfigured || !supabase) {
-    return []
-  }
-
-  const { data, error } = await supabase
-    .from('user_roles')
-    .select('email, role')
-
-  if (error) {
-    throw error
-  }
-
-  return data || []
+  const roles = await api.get('/api/roles')
+  return roles || []
 }
 
 export const saveRemoteRole = async (email, role) => {
-  if (!isSupabaseConfigured || !supabase) {
-    throw new Error('Supabase nie je nastavený. Rolu nie je možné uložiť.')
-  }
-
-  const { error } = await supabase
-    .from('user_roles')
-    .upsert({
-      email: String(email || '').trim().toLowerCase(),
-      role
-    }, { onConflict: 'email' })
-
-  if (error) {
-    throw error
-  }
+  await api.put(`/api/roles/${encodeURIComponent(email)}`, { role })
 }
 
 export const deleteRemoteRole = async (email) => {
-  if (!isSupabaseConfigured || !supabase) {
-    throw new Error('Supabase nie je nastavený. Rolu nie je možné odobrať.')
-  }
-
-  const { error } = await supabase
-    .from('user_roles')
-    .delete()
-    .eq('email', String(email || '').trim().toLowerCase())
-
-  if (error) {
-    throw error
-  }
+  await api.delete(`/api/roles/${encodeURIComponent(email)}`)
 }
 
 export const getAllRoles = async () => {
-  const rolesByEmail = new Map()
-
-  for (const email of ADMIN_EMAILS) {
-    rolesByEmail.set(email, { email, role: ROLES.ADMIN })
-  }
-
-  for (const item of await getRemoteRoles()) {
-    if (item?.email && !isAdminEmail(item.email)) {
-      rolesByEmail.set(item.email, item)
-    }
-  }
-
-  return Array.from(rolesByEmail.values())
+  return getRemoteRoles()
 }
 
 export const getRoleForEmail = async (email) => {
   const normalizedEmail = String(email || '').trim().toLowerCase()
-
-  if (isAdminEmail(normalizedEmail)) {
-    return ROLES.ADMIN
-  }
+  if (!normalizedEmail) return ROLES.USER
 
   const roles = await getAllRoles()
   return roles.find(item => item.email === normalizedEmail)?.role || ROLES.USER

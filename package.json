@@ -1,31 +1,23 @@
 {
   "name": "aktivity-dw-mapy",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
   "description": "Hľadač aktivitných trás - Vue.js webová aplikácia",
   "main": "src/main.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/generate-static-pages.js",
-    "build:spa": "vite build",
+    "build": "vite build",
     "preview": "vite preview",
-    "deploy": "npm run build && gh-pages -d dist",
-    "db:start": "npx supabase start",
-    "db:stop": "npx supabase stop",
-    "db:reset": "npx supabase db reset",
-    "db:status": "npx supabase status",
-    "tracks:scan": "node scripts/generate-track-index.js",
-    "generate:static": "node scripts/generate-static-pages.js"
+    "vercel-dev": "vercel dev"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.105.4",
+    "@upstash/redis": "^1.34.3",
+    "@vercel/blob": "^2.6.1",
     "vue": "^3.4.0",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.0",
-    "gh-pages": "^6.1.0",
-    "supabase": "^2.101.0",
     "vite": "^5.0.0"
   },
   "keywords": [

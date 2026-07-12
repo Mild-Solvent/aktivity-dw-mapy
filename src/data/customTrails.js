@@ -1,4 +1,4 @@
-import { isSupabaseConfigured, supabase } from '../lib/supabase'
+import { api } from '../lib/api'
 
 const firstString = (...values) => {
   return values.find(value => typeof value === 'string' && value.trim()) || ''
@@ -8,21 +8,10 @@ const getStorageTrailId = (value) => {
   return String(value || '')
     .trim()
     .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-z0-9-]+/g, '-')
     .replace(/^-+|-+$/g, '')
-}
-
-const getDefaultGpxUrl = (trail) => {
-  const storageTrailId = getStorageTrailId(trail?.id)
-  if (!isSupabaseConfigured || !supabase || !storageTrailId) {
-    return ''
-  }
-
-  const { data } = supabase.storage
-    .from('trail-files')
-    .getPublicUrl(`${storageTrailId}/track.gpx`)
-
-  return data.publicUrl || ''
 }
 
 const normalizeTrail = (trail) => {
@@ -36,8 +25,7 @@ const normalizeTrail = (trail) => {
     trail.gpx_url,
     trail.gpx?.url,
     trail.gpx?.publicUrl,
-    trail.gpx?.publicURL,
-    getDefaultGpxUrl(trail)
+    trail.gpx?.publicURL
   )
   const gpxFileName = firstString(
     trail.gpxFileName,
@@ -69,20 +57,9 @@ const mergeTrail = (currentTrail, nextTrail) => {
 }
 
 export const getRemoteAdminTrails = async () => {
-  if (!isSupabaseConfigured || !supabase) {
-    return []
-  }
-
-  const { data, error } = await supabase
-    .from('trails')
-    .select('payload')
-
-  if (error) {
-    throw error
-  }
-
-  return (data || [])
-    .map(row => normalizeTrail(row.payload))
+  const trails = await api.get('/api/trails')
+  return (trails || [])
+    .map(trail => normalizeTrail(trail))
     .filter(Boolean)
 }
 
@@ -100,8 +77,8 @@ export const getAdminTrails = async () => {
 
 export const getAdminTrailState = async () => {
   const trails = await getAdminTrails()
-  // deletedTrailIds is no longer tracked client-side (deletion is handled server-side by RLS).
-  // Return an empty Set so existing callers that check deletedTrailIds.has() still work safely.
+  // deletedTrailIds is no longer tracked client-side (deletion is server-side).
+  // Empty Set keeps old callers that check .has() safe.
   return { trails, deletedTrailIds: new Set() }
 }
 
@@ -111,41 +88,19 @@ export const getAdminTrailById = async (id) => {
 }
 
 export const saveRemoteAdminTrail = async (trail) => {
-  if (!isSupabaseConfigured || !supabase) {
-    throw new Error('Supabase nie je nastavený. Trasu nie je možné uložiť.')
+  if (!trail?.id) {
+    throw new Error('Trasa musí mať id.')
   }
-
-  // status must also live in the dedicated column so RLS SELECT policies
-  // (which filter on the column, not the JSONB) work correctly.
-  const { error } = await supabase
-    .from('trails')
-    .upsert({
-      id: trail.id,
-      payload: trail,
-      created_by: trail.createdBy || null,
-      status: trail.status || 'published'
-    }, { onConflict: 'id' })
-
-  if (error) {
-    throw error
-  }
+  await api.put(`/api/trails/${encodeURIComponent(trail.id)}`, trail)
 }
 
 export const saveAdminTrail = (trail) => saveRemoteAdminTrail(trail)
 
 export const deleteRemoteAdminTrail = async (trailId) => {
-  if (!isSupabaseConfigured || !supabase) {
-    throw new Error('Supabase nie je nastavený. Trasu nie je možné odstrániť.')
-  }
-
-  const { error } = await supabase
-    .from('trails')
-    .delete()
-    .eq('id', trailId)
-
-  if (error) {
-    throw error
-  }
+  await api.delete(`/api/trails/${encodeURIComponent(trailId)}`)
 }
 
 export const removeAdminTrail = ({ trailId }) => deleteRemoteAdminTrail(trailId)
+
+// Re-exported so legacy callers importing getStorageTrailId from here still work.
+export { getStorageTrailId }

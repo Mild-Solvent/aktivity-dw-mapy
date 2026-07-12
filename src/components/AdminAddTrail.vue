@@ -325,7 +325,7 @@
 </template>
 
 <script>
-import { isSupabaseConfigured, supabase } from '../lib/supabase'
+import { api } from '../lib/api'
 import { getAdminTrailById, removeAdminTrail, saveAdminTrail } from '../data/customTrails'
 import { gpxFileToPreviewPng, dataUrlToBlob } from '../utils/gpxMapCapture'
 import { compressImageToWebp } from '../utils/imageCompressor'
@@ -541,47 +541,33 @@ export default {
         return ''
       }
 
-      if (!isSupabaseConfigured || !supabase) {
-        if (hasManualPhoto) {
-          return this.photoPreview || await this.readFileAsDataUrl(this.photoFile)
-        }
-        return this.gpxPreview
-      }
-
       let fileBlob
       let extension
+      let contentType
       if (hasManualPhoto) {
-        const compressed = await compressImageToWebp(this.photoFile)
-        fileBlob = compressed
+        fileBlob = await compressImageToWebp(this.photoFile)
         extension = 'webp'
+        contentType = 'image/webp'
       } else {
         fileBlob = dataUrlToBlob(this.gpxPreview)
         extension = fileBlob.type.split('/')[1] || 'webp'
+        contentType = fileBlob.type || 'image/webp'
       }
 
-      const filePath = `${this.getTrailStorageId()}/preview-${Date.now()}.${extension}`
-      const { error } = await this.withTimeout(
-        supabase.storage
-          .from('trail-photos')
-          .upload(filePath, fileBlob, {
-            cacheControl: '3600',
-            upsert: true
-          }),
+      const path = `preview-${Date.now()}.${extension}`
+      const formData = new FormData()
+      formData.append('file', fileBlob, path)
+      formData.append('path', path)
+      formData.append('trailId', this.getTrailStorageId())
+      formData.append('contentType', contentType)
+
+      const { url } = await this.withTimeout(
+        api.upload('/api/upload', formData),
         120000,
         'Nahrávanie fotky trvá príliš dlho.'
       )
 
-      if (error) {
-        throw new Error(error.message === 'Bucket not found'
-          ? 'Chýba Supabase Storage bucket "trail-photos".'
-          : error.message)
-      }
-
-      const { data } = supabase.storage
-        .from('trail-photos')
-        .getPublicUrl(filePath)
-
-      return data.publicUrl
+      return url
     },
     async uploadGpx() {
       // User deliberately skipped GPX — return empty gracefully (no throw)
@@ -600,46 +586,25 @@ export default {
         throw new Error('Najprv vyber GPX súbor trasy.')
       }
 
-      if (!isSupabaseConfigured || !supabase) {
-        return {
-          url: await this.readFileAsDataUrl(this.gpxFile),
-          name: this.gpxFile.name
-        }
-      }
+      const path = 'track.gpx'
+      const formData = new FormData()
+      formData.append('file', this.gpxFile, path)
+      formData.append('path', path)
+      formData.append('trailId', this.getTrailStorageId())
+      formData.append('contentType', 'application/gpx+xml')
 
-      const filePath = `${this.getTrailStorageId()}/track.gpx`
-      const { error } = await this.withTimeout(
-        supabase.storage
-          .from('trail-files')
-          .upload(filePath, this.gpxFile, {
-            cacheControl: '3600',
-            contentType: 'application/gpx+xml',
-            upsert: true
-          }),
+      const { url } = await this.withTimeout(
+        api.upload('/api/upload', formData),
         120000,
         'Nahrávanie GPX súboru trvá príliš dlho.'
       )
 
-      if (error) {
-        throw new Error(error.message === 'Bucket not found'
-          ? 'Chýba Supabase Storage bucket "trail-files".'
-          : error.message)
-      }
-
-      const { data } = supabase.storage
-        .from('trail-files')
-        .getPublicUrl(filePath)
-
       return {
-        url: data.publicUrl,
+        url,
         name: this.gpxFile.name
       }
     },
     async uploadGalleryImages(trailId) {
-      if (!isSupabaseConfigured || !supabase) {
-        return this.galleryPreviews.map(item => item.url)
-      }
-
       const uploadedUrls = []
       for (let i = 0; i < this.galleryPreviews.length; i++) {
         const item = this.galleryPreviews[i]
@@ -649,30 +614,20 @@ export default {
         }
 
         const extension = item.file.type.split('/')[1] || 'webp'
-        const filePath = `${trailId}/gallery-${Date.now()}-${i}.${extension}`
+        const path = `gallery-${Date.now()}-${i}.${extension}`
+        const formData = new FormData()
+        formData.append('file', item.file, path)
+        formData.append('path', path)
+        formData.append('trailId', trailId)
+        formData.append('contentType', item.file.type || 'image/webp')
 
-        const { error } = await this.withTimeout(
-          supabase.storage
-            .from('trail-photos')
-            .upload(filePath, item.file, {
-              cacheControl: '3600',
-              upsert: true
-            }),
+        const { url } = await this.withTimeout(
+          api.upload('/api/upload', formData),
           120000,
           `Nahrávanie fotky galérie (${i + 1}) trvá príliš dlho.`
         )
 
-        if (error) {
-          throw new Error(error.message === 'Bucket not found'
-            ? 'Chýba Supabase Storage bucket "trail-photos".'
-            : error.message)
-        }
-
-        const { data } = supabase.storage
-          .from('trail-photos')
-          .getPublicUrl(filePath)
-
-        uploadedUrls.push(data.publicUrl)
+        uploadedUrls.push(url)
       }
 
       return uploadedUrls
