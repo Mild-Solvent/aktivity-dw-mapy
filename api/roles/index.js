@@ -19,9 +19,14 @@ export default withErrors(async (req, res) => {
   }
 
   const bootstrap = (process.env.ADMIN_BOOTSTRAP_EMAIL || '').trim().toLowerCase()
-  if (bootstrap && !users.some((u) => u.email === bootstrap)) {
-    users.unshift({ email: bootstrap, role: 'admin' })
+  // The bootstrap admin's effective role is always 'admin' regardless of any
+  // KV row — surface that truth to the UI so the roles table isn't misleading.
+  const withEffective = users.map((u) =>
+    u.email === bootstrap ? { ...u, role: 'admin' } : u
+  )
+  if (bootstrap && !withEffective.some((u) => u.email === bootstrap)) {
+    withEffective.unshift({ email: bootstrap, role: 'admin' })
   }
 
-  return ok(res, users)
+  return ok(res, withEffective)
 })

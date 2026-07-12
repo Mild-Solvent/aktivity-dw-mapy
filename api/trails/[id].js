@@ -48,7 +48,9 @@ export default withErrors(async (req, res) => {
 
   if (req.method === 'PUT') {
     let body = {}
-    try { body = JSON.parse(req.body || '{}') } catch { return badRequest(res, 'Neplatný JSON') }
+    try {
+      body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {})
+    } catch { return badRequest(res, 'Neplatný JSON') }
     if (!body.id) return badRequest(res, 'Trasa musí mať id')
     // The URL id wins; ignore a mismatched body.id to keep paths consistent.
     if (slugify(body.id) !== id) return badRequest(res, 'id v tele sa nezhoduje s URL')

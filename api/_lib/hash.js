@@ -71,5 +71,5 @@ export async function verifyPassword(password, stored) {
 
 /** Cryptographically random session token (URL-safe, 43 chars ≈ 256 bits). */
 export function newSessionToken() {
-  return randomBytes(32).toString('base64url')
+  return Buffer.from(randomBytes(32)).toString('base64url')
 }

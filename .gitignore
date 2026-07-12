@@ -74,3 +74,5 @@ vite.config.ts.timestamp-*
 # Temporary folders
 tmp/
 temp/
+.vercel
+.env*

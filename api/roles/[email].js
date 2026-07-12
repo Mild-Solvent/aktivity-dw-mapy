@@ -23,7 +23,9 @@ export default withErrors(async (req, res) => {
 
   if (req.method === 'PUT') {
     let body = {}
-    try { body = JSON.parse(req.body || '{}') } catch { return badRequest(res, 'Neplatný JSON') }
+    try {
+      body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {})
+    } catch { return badRequest(res, 'Neplatný JSON') }
     const role = String(body.role || '').trim().toLowerCase()
     if (!VALID_ROLES.has(role)) return badRequest(res, 'Neplatná rola')
 

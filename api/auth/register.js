@@ -13,7 +13,9 @@ export default withErrors(async (req, res) => {
   if (req.method !== 'POST') return badRequest(res, 'Metóda nie je podporovaná')
 
   let body = {}
-  try { body = JSON.parse(req.body || '{}') } catch { return badRequest(res, 'Neplatný JSON') }
+  try {
+    body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {})
+  } catch { return badRequest(res, 'Neplatný JSON') }
   const email = String(body.email || '').trim().toLowerCase()
   const password = String(body.password || '')
 

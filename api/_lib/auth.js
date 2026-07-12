@@ -43,8 +43,11 @@ export function isAdmin(role) {
 
 // ── Cookie helpers (Express-style on Vercel Node functions) ─────────────
 
-function isProd() {
-  return process.env.NODE_ENV === 'production' || !!process.env.VERCEL_URL
+function isHttps() {
+  // Secure cookie only over HTTPS. In `vercel dev` we're on plain HTTP localhost,
+  // and VERCEL_URL is set even in dev, so we can't rely on it alone.
+  if (process.env.NODE_ENV !== 'production') return false
+  return true
 }
 
 export function setSessionCookie(res, token) {
@@ -53,9 +56,9 @@ export function setSessionCookie(res, token) {
     'Path=/',
     `Max-Age=${SESSION_TTL_SECONDS}`,
     'HttpOnly',
-    'SameSite=Strict',
+    'SameSite=Lax',
   ]
-  if (isProd()) flags.push('Secure')
+  if (isHttps()) flags.push('Secure')
   res.setHeader('Set-Cookie', flags.join('; '))
 }
 
@@ -65,9 +68,9 @@ export function clearSessionCookie(res) {
     'Path=/',
     'Max-Age=0',
     'HttpOnly',
-    'SameSite=Strict',
+    'SameSite=Lax',
   ]
-  if (isProd()) flags.push('Secure')
+  if (isHttps()) flags.push('Secure')
   res.setHeader('Set-Cookie', flags.join('; '))
 }
 
