@@ -91,7 +91,9 @@ export const saveRemoteAdminTrail = async (trail) => {
   if (!trail?.id) {
     throw new Error('Trasa musí mať id.')
   }
-  await api.put(`/api/trails/${encodeURIComponent(trail.id)}`, trail)
+  // Slugify the id for the URL so it matches the server's slugified URL param.
+  const slug = getStorageTrailId(trail.id)
+  await api.put(`/api/trails/${encodeURIComponent(slug)}`, { ...trail, id: slug })
 }
 
 export const saveAdminTrail = (trail) => saveRemoteAdminTrail(trail)

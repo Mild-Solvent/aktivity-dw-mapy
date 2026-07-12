@@ -21,11 +21,15 @@ function sanitize(payload) {
 }
 
 function slugify(s) {
+  // MUST match getStorageTrailId() in src/data/customTrails.js and
+  // storageTrailId() in api/_lib/blob.js — all three produce the canonical
+  // trail id / Blob folder name. Keep them in sync.
   return String(s || '')
+    .trim()
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/[^a-z0-9-]+/g, '-')
     .replace(/^-+|-+$/g, '')
 }
 
@@ -33,7 +37,10 @@ function slugify(s) {
 // PUT    /api/trails/[id]   → create or update (trail managers only)
 // DELETE /api/trails/[id]   → remove trail + its blobs (trail managers only)
 export default withErrors(async (req, res) => {
-  const id = decodeURIComponent(req.query?.id || '').trim()
+  // Slugify the URL id so "My Cool Trail" and "my-cool-trail" resolve to the
+  // same record. The id doubles as the storage folder name, so it must be
+  // a clean slug.
+  const id = slugify(decodeURIComponent(req.query?.id || ''))
   if (!id) return badRequest(res, 'Chýba id trasy')
 
   if (req.method === 'GET') {
@@ -52,8 +59,12 @@ export default withErrors(async (req, res) => {
       body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {})
     } catch { return badRequest(res, 'Neplatný JSON') }
     if (!body.id) return badRequest(res, 'Trasa musí mať id')
-    // The URL id wins; ignore a mismatched body.id to keep paths consistent.
-    if (slugify(body.id) !== id) return badRequest(res, 'id v tele sa nezhoduje s URL')
+    // The URL id is authoritative (it's already slugified above). If the body
+    // id slugifies to something different, reject only when it's clearly a
+    // different trail — same slug is fine.
+    if (slugify(body.id) !== id) {
+      return badRequest(res, `id v tele (${slugify(body.id)}) sa nezhoduje s URL (${id})`)
+    }
 
     const existedBefore = await getTrail(id)
 
