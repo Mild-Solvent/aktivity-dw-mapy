@@ -80,21 +80,12 @@
 
             <div class="track-content">
               <div class="track-badges">
-                <img
-                  v-if="track.sport === 'cycling' || !track.sport"
-                  class="sport-icon"
-                  :src="getSportIcon(track)"
-                  :alt="getSportTitle(track)"
-                  :title="getSportTitle(track)"
-                />
-                <span
-                  v-else
-                  class="sport-icon sport-icon--emoji"
-                  :title="getSportTitle(track)"
-                >{{ getSportEmoji(track) }}</span>
-                <img class="difficulty-icon" :src="getDifficultyIcon(track.difficulty)" :alt="getDifficultyTitle(track.difficulty)" :title="getDifficultyTitle(track.difficulty)" />
+                <span class="sport-icon-wrap" :title="getSportTitle(track)">
+                  <SportIcon :sport="track.sport" size="sm" />
+                </span>
+                <DifficultyBadge :difficulty="track.difficulty" size="sm" />
                 <div class="track-location">
-                  <span class="location-icon">📍</span>
+                  <MapPin class="location-icon" :size="14" aria-hidden="true" />
                   <span class="location-text">{{ track.location }}</span>
                 </div>
               </div>
@@ -132,10 +123,14 @@
 </template>
 
 <script>
+import { MapPin } from 'lucide-vue-next'
+import DifficultyBadge from './DifficultyBadge.vue'
+import SportIcon from './SportIcon.vue'
 import { getAdminTrailState } from '../data/customTrails'
 
 export default {
   name: 'HomePage',
+  components: { DifficultyBadge, MapPin, SportIcon },
   props: {
     filters: {
       type: Object,
@@ -217,17 +212,6 @@ export default {
     goToTrack(trackId) {
       this.$router.push({ name: 'TrackDetail', params: { id: trackId } })
     },
-    getSportIcon(track) {
-      // Only cycling has an existing icon image
-      return '/assets/icons/icon-for-mtb.jpg'
-    },
-    getSportEmoji(track) {
-      const emojis = {
-        hiking: '🥾',
-        running: '🏃'
-      }
-      return emojis[track?.sport] || '🚵'
-    },
     getSportTitle(track) {
       const cyclingTitles = {
         mtb: 'MTB trasa',
@@ -261,26 +245,6 @@ export default {
       return cyclingTitles[sub] || hikingTitles[sub] || runningTitles[sub]
         || sportLabels[track?.sport]
         || 'Trasa'
-    },
-    getDifficultyIcon(difficulty) {
-      const icons = {
-        beginner: '/assets/icons/easy bike-track.jpg',
-        easy: '/assets/icons/easy bike-track.jpg',
-        moderate: '/assets/icons/medium-bike-track.jpg',
-        hard: '/assets/icons/harb-bike-track.jpg',
-        expert: '/assets/icons/harb-bike-track.jpg'
-      }
-      return icons[difficulty] || '/assets/icons/medium-bike-track.jpg'
-    },
-    getDifficultyTitle(difficulty) {
-      const titles = {
-        beginner: 'Začiatočník',
-        easy: 'Ľahká',
-        moderate: 'Stredná',
-        hard: 'Ťažká',
-        expert: 'Expertná'
-      }
-      return titles[difficulty] || 'Náročnosť'
     },
     handleImageError(event, track) {
       // Use fallback image if main image fails to load

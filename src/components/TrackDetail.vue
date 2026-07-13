@@ -31,18 +31,10 @@
           <h1 class="track-title">{{ track.name }}</h1>
           <div class="track-meta-badges">
             <span class="meta-badge sport-meta" :title="getSportTitle(track)">
-              <img
-                v-if="track.sport === 'cycling' || !track.sport"
-                class="meta-icon"
-                :src="getSportIcon(track)"
-                :alt="getSportTitle(track)"
-              />
-              <span v-else class="meta-icon sport-icon--emoji">{{ getSportEmoji(track) }}</span>
+              <SportIcon :sport="track.sport" size="xs" />
               {{ getSportTitle(track) }}
             </span>
-            <span class="meta-badge difficulty-meta" :title="getDifficultyTitle(track.difficulty)">
-              <img class="meta-icon" :src="getDifficultyIcon(track.difficulty)" :alt="getDifficultyTitle(track.difficulty)" /> {{ getDifficultyTitle(track.difficulty) }}
-            </span>
+            <DifficultyBadge :difficulty="track.difficulty" size="md" />
           </div>
         </div>
       </div>
@@ -63,7 +55,7 @@
             >
               <img :src="track.previewImage" :alt="track.name" class="track-main-image" />
               <div class="map-image-overlay">
-                <span class="overlay-text">🗺️ Zobraziť na Mapy.com</span>
+                <span class="overlay-text"><MapIcon class="section-icon" :size="16" aria-hidden="true" /> Zobraziť na Mapy.com</span>
               </div>
             </a>
           </div>
@@ -86,13 +78,13 @@
         <div class="track-info-column">
           <!-- Description Card -->
           <div class="track-description-section">
-            <h3>📝 O trase</h3>
+            <h3><FileText class="section-icon" :size="18" aria-hidden="true" /> O trase</h3>
             <p class="track-description">{{ track.description }}</p>
           </div>
 
           <!-- Stats Dashboard -->
           <div class="track-stats-section">
-            <h3>📊 Parametre</h3>
+            <h3><ChartColumn class="section-icon" :size="18" aria-hidden="true" /> Parametre</h3>
             <div class="track-stats-unified">
               <div class="unified-stat-item">
                 <img class="stat-icon" src="/assets/icons/lenght-of-track.jpg" alt="Vzdialenosť" />
@@ -129,7 +121,7 @@
                 rel="noopener noreferrer"
                 class="action-button primary map-link-btn"
               >
-                🗺️ Otvoriť na Mapy.com
+                🗺️ Otvoriť online
               </a>
             </div>
             <div class="track-gpx-action" v-if="track.gpxFile">
@@ -147,7 +139,7 @@
       <div class="track-content">
         <!-- GALLERY SECTION: Always bottom, full width -->
         <div class="gallery-section">
-          <h3>📸 Galéria obrázkov</h3>
+          <h3><Images class="section-icon" :size="18" aria-hidden="true" /> Galéria obrázkov</h3>
           <div class="gallery-container" v-if="validGalleryImages.length > 0">
             <div 
               v-for="(image, index) in validGalleryImages" 
@@ -185,11 +177,15 @@
 </template>
 
 <script>
+import { ChartColumn, FileText, Images, Map as MapIcon } from 'lucide-vue-next'
+import DifficultyBadge from './DifficultyBadge.vue'
+import SportIcon from './SportIcon.vue'
 import { getAdminTrailById, getAdminTrailState } from '../data/customTrails'
 import { api } from '../lib/api'
 
 export default {
   name: 'TrackDetail',
+  components: { ChartColumn, DifficultyBadge, FileText, Images, MapIcon, SportIcon },
   props: {
     id: {
       type: String,
@@ -244,15 +240,6 @@ export default {
     goBack() {
       this.$router.push('/')
     },
-    getSportIcon(track) {
-      const sport = track?.sport || 'cycling'
-      if (sport === 'cycling') return '/assets/icons/icon-for-mtb.jpg'
-      return '' // hiking and running use emoji spans instead
-    },
-    getSportEmoji(track) {
-      const emojis = { hiking: '🥾', running: '🏃' }
-      return emojis[track?.sport] || '🚵'
-    },
     getSportTitle(track) {
       const cyclingTitles = {
         mtb: 'MTB trasa',
@@ -286,26 +273,6 @@ export default {
       return cyclingTitles[sub] || hikingTitles[sub] || runningTitles[sub]
         || sportLabels[track?.sport]
         || 'Trasa'
-    },
-    getDifficultyIcon(difficulty) {
-      const icons = {
-        beginner: '/assets/icons/easy bike-track.jpg',
-        easy: '/assets/icons/easy bike-track.jpg',
-        moderate: '/assets/icons/medium-bike-track.jpg',
-        hard: '/assets/icons/harb-bike-track.jpg',
-        expert: '/assets/icons/harb-bike-track.jpg'
-      }
-      return icons[difficulty] || '/assets/icons/medium-bike-track.jpg'
-    },
-    getDifficultyTitle(difficulty) {
-      const titles = {
-        beginner: 'Začiatočník',
-        easy: 'Ľahká',
-        moderate: 'Stredná',
-        hard: 'Ťažká',
-        expert: 'Expertná'
-      }
-      return titles[difficulty] || 'Náročnosť'
     },
     formatDate(dateString) {
       const options = { year: 'numeric', month: 'long', day: 'numeric' }
@@ -371,22 +338,6 @@ export default {
           }
         }
       }
-    },
-    getDifficultyText(difficulty) {
-      const translations = {
-        easy: 'ľahkej',
-        moderate: 'strednej',
-        hard: 'ťažkej'
-      }
-      return translations[difficulty] || 'strednej'
-    },
-    getSportText(sport) {
-      const translations = {
-        cycling: 'cyklistiky',
-        running: 'behu',
-        hiking: 'turistiky'
-      }
-      return translations[sport] || 'sportu'
     },
     handleProfileImageError() {
       // Hide profile image section if image fails to load

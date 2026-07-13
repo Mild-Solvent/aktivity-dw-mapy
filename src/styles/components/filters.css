@@ -39,7 +39,7 @@
   box-shadow: 0 0 0 3px rgba(195, 34, 36, 0.1);
 }
 
-/* Sport buttons */
+/* Sport buttons — all use SportIcon SVGs now, so sizing is uniform */
 .sport-options {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -49,45 +49,35 @@
 
 .sport-button {
   background: white;
-  border: 2px solid #e2e8f0;
-  border-radius: 8px;
+  border: 2px solid var(--control-border);
+  border-radius: var(--control-radius);
   padding: 0.5rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 50px;
-}
-
-.sport-button img {
-  width: 100%;
-  height: auto;
-  max-width: 40px;
-  border-radius: 4px;
-}
-
-.sport-button span {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #555;
-}
-
-.sport-button--emoji {
-  font-size: 1.5rem;
-  line-height: 1;
+  min-height: 52px;
+  color: #64748b;
 }
 
 .sport-button:hover {
   border-color: var(--primary);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: var(--primary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.sport-button:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 .sport-button.active {
   border-color: var(--primary);
-  background: rgba(195, 34, 36, 0.1);
-  box-shadow: 0 2px 8px rgba(195, 34, 36, 0.2);
+  background: var(--primary-tint);
+  color: var(--primary);
+  box-shadow: 0 2px 8px rgba(195, 34, 36, 0.18);
 }
 
 /* Admin form – sport picker */
@@ -97,11 +87,16 @@
   flex-wrap: wrap;
 }
 
-.sport-picker-btn {
+.sport-picker-btn,
+.status-picker-btn {
   flex: 1;
   min-width: 90px;
-  border: 2px solid #e2e8f0;
-  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 2px solid var(--control-border);
+  border-radius: var(--control-radius);
   background: white;
   color: #334155;
   cursor: pointer;
@@ -111,15 +106,23 @@
   transition: all 0.2s ease;
 }
 
-.sport-picker-btn:hover {
+.sport-picker-btn:hover,
+.status-picker-btn:hover {
   border-color: var(--primary);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
 }
 
-.sport-picker-btn.active {
+.sport-picker-btn:focus-visible,
+.status-picker-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.sport-picker-btn.active,
+.status-picker-btn.active {
   border-color: var(--primary);
-  background: rgba(195, 34, 36, 0.1);
+  background: var(--primary-tint);
   color: var(--primary);
   font-weight: 700;
   box-shadow: 0 2px 8px rgba(195, 34, 36, 0.2);
@@ -178,49 +181,90 @@
   color: #666;
 }
 
-/* Difficulty buttons */
+/* Difficulty buttons — each wraps a color-coded DifficultyBadge pill */
 .difficulty-options {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.5rem;
   margin-top: 0.5rem;
 }
 
 .difficulty-button {
   background: white;
-  border: 2px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 0.5rem;
+  border: 2px solid var(--control-border);
+  border-radius: var(--control-radius);
+  padding: 0.35rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 50px;
-}
-
-.difficulty-button img {
-  width: 100%;
-  height: auto;
-  max-width: 40px;
-  border-radius: 4px;
+  min-height: 44px;
 }
 
 .difficulty-button span {
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 600;
   color: #555;
 }
 
 .difficulty-button:hover {
   border-color: var(--primary);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.difficulty-button:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 .difficulty-button.active {
   border-color: var(--primary);
-  background: rgba(195, 34, 36, 0.1);
+  background: var(--primary-tint);
   box-shadow: 0 2px 8px rgba(195, 34, 36, 0.2);
 }
+
+/* Active filter glows in its own difficulty color (ski-slope semantics) */
+.difficulty-button.diff--beginner.active { border-color: var(--diff-beginner); background: var(--diff-beginner-bg); box-shadow: 0 2px 8px var(--diff-beginner-border); }
+.difficulty-button.diff--easy.active { border-color: var(--diff-easy); background: var(--diff-easy-bg); box-shadow: 0 2px 8px var(--diff-easy-border); }
+.difficulty-button.diff--moderate.active { border-color: var(--diff-moderate); background: var(--diff-moderate-bg); box-shadow: 0 2px 8px var(--diff-moderate-border); }
+.difficulty-button.diff--hard.active { border-color: var(--diff-hard); background: var(--diff-hard-bg); box-shadow: 0 2px 8px var(--diff-hard-border); }
+.difficulty-button.diff--expert.active { border-color: var(--diff-expert); background: var(--diff-expert-bg); box-shadow: 0 2px 8px var(--diff-expert-border); }
+
+/* Admin form — difficulty pill radio group */
+.difficulty-picker {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.difficulty-picker-btn {
+  background: white;
+  border: 2px solid var(--control-border);
+  border-radius: var(--control-radius);
+  padding: 0.35rem 0.45rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.difficulty-picker-btn:hover {
+  border-color: var(--primary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.difficulty-picker-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.difficulty-picker-btn.diff--beginner.active { border-color: var(--diff-beginner); background: var(--diff-beginner-bg); }
+.difficulty-picker-btn.diff--easy.active { border-color: var(--diff-easy); background: var(--diff-easy-bg); }
+.difficulty-picker-btn.diff--moderate.active { border-color: var(--diff-moderate); background: var(--diff-moderate-bg); }
+.difficulty-picker-btn.diff--hard.active { border-color: var(--diff-hard); background: var(--diff-hard-bg); }
+.difficulty-picker-btn.diff--expert.active { border-color: var(--diff-expert); background: var(--diff-expert-bg); }
 

@@ -27,11 +27,11 @@
                 <span
                   v-if="trail.status === 'draft'"
                   class="status-badge status-badge--draft"
-                >📝 Koncept</span>
+                ><NotebookPen :size="12" aria-hidden="true" /> Koncept</span>
                 <span
                   v-else
                   class="status-badge status-badge--published"
-                >📢 Zverejnená</span>
+                ><Megaphone :size="12" aria-hidden="true" /> Zverejnená</span>
               </p>
             </div>
             <div class="admin-item-actions">
@@ -58,10 +58,12 @@
 </template>
 
 <script>
+import { Megaphone, NotebookPen } from 'lucide-vue-next'
 import { getAdminTrailState, removeAdminTrail } from '../data/customTrails'
 
 export default {
   name: 'AdminManageTrails',
+  components: { Megaphone, NotebookPen },
   props: {
     isAdmin: {
       type: Boolean,

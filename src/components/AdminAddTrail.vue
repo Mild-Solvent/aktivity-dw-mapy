@@ -44,25 +44,28 @@
                   type="button"
                   class="sport-picker-btn"
                   :class="{ active: form.sport === 'cycling' }"
+                  :aria-pressed="form.sport === 'cycling'"
                   @click="setSport('cycling')"
                 >
-                  🚵 Cyklistika
+                  <SportIcon sport="cycling" size="sm" /> Cyklistika
                 </button>
                 <button
                   type="button"
                   class="sport-picker-btn"
                   :class="{ active: form.sport === 'hiking' }"
+                  :aria-pressed="form.sport === 'hiking'"
                   @click="setSport('hiking')"
                 >
-                  🥾 Turistika
+                  <SportIcon sport="hiking" size="sm" /> Turistika
                 </button>
                 <button
                   type="button"
                   class="sport-picker-btn"
                   :class="{ active: form.sport === 'running' }"
+                  :aria-pressed="form.sport === 'running'"
                   @click="setSport('running')"
                 >
-                  🏃 Beh
+                  <SportIcon sport="running" size="sm" /> Beh
                 </button>
               </div>
             </div>
@@ -95,16 +98,22 @@
               </select>
             </label>
 
-            <label class="form-field">
+            <div class="form-field">
               <span>Náročnosť</span>
-              <select v-model="form.difficulty">
-                <option value="beginner">Začiatočník</option>
-                <option value="easy">Ľahká</option>
-                <option value="moderate">Stredná</option>
-                <option value="hard">Ťažká</option>
-                <option value="expert">Expertná</option>
-              </select>
-            </label>
+              <div class="difficulty-picker">
+                <button
+                  v-for="level in difficultyLevels"
+                  :key="level"
+                  type="button"
+                  class="difficulty-picker-btn"
+                  :class="[`diff--${level}`, { active: form.difficulty === level }]"
+                  :aria-pressed="form.difficulty === level"
+                  @click="form.difficulty = level"
+                >
+                  <DifficultyBadge :difficulty="level" size="sm" />
+                </button>
+              </div>
+            </div>
 
             <label class="form-field">
               <span>Lokalita</span>
@@ -259,19 +268,21 @@
               <div class="sport-picker">
                 <button
                   type="button"
-                  class="sport-picker-btn"
+                  class="status-picker-btn"
                   :class="{ active: form.status === 'published' }"
+                  :aria-pressed="form.status === 'published'"
                   @click="form.status = 'published'"
                 >
-                  📢 Zverejnená
+                  <Megaphone :size="16" aria-hidden="true" /> Zverejnená
                 </button>
                 <button
                   type="button"
-                  class="sport-picker-btn"
+                  class="status-picker-btn"
                   :class="{ active: form.status === 'draft' }"
+                  :aria-pressed="form.status === 'draft'"
                   @click="form.status = 'draft'"
                 >
-                  📝 Koncept (draft)
+                  <NotebookPen :size="16" aria-hidden="true" /> Koncept (draft)
                 </button>
               </div>
               <p class="file-status" v-if="form.status === 'draft'">⚠ Trasa nebude verejne viditeľná, kým ju nezverejníš.</p>
@@ -325,6 +336,9 @@
 </template>
 
 <script>
+import { Megaphone, NotebookPen } from 'lucide-vue-next'
+import DifficultyBadge from './DifficultyBadge.vue'
+import SportIcon from './SportIcon.vue'
 import { api } from '../lib/api'
 import { getAdminTrailById, removeAdminTrail, saveAdminTrail } from '../data/customTrails'
 import { gpxFileToPreviewPng, dataUrlToBlob } from '../utils/gpxMapCapture'
@@ -360,6 +374,7 @@ const emptyForm = () => ({
 
 export default {
   name: 'AdminAddTrail',
+  components: { DifficultyBadge, Megaphone, NotebookPen, SportIcon },
   props: {
     authUser: {
       type: Object,
@@ -381,6 +396,7 @@ export default {
   data() {
     return {
       form: emptyForm(),
+      difficultyLevels: ['beginner', 'easy', 'moderate', 'hard', 'expert'],
       tagText: '',
       photoFile: null,
       gpxFile: null,

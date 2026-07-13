@@ -22,5 +22,29 @@
   --grid-gap: 2rem;
   --card-min-width: 280px;
   --card-max-width: 400px;
+
+  /* Difficulty scale (ski-slope semantics: green → blue → orange → black) */
+  --diff-beginner: #15803d;
+  --diff-beginner-bg: rgba(34, 197, 94, 0.12);
+  --diff-beginner-border: rgba(34, 197, 94, 0.35);
+  --diff-easy: #16a34a;
+  --diff-easy-bg: rgba(22, 163, 74, 0.12);
+  --diff-easy-border: rgba(22, 163, 74, 0.35);
+  --diff-moderate: #2563eb;
+  --diff-moderate-bg: rgba(37, 99, 235, 0.12);
+  --diff-moderate-border: rgba(37, 99, 235, 0.35);
+  --diff-hard: #ea580c;
+  --diff-hard-bg: rgba(234, 88, 12, 0.12);
+  --diff-hard-border: rgba(234, 88, 12, 0.35);
+  --diff-expert: #1f2937;
+  --diff-expert-bg: rgba(31, 41, 55, 0.12);
+  --diff-expert-border: rgba(31, 41, 55, 0.4);
+
+  /* Unified control system */
+  --control-radius: 10px;
+  --chip-radius: 999px;
+  --control-border: #e2e8f0;
+  --focus-ring: 0 0 0 3px rgba(195, 34, 36, 0.25);
+  --primary-tint: rgba(195, 34, 36, 0.08);
 }
 

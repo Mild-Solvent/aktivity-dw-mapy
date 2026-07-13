@@ -18,13 +18,13 @@
             <div class="menu-content">
               <div class="menu-main">
                 <router-link to="/" @click="closeMenu" class="menu-item">
-                  🏠 Domov
+                  <House class="section-icon" :size="16" aria-hidden="true" /> Domov
                 </router-link>
                 <router-link to="/terms" @click="closeMenu" class="menu-item">
-                  📋 Všeobecné podmienky
+                  <ScrollText class="section-icon" :size="16" aria-hidden="true" /> Všeobecné podmienky
                 </router-link>
                 <router-link to="/privacy" @click="closeMenu" class="menu-item">
-                  🔒 Ochrana súkromia
+                  <Lock class="section-icon" :size="16" aria-hidden="true" /> Ochrana súkromia
                 </router-link>
               </div>
               
@@ -47,36 +47,45 @@
                 <div class="filter-group">
                   <label>Šport</label>
                   <div class="sport-options">
-                    <button 
+                    <button
                       class="sport-button"
                       :class="{ active: filters.sport === '' }"
+                      :aria-pressed="filters.sport === ''"
                       @click="setSport('')"
+                      title="Všetky športy"
+                      aria-label="Všetky športy"
                     >
-                      <span>Všetky</span>
+                      <SportIcon sport="" size="md" />
                     </button>
-                    <button 
+                    <button
                       class="sport-button"
                       :class="{ active: filters.sport === 'cycling' }"
+                      :aria-pressed="filters.sport === 'cycling'"
                       @click="setSport('cycling')"
                       title="Cyklistika"
+                      aria-label="Cyklistika"
                     >
-                      <img src="/assets/icons/icon-for-mtb.jpg" alt="Cyklistika" />
+                      <SportIcon sport="cycling" size="md" />
                     </button>
                     <button
-                      class="sport-button sport-button--emoji"
+                      class="sport-button"
                       :class="{ active: filters.sport === 'hiking' }"
+                      :aria-pressed="filters.sport === 'hiking'"
                       @click="setSport('hiking')"
                       title="Turistika"
+                      aria-label="Turistika"
                     >
-                      🥾
+                      <SportIcon sport="hiking" size="md" />
                     </button>
                     <button
-                      class="sport-button sport-button--emoji"
+                      class="sport-button"
                       :class="{ active: filters.sport === 'running' }"
+                      :aria-pressed="filters.sport === 'running'"
                       @click="setSport('running')"
                       title="Beh"
+                      aria-label="Beh"
                     >
-                      🏃
+                      <SportIcon sport="running" size="md" />
                     </button>
                   </div>
                 </div>
@@ -101,33 +110,24 @@
                 <div class="filter-group">
                   <label>Náročnosť</label>
                   <div class="difficulty-options">
-                    <button 
+                    <button
                       class="difficulty-button"
                       :class="{ active: filters.difficulty === '' }"
+                      :aria-pressed="filters.difficulty === ''"
                       @click="setDifficulty('')"
+                      title="Všetky náročnosti"
                     >
                       <span>Všetky</span>
                     </button>
-                    <button 
+                    <button
+                      v-for="level in difficultyLevels"
+                      :key="level"
                       class="difficulty-button"
-                      :class="{ active: filters.difficulty === 'easy' }"
-                      @click="setDifficulty('easy')"
+                      :class="[`diff--${level}`, { active: filters.difficulty === level }]"
+                      :aria-pressed="filters.difficulty === level"
+                      @click="setDifficulty(level)"
                     >
-                      <img src="/assets/icons/easy bike-track.jpg" alt="Ľahká" />
-                    </button>
-                    <button 
-                      class="difficulty-button"
-                      :class="{ active: filters.difficulty === 'moderate' }"
-                      @click="setDifficulty('moderate')"
-                    >
-                      <img src="/assets/icons/medium-bike-track.jpg" alt="Stredná" />
-                    </button>
-                    <button 
-                      class="difficulty-button"
-                      :class="{ active: filters.difficulty === 'hard' }"
-                      @click="setDifficulty('hard')"
-                    >
-                      <img src="/assets/icons/harb-bike-track.jpg" alt="Ťažká" />
+                      <DifficultyBadge :difficulty="level" size="sm" />
                     </button>
                   </div>
                 </div>
@@ -317,13 +317,13 @@
         <div class="footer-content">
           <div class="footer-links">
             <router-link to="/" class="footer-link">
-              🏠 Domov
+              <House class="section-icon" :size="14" aria-hidden="true" /> Domov
             </router-link>
             <router-link to="/terms" class="footer-link">
-              📋 Všeobecné podmienky
+              <ScrollText class="section-icon" :size="14" aria-hidden="true" /> Všeobecné podmienky
             </router-link>
             <router-link to="/privacy" class="footer-link">
-              🔒 Ochrana súkromia
+              <Lock class="section-icon" :size="14" aria-hidden="true" /> Ochrana súkromia
             </router-link>
           </div>
           
@@ -348,14 +348,22 @@
 </template>
 
 <script>
+import { House, Lock, ScrollText } from 'lucide-vue-next'
 import CookieBanner from './components/CookieBanner.vue'
+import DifficultyBadge from './components/DifficultyBadge.vue'
+import SportIcon from './components/SportIcon.vue'
 import { ROLE_LABELS, ROLES, canAddTrails as roleCanAddTrails } from './config/admin'
 import { api } from './lib/api'
 
 export default {
   name: 'App',
   components: {
-    CookieBanner
+    CookieBanner,
+    DifficultyBadge,
+    House,
+    Lock,
+    ScrollText,
+    SportIcon
   },
   data() {
     return {
@@ -371,6 +379,7 @@ export default {
       authUser: null,
       userRole: ROLES.USER,
       searchQuery: '',
+      difficultyLevels: ['beginner', 'easy', 'moderate', 'hard', 'expert'],
       filters: {
         sport: '',
         maxDistance: 1000,

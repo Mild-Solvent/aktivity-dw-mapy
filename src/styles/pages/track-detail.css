@@ -98,6 +98,12 @@
   transform: translateY(-2px);
 }
 
+/* Difficulty pill in the red hero: solid white base so its level color stays readable */
+.track-meta-badges .diff-badge {
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
 .back-button {
   background: rgba(255, 255, 255, 0.2);
   border: 2px solid rgba(255, 255, 255, 0.3);

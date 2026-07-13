@@ -24,6 +24,10 @@
   color: #92400e;
 }
 
+.status-badge svg {
+  flex-shrink: 0;
+}
+
 /* Danger variant for admin inline buttons (delete role, delete trail) */
 .admin-inline-button.danger {
   background: transparent;
@@ -39,11 +43,5 @@
 .admin-inline-button:disabled {
   opacity: 0.55;
   cursor: not-allowed;
-}
-
-/* Sport icon emoji in TrackDetail meta badges */
-.sport-icon--emoji {
-  font-size: 1rem;
-  line-height: 1;
 }
 
