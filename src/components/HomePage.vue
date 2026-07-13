@@ -93,16 +93,16 @@
               <p class="track-description">{{ track.description }}</p>
 
               <div class="track-stats">
-                <div class="stat">
-                  <img class="stat-icon" src="/assets/icons/lenght-of-track.jpg" alt="Length" />
+                <div class="stat" title="Vzdialenosť">
+                  <Ruler class="stat-icon" :size="16" aria-hidden="true" />
                   <span class="stat-value">{{ track.distance }}</span>
                 </div>
-                <div class="stat">
-                  <img class="stat-icon" src="/assets/icons/duration.jpg" alt="Trvanie" />
+                <div class="stat" title="Trvanie">
+                  <Clock class="stat-icon" :size="16" aria-hidden="true" />
                   <span class="stat-value">{{ track.duration }}</span>
                 </div>
-                <div class="stat">
-                  <img class="stat-icon" src="/assets/icons/profil-elevation.jpg" alt="Prevýšenie" />
+                <div class="stat" title="Prevýšenie">
+                  <TrendingUp class="stat-icon" :size="16" aria-hidden="true" />
                   <span class="stat-value">{{ track.elevation }}</span>
                 </div>
               </div>
@@ -123,14 +123,14 @@
 </template>
 
 <script>
-import { MapPin } from 'lucide-vue-next'
+import { Clock, MapPin, Ruler, TrendingUp } from 'lucide-vue-next'
 import DifficultyBadge from './DifficultyBadge.vue'
 import SportIcon from './SportIcon.vue'
 import { getAdminTrailState } from '../data/customTrails'
 
 export default {
   name: 'HomePage',
-  components: { DifficultyBadge, MapPin, SportIcon },
+  components: { Clock, DifficultyBadge, MapPin, Ruler, SportIcon, TrendingUp },
   props: {
     filters: {
       type: Object,

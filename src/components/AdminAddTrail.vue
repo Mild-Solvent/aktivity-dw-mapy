@@ -239,6 +239,7 @@
                 <span>{{ photoFile ? photoFile.name : 'Vybrať fotku z počítača' }}</span>
               </label>
               <p class="file-status">Náhľad sa vytvorí z GPX súboru. Vybraná fotka prepíše GPX náhľad.</p>
+              <p class="file-status">Odporúčanie: fotka na šírku s pomerom strán približne 4:3 (napr. 1600×1200 px) — vyplní kartu na stránke trasy bez orezania a prázdnych okrajov.</p>
               <img v-if="photoPreview" :src="photoPreview" alt="Vybraná fotka trasy" class="photo-preview" />
             </div>
 
@@ -297,16 +298,16 @@
             </div>
             <img v-if="photoPreview" :src="photoPreview" alt="Vybraná fotka trasy" class="trail-preview-image" />
             <div class="track-stats">
-              <div class="stat">
-                <img class="stat-icon" src="/assets/icons/lenght-of-track.jpg" alt="Dĺžka" />
+              <div class="stat" title="Dĺžka">
+                <Ruler class="stat-icon" :size="16" aria-hidden="true" />
                 <span class="stat-value">{{ formattedDistance }}</span>
               </div>
-              <div class="stat">
-                <img class="stat-icon" src="/assets/icons/duration.jpg" alt="Trvanie" />
+              <div class="stat" title="Trvanie">
+                <Clock class="stat-icon" :size="16" aria-hidden="true" />
                 <span class="stat-value">{{ formattedDuration }}</span>
               </div>
-              <div class="stat">
-                <img class="stat-icon" src="/assets/icons/profil-elevation.jpg" alt="Prevýšenie" />
+              <div class="stat" title="Prevýšenie">
+                <TrendingUp class="stat-icon" :size="16" aria-hidden="true" />
                 <span class="stat-value">{{ formattedElevation }}</span>
               </div>
             </div>
@@ -336,7 +337,7 @@
 </template>
 
 <script>
-import { Megaphone, NotebookPen } from 'lucide-vue-next'
+import { Clock, Megaphone, NotebookPen, Ruler, TrendingUp } from 'lucide-vue-next'
 import DifficultyBadge from './DifficultyBadge.vue'
 import SportIcon from './SportIcon.vue'
 import { api } from '../lib/api'
@@ -374,7 +375,7 @@ const emptyForm = () => ({
 
 export default {
   name: 'AdminAddTrail',
-  components: { DifficultyBadge, Megaphone, NotebookPen, SportIcon },
+  components: { Clock, DifficultyBadge, Megaphone, NotebookPen, Ruler, SportIcon, TrendingUp },
   props: {
     authUser: {
       type: Object,

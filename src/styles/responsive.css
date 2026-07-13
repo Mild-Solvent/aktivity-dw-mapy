@@ -83,10 +83,6 @@
     gap: 2rem;
   }
 
-  .track-visuals-column {
-    align-self: stretch;
-  }
-
   .track-main-image {
     max-height: 520px;
   }
@@ -141,78 +137,9 @@
     width: 100%;
   }
 
-  /* Mobile search behavior */
-  .search-container {
-    min-width: 32px;
-    width: 32px;
-    transition: all 0.3s ease;
-    position: relative;
-    z-index: 100;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-  }
-
+  /* Mobile search: narrower expanded width (base collapse styles in shell/search.css) */
   .search-container.search-expanded {
     width: min(190px, calc(100vw - 165px));
-    min-width: min(190px, calc(100vw - 165px));
-    max-width: calc(100vw - 165px);
-  }
-
-  .search-input {
-    opacity: 0;
-    width: 0;
-    padding: 0;
-    border: none;
-    background: transparent;
-    transition: all 0.3s ease;
-  }
-
-  .search-container.search-expanded .search-input {
-    opacity: 1;
-    width: 100%;
-    padding: 0.75rem 3rem 0.75rem 1rem;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 25px;
-  }
-
-  .search-icon {
-    right: 0;
-    position: static;
-    transform: none;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    margin: 0;
-    padding: 0;
-    flex-shrink: 0;
-  }
-
-  .search-container.search-expanded .search-icon {
-    position: absolute;
-    right: 0.5rem;
-    top: 50%;
-    transform: translateY(-50%);
-    width: auto;
-    height: auto;
-    background: none;
-  }
-
-  /* Logo hiding on mobile when search is expanded */
-  .logo {
-    transition: all 0.3s ease;
-  }
-
-  .logo.logo-hidden {
-    opacity: 0;
-    transform: translateX(-50%) scale(0.8);
-    pointer-events: none;
   }
 
   .hero-content {
@@ -543,17 +470,6 @@
     max-width: 350px;
   }
 
-  /* Track detail improvements */
-  .track-detail .track-content {
-    max-width: 1400px;
-    margin: 3rem auto;
-    padding: 0 2rem;
-  }
-
-  .track-main-image {
-    max-height: 500px;
-  }
-
   .gallery-container {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 1.5rem;
@@ -589,13 +505,6 @@
 
   .track-card {
     max-width: 340px;
-  }
-
-  /* Track detail improvements */
-  .track-detail .track-content {
-    max-width: 1600px;
-    margin: 3rem auto;
-    padding: 0 3rem;
   }
 
   .content {
@@ -637,17 +546,6 @@
 
   .track-card {
     max-width: 350px;
-  }
-
-  /* Track detail improvements */
-  .track-detail .track-content {
-    max-width: 2000px;
-    margin: 4rem auto;
-    padding: 0 4rem;
-  }
-
-  .track-main-image {
-    max-height: 600px;
   }
 
   .content {

@@ -34,8 +34,34 @@ export default withErrors(async (req, res) => {
     return badRequest(res, 'Očakáva sa multipart/form-data')
   }
 
-  // Parse multipart stream with busboy. Collect text fields and buffer the
-  // single file part (capped at MAX_BYTES).
+  // Buffer the raw body via 'data' events. The @vercel/node helper consumes
+  // the socket up front and replays it only through the patched req.on('data')
+  // path — req.pipe()/async iteration see an empty stream, which used to make
+  // busboy fail with "Unexpected end of form".
+  const rawBody = await new Promise((resolve, reject) => {
+    const chunks = []
+    let total = 0
+    req.on('data', (chunk) => {
+      total += chunk.length
+      if (total > MAX_BYTES + 1024 * 1024) {
+        reject(Object.assign(new Error('too large'), { tooLarge: true }))
+        return
+      }
+      chunks.push(chunk)
+    })
+    req.on('end', () => resolve(Buffer.concat(chunks)))
+    req.on('error', reject)
+  }).catch((err) => {
+    if (err && err.tooLarge) return 'TOO_LARGE'
+    throw err
+  })
+
+  if (rawBody === 'TOO_LARGE') {
+    return badRequest(res, `Súbor presahuje limit ${MAX_BYTES / 1024 / 1024} MB`)
+  }
+
+  // Parse the buffered multipart body with busboy. Collect text fields and
+  // the single file part (capped at MAX_BYTES).
   const fields = {}
   let fileBuffer = null
   let fileContentType = null
@@ -69,7 +95,7 @@ export default withErrors(async (req, res) => {
     busboy.on('finish', resolve)
     busboy.on('close', resolve)
 
-    req.pipe(busboy)
+    busboy.end(rawBody)
   })
 
   if (sizeExceeded) {

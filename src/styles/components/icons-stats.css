@@ -18,12 +18,10 @@
   flex-shrink: 0;
 }
 
+/* Small lucide stat icon on trail cards / admin preview */
 .stat-icon {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-  border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  color: var(--primary);
+  flex-shrink: 0;
 }
 
 /* Track badges layout */
@@ -79,13 +77,6 @@
   color: var(--primary);
 }
 
-/* Detail page stats unified */
-.track-stats-unified .stat-icon {
-  width: 32px;
-  height: 32px;
-  flex-shrink: 0;
-}
-
 .stat-content {
   flex: 1;
 }
@@ -106,16 +97,6 @@
 @media (max-width: 768px) {
 
   .sport-icon-wrap {
-    width: 28px;
-    height: 28px;
-  }
-
-  .stat-icon {
-    width: 20px;
-    height: 20px;
-  }
-
-  .track-stats-unified .stat-icon {
     width: 28px;
     height: 28px;
   }

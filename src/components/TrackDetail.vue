@@ -2,18 +2,18 @@
   <!-- Loading State -->
   <div v-if="loading" class="track-loading">
     <div class="loading-content">
-      <div class="loading-spinner">⏳</div>
+      <LoaderCircle class="loading-spinner" :size="48" aria-hidden="true" />
       <p>Načítavam trasu...</p>
     </div>
   </div>
-  
+
   <!-- Error State -->
   <div v-else-if="error" class="track-error">
     <div class="error-content">
-      <div class="error-icon">❌</div>
+      <CircleAlert class="error-icon" :size="48" aria-hidden="true" />
       <h2>{{ error }}</h2>
       <button @click="goBack" class="back-button">
-← Späť na zoznam trás
+        <ArrowLeft class="section-icon" :size="16" aria-hidden="true" /> Späť na zoznam trás
       </button>
     </div>
   </div>
@@ -24,7 +24,7 @@
       <div class="container">
         <div class="header-nav-line">
           <button @click="goBack" class="back-button">
-            ← Späť na zoznam trás
+            <ArrowLeft class="section-icon" :size="16" aria-hidden="true" /> Späť na zoznam trás
           </button>
         </div>
         <div class="track-title-section">
@@ -87,7 +87,7 @@
             <h3><ChartColumn class="section-icon" :size="18" aria-hidden="true" /> Parametre</h3>
             <div class="track-stats-unified">
               <div class="unified-stat-item">
-                <img class="stat-icon" src="/assets/icons/lenght-of-track.jpg" alt="Vzdialenosť" />
+                <span class="stat-chip"><Ruler :size="20" aria-hidden="true" /></span>
                 <div class="stat-content">
                   <div class="stat-label">Vzdialenosť</div>
                   <div class="stat-value">{{ track.distance }}</div>
@@ -95,7 +95,7 @@
               </div>
               <div class="stat-separator"></div>
               <div class="unified-stat-item">
-                <img class="stat-icon" src="/assets/icons/duration.jpg" alt="Trvanie" />
+                <span class="stat-chip"><Clock :size="20" aria-hidden="true" /></span>
                 <div class="stat-content">
                   <div class="stat-label">Trvanie</div>
                   <div class="stat-value">{{ track.duration }}</div>
@@ -103,7 +103,7 @@
               </div>
               <div class="stat-separator"></div>
               <div class="unified-stat-item">
-                <img class="stat-icon" src="/assets/icons/profil-elevation.jpg" alt="Prevýšenie" />
+                <span class="stat-chip"><TrendingUp :size="20" aria-hidden="true" /></span>
                 <div class="stat-content">
                   <div class="stat-label">Prevýšenie</div>
                   <div class="stat-value">{{ track.elevation }}</div>
@@ -121,7 +121,7 @@
                 rel="noopener noreferrer"
                 class="action-button primary map-link-btn"
               >
-                🗺️ Otvoriť online
+                <MapIcon :size="18" aria-hidden="true" /> Otvoriť online
               </a>
             </div>
             <div class="track-gpx-action" v-if="track.gpxFile">
@@ -129,7 +129,7 @@
                 @click="downloadGPX" 
                 class="action-button secondary gpx-download-btn"
               >
-                📥 Stiahnuť GPX
+                <Download :size="18" aria-hidden="true" /> Stiahnuť GPX
               </button>
             </div>
           </div>
@@ -153,7 +153,7 @@
               class="gallery-image"
             />
             <div class="gallery-item-overlay">
-              <span class="zoom-icon">🔍 Zväčšiť</span>
+              <span class="zoom-icon"><ZoomIn :size="14" aria-hidden="true" /> Zväčšiť</span>
             </div>
           </div>
         </div>
@@ -164,12 +164,12 @@
       </div>
       <!-- Image Modal / Lightbox -->
       <div v-if="imageModal.show" class="image-modal-overlay" @click.self="closeImageModal">
-        <button class="modal-close" @click="closeImageModal" type="button">✕</button>
-        <button v-if="imageModal.currentIndex > 0" class="modal-nav prev" @click="prevImage" type="button">‹</button>
+        <button class="modal-close" @click="closeImageModal" type="button" aria-label="Zavrieť"><X :size="22" aria-hidden="true" /></button>
+        <button v-if="imageModal.currentIndex > 0" class="modal-nav prev" @click="prevImage" type="button" aria-label="Predchádzajúci obrázok"><ChevronLeft :size="28" aria-hidden="true" /></button>
         <div class="modal-content">
           <img :src="imageModal.currentImage" :alt="`Obrázok ${imageModal.currentIndex + 1}`" class="modal-image" />
         </div>
-        <button v-if="imageModal.currentIndex < validGalleryImages.length - 1" class="modal-nav next" @click="nextImage" type="button">›</button>
+        <button v-if="imageModal.currentIndex < validGalleryImages.length - 1" class="modal-nav next" @click="nextImage" type="button" aria-label="Ďalší obrázok"><ChevronRight :size="28" aria-hidden="true" /></button>
       </div>
 
     </div>
@@ -177,7 +177,23 @@
 </template>
 
 <script>
-import { ChartColumn, FileText, Images, Map as MapIcon } from 'lucide-vue-next'
+import {
+  ArrowLeft,
+  ChartColumn,
+  ChevronLeft,
+  ChevronRight,
+  CircleAlert,
+  Clock,
+  Download,
+  FileText,
+  Images,
+  LoaderCircle,
+  Map as MapIcon,
+  Ruler,
+  TrendingUp,
+  X,
+  ZoomIn
+} from 'lucide-vue-next'
 import DifficultyBadge from './DifficultyBadge.vue'
 import SportIcon from './SportIcon.vue'
 import { getAdminTrailById, getAdminTrailState } from '../data/customTrails'
@@ -185,7 +201,25 @@ import { api } from '../lib/api'
 
 export default {
   name: 'TrackDetail',
-  components: { ChartColumn, DifficultyBadge, FileText, Images, MapIcon, SportIcon },
+  components: {
+    ArrowLeft,
+    ChartColumn,
+    ChevronLeft,
+    ChevronRight,
+    CircleAlert,
+    Clock,
+    DifficultyBadge,
+    Download,
+    FileText,
+    Images,
+    LoaderCircle,
+    MapIcon,
+    Ruler,
+    SportIcon,
+    TrendingUp,
+    X,
+    ZoomIn
+  },
   props: {
     id: {
       type: String,

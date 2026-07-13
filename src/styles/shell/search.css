@@ -1,44 +1,86 @@
-/* Search */
+/* Search — collapsed to an icon at every width; expands on click.
+   The expanded input hides the centered logo (.logo-hidden via App.vue),
+   so the two can never overlap. */
 .search-container {
   position: relative;
-  min-width: 200px;
-  /* Prevent search container overflow */
-  max-width: 300px;
+  min-width: 36px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
   box-sizing: border-box;
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+.search-container.search-expanded {
+  width: min(320px, calc(100vw - 165px));
+  min-width: min(190px, calc(100vw - 165px));
+  max-width: calc(100vw - 165px);
 }
 
 .search-input {
-  width: 100%;
-  padding: 0.75rem 3rem 0.75rem 1rem;
+  opacity: 0;
+  width: 0;
+  padding: 0;
   border: none;
-  border-radius: 25px;
+  background: transparent;
   font-size: 1rem;
-  background: rgba(255, 255, 255, 0.9);
+  border-radius: 25px;
   transition: all 0.3s ease;
+}
+
+.search-container.search-expanded .search-input {
+  opacity: 1;
+  width: 100%;
+  padding: 0.65rem 3rem 0.65rem 1rem;
+  background: #ffffff;
 }
 
 .search-input:focus {
   outline: none;
-  background: white;
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
 }
 
 .search-icon {
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.2rem;
-  background: none;
+  background: rgba(255, 255, 255, 0.9);
   border: none;
-  cursor: pointer;
-  padding: 0.25rem;
   border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  flex-shrink: 0;
+  color: var(--primary);
   transition: all 0.3s ease;
-  z-index: 10;
 }
 
 .search-icon:hover {
-  background: rgba(0, 0, 0, 0.1);
+  background: #ffffff;
 }
 
+.search-container.search-expanded .search-icon {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: auto;
+  height: auto;
+  background: none;
+}
+
+/* Centered logo fades out while the search is expanded */
+.logo {
+  transition: all 0.3s ease;
+}
+
+.logo.logo-hidden {
+  opacity: 0;
+  transform: translateX(-50%) scale(0.8);
+  pointer-events: none;
+}

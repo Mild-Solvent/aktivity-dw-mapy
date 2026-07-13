@@ -170,9 +170,9 @@
             class="search-icon"
             @click="toggleSearch"
             :class="{ 'search-icon-active': isSearchExpanded }"
-            aria-label="Search"
+            aria-label="Hľadať"
           >
-            🔍
+            <Search :size="18" aria-hidden="true" />
           </button>
           </div>
 
@@ -348,7 +348,7 @@
 </template>
 
 <script>
-import { House, Lock, ScrollText } from 'lucide-vue-next'
+import { House, Lock, ScrollText, Search } from 'lucide-vue-next'
 import CookieBanner from './components/CookieBanner.vue'
 import DifficultyBadge from './components/DifficultyBadge.vue'
 import SportIcon from './components/SportIcon.vue'
@@ -363,6 +363,7 @@ export default {
     House,
     Lock,
     ScrollText,
+    Search,
     SportIcon
   },
   data() {
