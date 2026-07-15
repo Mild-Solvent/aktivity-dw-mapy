@@ -51,11 +51,11 @@
               target="_blank" 
               rel="noopener noreferrer"
               class="track-image-link"
-              title="Otvoriť trasu na Mapy.com"
+              title="Otvoriť online"
             >
               <img :src="track.previewImage" :alt="track.name" class="track-main-image" />
               <div class="map-image-overlay">
-                <span class="overlay-text"><MapIcon class="section-icon" :size="16" aria-hidden="true" /> Zobraziť na Mapy.com</span>
+                <span class="overlay-text"><MapIcon class="section-icon" :size="16" aria-hidden="true" /> Otvoriť online</span>
               </div>
             </a>
           </div>
