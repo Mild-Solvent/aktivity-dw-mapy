@@ -59,7 +59,10 @@ define('ADMIN_BOOTSTRAP_EMAIL', 'deletezajac@gmail.com');
 //
 // Leave SMTP_HOST empty to disable sending: the reset endpoint still responds
 // normally and logs that mail was not sent, instead of erroring.
-define('SMTP_HOST',      'smtp.ceaeurope.sk');
+// Use Websupport's own hostname, not smtp.<yourdomain>. Both point at the same
+// server, but the relay's certificate is *.websupport.sk, so the domain alias
+// fails TLS hostname verification.
+define('SMTP_HOST',      'smtp.websupport.sk');
 define('SMTP_PORT',      465);              // 465 implicit TLS, or 587 STARTTLS
 define('SMTP_USER',      'noreply@ceaeurope.sk');
 define('SMTP_PASSWORD',  'your_mailbox_password');
