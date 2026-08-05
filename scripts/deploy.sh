@@ -58,7 +58,10 @@ done
 # ── Blast radius guard ──────────────────────────────────────────────────
 # This account also hosts ceaeurope.sk (a live WolfCMS site) and the company
 # mailboxes. Refuse to run against anything but this project's own docroot.
-EXPECTED_ROOT="aktivity.ceaeurope.sk/web"
+# Websupport serves <name>.<domain> from ~/<domain>/sub/<name>/ directly — the
+# sibling sub/eshop is a Laravel root with index.php at its top level, and
+# ~/ceaeurope.sk/web (the live WolfCMS site) is a different directory entirely.
+EXPECTED_ROOT="ceaeurope.sk/sub/aktivity"
 REMOTE_DIR="${DEPLOY_REMOTE_DIR#/}"       # tolerate a leading slash
 REMOTE_DIR="${REMOTE_DIR%/}"              # and a trailing one
 
@@ -124,6 +127,11 @@ fi
 
 # ── Upload ──────────────────────────────────────────────────────────────
 echo "→ Uploading $FILE_COUNT files to $DEPLOY_USER@$DEPLOY_HOST:$REMOTE_DIR …"
+
+# Websupport serves <name>.<domain> out of ~/<domain>/sub/<name> as soon as the
+# directory exists, so creating it here is the whole of "adding the subdomain"
+# — there is no panel step, and nothing in the DNS zone has to move.
+ssh "${SSH_OPTS[@]}" "$DEPLOY_USER@$DEPLOY_HOST" "mkdir -p '$REMOTE_DIR'"
 
 # sftp's `put -r` will not create missing intermediate directories, so build
 # the tree first. -f on mkdir is not portable here; ignore "already exists".
