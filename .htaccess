@@ -17,21 +17,26 @@ Options -Indexes -MultiViews
   RewriteEngine On
 
   # ── API routing ────────────────────────────────────────────────────────
-  # The [E=...] env-var trick is how email.php / id.php find their path
-  # segment. [L] stops rewriting so the SPA fallback below never matches.
+  # id.php / email.php recover their path segment from REDIRECT_URL.
+  #
+  # [END], not [L]. In .htaccess context [L] only ends the current pass --
+  # mod_rewrite then feeds the rewritten path through these rules again, so
+  # /api/trails became api/trails/index.php, which matched the id rule on the
+  # second pass and asked for a trail called "index.php". [END] stops rewriting
+  # outright (Apache 2.4+).
 
-  RewriteRule ^api/auth/register$  api/auth/register.php [L,QSA]
-  RewriteRule ^api/auth/login$     api/auth/login.php    [L,QSA]
-  RewriteRule ^api/auth/logout$    api/auth/logout.php   [L,QSA]
-  RewriteRule ^api/auth/me$        api/auth/me.php       [L,QSA]
+  RewriteRule ^api/auth/register$  api/auth/register.php [END,QSA]
+  RewriteRule ^api/auth/login$     api/auth/login.php    [END,QSA]
+  RewriteRule ^api/auth/logout$    api/auth/logout.php   [END,QSA]
+  RewriteRule ^api/auth/me$        api/auth/me.php       [END,QSA]
 
-  RewriteRule ^api/roles$          api/roles/index.php   [L,QSA]
-  RewriteRule ^api/roles/(.+)$     api/roles/email.php   [L,QSA]
+  RewriteRule ^api/roles$          api/roles/index.php   [END,QSA]
+  RewriteRule ^api/roles/(.+)$     api/roles/email.php   [END,QSA]
 
-  RewriteRule ^api/trails$         api/trails/index.php  [L,QSA]
-  RewriteRule ^api/trails/(.+)$    api/trails/id.php     [L,QSA]
+  RewriteRule ^api/trails$         api/trails/index.php  [END,QSA]
+  RewriteRule ^api/trails/(.+)$    api/trails/id.php     [END,QSA]
 
-  RewriteRule ^api/upload$         api/upload.php        [L,QSA]
+  RewriteRule ^api/upload$         api/upload.php        [END,QSA]
 
   # ── SPA fallback ───────────────────────────────────────────────────────
   # Match anything that is NOT:

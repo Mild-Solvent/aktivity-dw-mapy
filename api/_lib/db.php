@@ -29,25 +29,43 @@ function db(): PDO {
     if (!defined('DB_NAME') || !defined('DB_USER') || !defined('DB_PASSWORD')) {
         throw new RuntimeException('DB not configured: define DB_NAME/DB_USER/DB_PASSWORD in private/config.php');
     }
-    // The socket exists on the web servers but not on the premium shell host,
-    // so presence is checked rather than assumed — otherwise every CLI run
-    // (migrations, the parity check) would fail with a bare "No such file or
-    // directory" while the site itself worked fine.
-    if (defined('DB_SOCKET') && DB_SOCKET !== '' && file_exists(DB_SOCKET)) {
-        $dsn = sprintf('mysql:unix_socket=%s;dbname=%s;charset=utf8mb4', DB_SOCKET, DB_NAME);
-    } elseif (defined('DB_HOST')) {
+    // Candidates in preference order: the socket keeps traffic off the network,
+    // TCP works everywhere. Each is *attempted* rather than probed first --
+    // open_basedir forbids stat()ing the socket path on the web servers, and
+    // because bootstrap.php promotes warnings to exceptions, a file_exists()
+    // check there turns into a 500 on every database-backed request.
+    $dsns = [];
+    if (defined('DB_SOCKET') && DB_SOCKET !== '') {
+        $dsns[] = sprintf('mysql:unix_socket=%s;dbname=%s;charset=utf8mb4', DB_SOCKET, DB_NAME);
+    }
+    if (defined('DB_HOST') && DB_HOST !== '') {
         $port = defined('DB_PORT') ? (int) DB_PORT : 3306;
-        $dsn = sprintf('mysql:host=%s;port=%d;dbname=%s;charset=utf8mb4', DB_HOST, $port, DB_NAME);
-    } else {
+        $dsns[] = sprintf('mysql:host=%s;port=%d;dbname=%s;charset=utf8mb4', DB_HOST, $port, DB_NAME);
+    }
+    if (!$dsns) {
         throw new RuntimeException('DB not configured: define DB_SOCKET or DB_HOST in private/config.php');
     }
 
-    $pdo = new PDO($dsn, DB_USER, DB_PASSWORD, [
+    $options = [
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::ATTR_EMULATE_PREPARES   => false,
         PDO::ATTR_PERSISTENT         => true,
-    ]);
+    ];
+
+    $pdo = null;
+    $lastError = null;
+    foreach ($dsns as $dsn) {
+        try {
+            $pdo = new PDO($dsn, DB_USER, DB_PASSWORD, $options);
+            break;
+        } catch (PDOException $e) {
+            $lastError = $e;
+        }
+    }
+    if ($pdo === null) {
+        throw $lastError;
+    }
     // Strict SQL mode so invalid dates / out-of-range values fail loudly.
     $pdo->exec("SET sql_mode = 'STRICT_ALL_TABLES,NO_ENGINE_SUBSTITUTION'");
 
