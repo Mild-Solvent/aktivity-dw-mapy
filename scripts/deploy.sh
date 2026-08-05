@@ -86,7 +86,9 @@ if [[ ! -f "$DEPLOY_KEY" ]]; then
   exit 1
 fi
 
-SSH_OPTS=(-i "$DEPLOY_KEY" -p "$DEPLOY_PORT" -o BatchMode=yes -o StrictHostKeyChecking=accept-new)
+# -o Port= rather than a port flag: ssh spells it -p and sftp spells it -P, and
+# these options are shared by both.
+SSH_OPTS=(-i "$DEPLOY_KEY" -o "Port=$DEPLOY_PORT" -o BatchMode=yes -o StrictHostKeyChecking=accept-new)
 
 # ── Build ───────────────────────────────────────────────────────────────
 if [[ "${1:-}" != "--no-build" ]]; then

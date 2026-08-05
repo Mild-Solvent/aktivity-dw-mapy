@@ -5,6 +5,14 @@
 #   2. SPA fallback: anything that isn't a real file/dir and isn't under /api/
 #      → /index.html (so Vue Router in history mode works on deep links).
 
+# /api/trails and /api/roles are also real directories on disk. mod_dir would
+# see the directory first and 301 to /api/trails/, which none of the rules
+# below match — so the API answered redirects instead of JSON. Turning
+# DirectorySlash off lets the rewrites claim those paths. MultiViews is off for
+# the same class of reason: it would try to guess api/trails.php.
+DirectorySlash Off
+Options -Indexes -MultiViews
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
