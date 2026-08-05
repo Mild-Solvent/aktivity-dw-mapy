@@ -13,6 +13,13 @@
 DirectorySlash Off
 Options -Indexes -MultiViews
 
+# This is a static SPA: index.html is the only entry point. Stated explicitly
+# because Websupport drops its own placeholder index.php into a new service's
+# document root, and the default DirectoryIndex prefers .php -- which served
+# the "Na tejto doméne zatiaľ nič nie je" page at / while every deep link
+# correctly rendered the app.
+DirectoryIndex index.html
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
