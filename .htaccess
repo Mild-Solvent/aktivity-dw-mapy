@@ -1,0 +1,47 @@
+# aktivity-dw-mapy — Apache routing for Websupport.
+#
+# Two jobs:
+#   1. Map /api/<route> → api/<handler>.php (mirrors Vercel's filesystem routing).
+#   2. SPA fallback: anything that isn't a real file/dir and isn't under /api/
+#      → /index.html (so Vue Router in history mode works on deep links).
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # ── API routing ────────────────────────────────────────────────────────
+  # The [E=...] env-var trick is how email.php / id.php find their path
+  # segment. [L] stops rewriting so the SPA fallback below never matches.
+
+  RewriteRule ^api/auth/register$  api/auth/register.php [L,QSA]
+  RewriteRule ^api/auth/login$     api/auth/login.php    [L,QSA]
+  RewriteRule ^api/auth/logout$    api/auth/logout.php   [L,QSA]
+  RewriteRule ^api/auth/me$        api/auth/me.php       [L,QSA]
+
+  RewriteRule ^api/roles$          api/roles/index.php   [L,QSA]
+  RewriteRule ^api/roles/(.+)$     api/roles/email.php   [L,QSA]
+
+  RewriteRule ^api/trails$         api/trails/index.php  [L,QSA]
+  RewriteRule ^api/trails/(.+)$    api/trails/id.php     [L,QSA]
+
+  RewriteRule ^api/upload$         api/upload.php        [L,QSA]
+
+  # ── SPA fallback ───────────────────────────────────────────────────────
+  # Match anything that is NOT:
+  #   - under /api/         (handled above)
+  #   - an existing file    (Vite JS/CSS, /assets, /tracks uploads)
+  #   - an existing dir
+  # and rewrite it to index.html so Vue Router can take over.
+  RewriteCond %{REQUEST_URI} !^/api/
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
+
+# ── Security: block direct PHP access to non-route files ─────────────────
+# Nobody should ever fetch api/bootstrap.php or api/_lib/*.php directly.
+<FilesMatch "^(bootstrap|config)\.php$">
+  Require all denied
+</FilesMatch>
+<IfModule mod_rewrite.c>
+  RewriteRule ^api/_lib/ - [F,L]
+</IfModule>

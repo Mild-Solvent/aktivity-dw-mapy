@@ -1,0 +1,13 @@
+# This repo is developed on Windows but deployed to Linux/Apache on Websupport.
+# Anything the server executes or parses must keep LF endings — a CRLF in
+# deploy.sh makes bash fail with "\r: command not found", and CRLF in .htaccess
+# or .user.ini can be read as part of directive values.
+
+* text=auto
+
+*.php   text eol=lf
+*.sh    text eol=lf
+*.sql   text eol=lf
+*.mjs   text eol=lf
+.htaccess  text eol=lf
+.user.ini  text eol=lf

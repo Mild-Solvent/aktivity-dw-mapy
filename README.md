@@ -1,164 +1,125 @@
-# TrackFinder - Activity Tracks Discovery Platform
+# TrackFinder — Activity Tracks Discovery
 
-A modern Vue.js web application for discovering running, cycling, and hiking tracks with interactive maps, filtering, and mobile-responsive design.
+Slovak-language single-page app for discovering outdoor activity tracks (running, cycling, hiking) in Slovakia. Filterable grid of trails, per-track detail pages with stats and GPX download, and a small admin back-office for managing trails and user roles.
 
-## Features
+Branding: *Hľadač aktivitných trás*, built in cooperation with [CEA Europe](https://new.ceaeurope.sk/).
 
-- 🗺️ **Interactive Track Discovery**: Browse tracks with preview images and detailed information
-- 🔍 **Advanced Filtering**: Filter by sport, distance, difficulty, and location
-- 📱 **Mobile-First Design**: Fully responsive and optimized for mobile devices
-- 🍔 **Burger Menu Navigation**: Clean navigation with collapsible menu
-- 🎯 **Dynamic Routing**: Individual pages for each track with detailed view
-- 📥 **GPX Downloads**: Download track files for GPS devices
-- 🌐 **Map Integration**: View tracks on Mapy.com with embedded maps
-- ⚡ **Modern UI**: Clean design with hover effects and smooth animations
+## Tech stack
 
-## Tech Stack
+**Frontend** — Vue 3 + Vue Router 4 + Vite. No state library (state lives in `App.vue`). Client-side GPX→preview-image renderer composites OpenStreetMap tiles (`src/utils/gpxMapCapture.js`).
 
-- **Frontend**: Vue 3 with Composition API
-- **Routing**: Vue Router 4
-- **Build Tool**: Vite
-- **Styling**: Modern CSS with mobile-first approach
-- **Maps**: Mapy.com integration
+**Backend** — PHP 8 handlers under `api/` + MariaDB. Apache routes `/api/*` to PHP via `.htaccess` and serves the built SPA + uploaded files directly. Custom email/password auth (PBKDF2/SHA-256), three roles, sessions in a DB table.
 
-## Project Structure
+**Hosting** — Websupport (one origin for SPA + API + DB + files, so no CORS and no cross-domain cookies).
+
+## Project layout
 
 ```
-├── src/
-│   ├── components/
-│   │   ├── HomePage.vue       # Main track listing page
-│   │   ├── TrackDetail.vue    # Individual track details
-│   │   ├── Terms.vue          # Terms & Conditions
-│   │   └── Privacy.vue        # Privacy Policy
-│   ├── data/
-│   │   └── tracks.json        # Track data with filtering metadata
-│   ├── assets/
-│   │   └── tracks/            # Organized track assets
-│   │       ├── vrsatec/
-│   │       ├── mountain-biking-trail/
-│   │       ├── river-run/
-│   │       └── forest-hike/
-│   ├── App.vue               # Main app component with header
-│   ├── main.js              # App entry point with routing
-│   └── style.css            # Global styles
-├── package.json
-├── vite.config.js
-└── index.html
+├── api/                    PHP backend
+│   ├── bootstrap.php       Shared init (config, PDO, error→JSON)
+│   ├── _lib/               db, auth, hash, response, trails, users, sessions, files
+│   ├── auth/               register / login / logout / me
+│   ├── roles/              index (list) + email (set/delete)
+│   ├── trails/             index (list) + id (get/put/delete)
+│   └── upload.php          multipart file upload
+├── migrations/
+│   └── 001_init.sql        MariaDB schema (trails, users, sessions)
+├── private/
+│   ├── config.php.example  Template — copy to config.php (gitignored)
+│   └── config.php          DB creds, ADMIN_BOOTSTRAP_EMAIL (NEVER commit)
+├── scripts/
+│   ├── deploy.sh           Build + SFTP mirror to Websupport
+│   └── export-kv-to-sql.mjs  One-time Upstash→MariaDB migration (legacy)
+├── src/                    Vue SPA source
+├── .htaccess               API routing + SPA fallback
+├── .user.ini               PHP upload limits (26M to honor 25 MB cap)
+└── vercel.json             (removed)
 ```
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js (version 16 or higher)
-- npm or yarn
-
-### Installation
-
-1. **Clone or navigate to the project directory**
-   ```bash
-   cd /Users/rabbithole/github/aktivity-dw-mapy
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Start the development server**
-   ```bash
-   npm run dev
-   ```
-
-4. **Open your browser and visit**
-   ```
-   http://localhost:3000
-   ```
-
-### Build for Production
+## Local development (frontend only)
 
 ```bash
-npm run build
+npm install
+npm run dev      # http://localhost:3000
 ```
 
-The built files will be in the `dist/` directory.
+The SPA expects `/api/*` to resolve same-origin. For full local dev with a backend, run PHP locally (e.g. `php -S localhost:3000 -t .` after a build), or just develop against the live Websupport API.
 
-## Usage
+## Production build & deploy
 
-### Main Features
+```bash
+npm run build    # outputs dist/
+./scripts/deploy.sh
+```
 
-1. **Browse Tracks**: View all available tracks on the home page with preview images
-2. **Filter & Search**: Use the burger menu to filter by sport, distance, difficulty, and location
-3. **Track Details**: Click on any track card to view detailed information
-4. **Interactive Map**: View track routes on embedded Mapy.com maps
-5. **Download GPX**: Download track files for your GPS device
-6. **Mobile Navigation**: Use the responsive burger menu on mobile devices
+`deploy.sh` requires `.deploy.env` (gitignored) with:
 
-### Adding New Tracks
+```bash
+DEPLOY_HOST=aktivity.ceaeurope.sk
+DEPLOY_USER=username
+DEPLOY_PASS=your-password
+DEPLOY_REMOTE_DIR=/public_html
+```
 
-To add new tracks to the application:
+It mirrors `dist/`, `api/`, `.htaccess`, `.user.ini`, and (if present) `private/config.php` to the remote docroot. `tracks/` is runtime data and is left untouched on the server.
 
-1. **Add track assets**:
+## First-time server setup (Websupport)
+
+1. **Create a MariaDB database** in Webadmin → MySQL/MariaDB. Note the DB name, user, and password.
+2. **Run the schema**: open phpMyAdmin → SQL tab → paste `migrations/001_init.sql`.
+3. **Configure secrets**: copy `private/config.php.example` → `private/config.php` and fill in `DB_*` + `ADMIN_BOOTSTRAP_EMAIL`.
+4. **Make `tracks/` writable**: `mkdir tracks && chmod 775 tracks` in the docroot (PHP user needs write access for uploads).
+5. **Deploy** (see above).
+6. **Smoke-test**:
    ```bash
-   mkdir src/assets/tracks/your-track-name
-   # Add preview.png and track.gpx files
+   curl -s https://aktivity.ceaeurope.sk/api/auth/me   # {"error":"Neprihlásený"}
+   curl -s https://aktivity.ceaeurope.sk/api/trails      # JSON array
    ```
 
-2. **Update tracks.json**:
-   ```json
-   {
-     "id": "your-track-name",
-     "name": "Your Track Name",
-     "description": "Track description...",
-     "sport": "cycling|running|hiking",
-     "distance": "10.5 km",
-     "distanceValue": 10.5,
-     "difficulty": "easy|moderate|hard",
-     "location": "Location Name",
-     "locationRegion": "region-identifier",
-     "duration": "1h 30m",
-     "elevation": "200m",
-     "previewImage": "/src/assets/tracks/your-track-name/preview.png",
-     "gpxFile": "/src/assets/tracks/your-track-name/track.gpx",
-     "mapUrl": "https://mapy.com/s/your-map-link",
-     "tags": ["tag1", "tag2", "tag3"],
-     "createdAt": "2024-11-03"
-   }
-   ```
+## One-time data migration (from Upstash Redis / Vercel Blob)
 
-## Mobile Compatibility
+Only needed once, to carry over data from the previous Vercel deployment:
 
-The application is designed with mobile-first principles:
+```bash
+node --env-file=.env.local scripts/export-kv-to-sql.mjs
+```
 
-- **Responsive Grid**: Track cards adapt to screen size
-- **Touch-Friendly**: Large tap targets and smooth scrolling
-- **Optimized Images**: Properly sized for different screen densities
-- **Mobile Menu**: Collapsible burger menu for easy navigation
-- **Fast Loading**: Optimized assets and minimal bundle size
+Produces `migrate.sql` (import via phpMyAdmin) + `migration-tracks/` (SFTP to `<docroot>/tracks/`). Password hashes are preserved verbatim — users keep logging in with the same password. After import, delete `migrate.sql`, `migration-tracks/`, and the script itself.
 
-## Browser Support
+## Roles
 
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-- iOS Safari
-- Chrome Mobile
+| Role          | Capabilities                                              |
+|---------------|-----------------------------------------------------------|
+| `admin`       | Manage trails + users/roles. Bootstrap admin always wins. |
+| `trails_adder`| Create / edit / delete trails, see drafts.                |
+| `user`        | Read published trails only.                               |
 
-## Contributing
+The bootstrap admin (`ADMIN_BOOTSTRAP_EMAIL` in `private/config.php`) is always `admin` regardless of the `users` table, and cannot be demoted.
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test on mobile devices
-5. Submit a pull request
+## API surface
+
+| Method | Route                       | Auth                  | Purpose                         |
+|--------|-----------------------------|-----------------------|---------------------------------|
+| POST   | `/api/auth/register`        | open                  | Self-register + auto-login      |
+| POST   | `/api/auth/login`           | open                  | Login                           |
+| POST   | `/api/auth/logout`          | any                   | Logout (idempotent)             |
+| GET    | `/api/auth/me`              | any                   | Current user profile            |
+| GET    | `/api/roles`                | admin                 | List users + roles              |
+| PUT    | `/api/roles/<email>`        | admin                 | Set role                        |
+| DELETE | `/api/roles/<email>`        | admin                 | Demote to `user`                |
+| GET    | `/api/trails`               | any (drafts: manager) | List trails                     |
+| GET    | `/api/trails/<id>`          | any                   | Fetch one trail                 |
+| PUT    | `/api/trails/<id>`          | admin/trails_adder    | Create or update                |
+| DELETE | `/api/trails/<id>`          | admin/trails_adder    | Delete trail + its files        |
+| POST   | `/api/upload`               | admin/trails_adder    | Multipart upload (≤25 MB)       |
+
+## Notes
+
+- Cookie `dw_session` (HttpOnly, SameSite=Lax, Secure in prod, 7-day TTL) — same-origin, so the SPA's `credentials: 'include'` works with no CORS config.
+- The trail id is also the storage folder name under `tracks/`. The slug rules in `api/_lib/trails.php` (`slugify`) and `api/_lib/files.php` (`storage_trail_id`) MUST stay in sync with `getStorageTrailId()` in `src/data/customTrails.js`.
+- Sessions are swept opportunistically (~1% of writes) — no cron needed at this scale.
+- Websupport's nightly DB + filesystem backups cover disaster recovery.
 
 ## License
 
-This project is licensed under the MIT License.
-
-## Acknowledgments
-
-- Track data and images from Strava/Mapy.com
-- Icons from system emoji sets
-- CSS design inspired by modern web standards
+MIT.

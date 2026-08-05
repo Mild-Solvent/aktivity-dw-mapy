@@ -68,11 +68,27 @@ vite.config.ts.timestamp-*
 .cache/
 .supabase-home/
 
-# Vercel
+# Vercel (legacy — we no longer deploy here)
 .vercel/
+
+# Websupport / PHP secrets — NEVER commit
+private/config.php
+tracks/
+
+# One-time migration outputs (run from scripts/export-kv-to-sql.mjs)
+migrate.sql
+migration-tracks/
+
+# Deploy secrets
+.deploy.env
 
 # Temporary folders
 tmp/
 temp/
-.vercel
 .env*
+
+# Agent plan files
+.zcode/
+
+# DNS zone exports + pre-change snapshots (rollback artifacts, not source)
+.backup/

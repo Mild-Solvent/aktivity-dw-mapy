@@ -1,0 +1,50 @@
+<?php
+/**
+ * Server-side configuration for aktivity-dw-mapy on Websupport.
+ *
+ * Copy this file to config.php (same folder) and fill in the values.
+ * NEVER commit config.php — it's gitignored.
+ *
+ * Recommended layout on Websupport:
+ *
+ *   /home/<user>/                          ← above docroot
+ *   ├── private/
+ *   │   └── config.php                     ← this file (NOT web-accessible)
+ *   └── public_html/                       ← docroot
+ *       ├── index.html                     ← built Vue SPA
+ *       ├── assets/                        ← Vite bundles
+ *       ├── tracks/                        ← uploaded GPX/WebP
+ *       ├── api/                           ← PHP handlers + _lib/
+ *       └── .htaccess
+ *
+ * bootstrap.php looks for private/config.php in three locations:
+ *   1. ../private/config.php   (relative to api/)     ← recommended
+ *   2. ../_private/config.php  (Websupport's _private/ alias)
+ *   3. ./config.php            (last-resort dev only)
+ *
+ * If your Websupport plan only gives you docroot access, put config.php
+ * inside a folder protected by "Require all denied" in its own .htaccess.
+ */
+
+declare(strict_types=1);
+
+// ── Database (MariaDB on Websupport) ────────────────────────────────────
+// Find these in Webadmin → MySQL / MariaDB databases.
+define('DB_HOST', 'localhost');           // usually 'localhost' on shared hosting
+define('DB_PORT', 3306);
+define('DB_NAME', 'aktivity_dw_mapy');
+define('DB_USER', 'your_db_user');
+define('DB_PASSWORD', 'your_db_password');
+
+// ── Auth ────────────────────────────────────────────────────────────────
+// Email that always resolves to 'admin' regardless of the users table.
+// Must match the ADMIN_BOOTSTRAP_EMAIL you used on Vercel for continuity.
+define('ADMIN_BOOTSTRAP_EMAIL', 'deletezajac@gmail.com');
+
+// Cookie name. Leave default unless you renamed it on the SPA side (you didn't).
+// define('SESSION_COOKIE', 'dw_session');
+
+// ── Filesystem ──────────────────────────────────────────────────────────
+// Absolute path to the docroot — used to locate tracks/<slug>/ uploads.
+// Leave commented to auto-detect (two levels up from api/).
+// define('TRACKS_DIR', '/home/<user>/public_html');
