@@ -48,3 +48,20 @@ define('ADMIN_BOOTSTRAP_EMAIL', 'deletezajac@gmail.com');
 // Absolute path to the docroot — used to locate tracks/<slug>/ uploads.
 // Leave commented to auto-detect (two levels up from api/).
 // define('TRACKS_DIR', '/home/<user>/public_html');
+
+// ── Outbound mail (password reset) ──────────────────────────────────────
+// Authenticated submission to Websupport's own SMTP. That relay is already
+// inside the domain's SPF record (include:_spf.m1.websupport.sk), so no DNS
+// change is needed and nothing about inbound company mail is affected.
+//
+// Use a dedicated send-only mailbox (e.g. noreply@ceaeurope.sk) rather than a
+// real person's account, so it can be revoked on its own.
+//
+// Leave SMTP_HOST empty to disable sending: the reset endpoint still responds
+// normally and logs that mail was not sent, instead of erroring.
+define('SMTP_HOST',      'smtp.ceaeurope.sk');
+define('SMTP_PORT',      465);              // 465 implicit TLS, or 587 STARTTLS
+define('SMTP_USER',      'noreply@ceaeurope.sk');
+define('SMTP_PASSWORD',  'your_mailbox_password');
+define('SMTP_FROM',      'noreply@ceaeurope.sk');
+define('SMTP_FROM_NAME', 'ACTIVITY DW Club');

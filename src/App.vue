@@ -139,6 +139,14 @@
                     <option value="slovakia">🇸🇰 Slovensko</option>
                   </select>
                 </div>
+
+                <div class="filter-group">
+                  <label>Zoradenie</label>
+                  <select v-model="filters.sort" @change="applyFilters">
+                    <option value="">Predvolené</option>
+                    <option value="popular">Najobľúbenejšie</option>
+                  </select>
+                </div>
               </div>
             </div>
           </nav>
@@ -229,10 +237,78 @@
         <div v-if="authUser" class="auth-account">
           <p class="auth-user-email">{{ authUser.email }}</p>
           <p v-if="roleLabel" class="auth-admin-badge">{{ roleLabel }}</p>
+
+          <router-link
+            class="auth-option-button auth-option-secondary"
+            to="/moje-oblubene"
+            @click="closeAuthMenu"
+          >
+            Obľúbené trasy
+          </router-link>
+
+          <form v-if="showChangePassword" class="auth-form" @submit.prevent="submitChangePassword">
+            <label class="auth-field">
+              <span>Súčasné heslo</span>
+              <input
+                v-model="currentPassword"
+                type="password"
+                autocomplete="current-password"
+                required
+              />
+            </label>
+            <label class="auth-field">
+              <span>Nové heslo</span>
+              <input
+                v-model="newPassword"
+                type="password"
+                autocomplete="new-password"
+                required
+                minlength="8"
+                placeholder="Minimálne 8 znakov"
+              />
+            </label>
+            <button class="auth-option-button" type="submit" :disabled="authLoading">
+              {{ authLoading ? 'Pracujem...' : 'Uložiť nové heslo' }}
+            </button>
+          </form>
+
+          <button
+            v-else
+            class="auth-option-button auth-option-secondary"
+            type="button"
+            @click="openChangePassword"
+          >
+            Zmeniť heslo
+          </button>
+
           <button class="auth-option-button auth-option-secondary" type="button" @click="signOut" :disabled="authLoading">
             Odhlásiť sa
           </button>
         </div>
+
+        <template v-else-if="authMode === 'forgot'">
+          <form class="auth-form" @submit.prevent="submitForgotPassword">
+            <p class="auth-hint">
+              Zadajte e-mail, ktorým ste sa registrovali. Pošleme naň odkaz na nastavenie nového hesla.
+            </p>
+            <label class="auth-field">
+              <span>Email</span>
+              <input
+                v-model.trim="authEmail"
+                type="email"
+                autocomplete="email"
+                required
+                placeholder="you@example.com"
+              />
+            </label>
+            <button class="auth-option-button" type="submit" :disabled="authLoading">
+              {{ authLoading ? 'Pracujem...' : 'Poslať odkaz' }}
+            </button>
+            <button class="auth-link-button" type="button" @click="setAuthMode('login')">
+              Späť na prihlásenie
+            </button>
+          </form>
+        </template>
 
         <template v-else>
           <div class="auth-tabs" role="tablist" aria-label="Authentication mode">
@@ -273,13 +349,22 @@
                 type="password"
                 :autocomplete="authMode === 'register' ? 'new-password' : 'current-password'"
                 required
-                minlength="6"
-                placeholder="Minimálne 6 znakov"
+                minlength="8"
+                placeholder="Minimálne 8 znakov"
               />
             </label>
 
             <button class="auth-option-button" type="submit" :disabled="authLoading">
               {{ authLoading ? 'Pracujem...' : authSubmitLabel }}
+            </button>
+
+            <button
+              v-if="authMode === 'login'"
+              class="auth-link-button"
+              type="button"
+              @click="setAuthMode('forgot')"
+            >
+              Zabudli ste heslo?
             </button>
           </form>
         </template>
@@ -308,6 +393,7 @@
         :can-add-trails="canAddTrails"
         :user-role="userRole"
         @update-filters="updateFilters"
+        @request-sign-in="openSignIn"
       />
     </main>
 
@@ -377,6 +463,9 @@ export default {
       authLoading: false,
       authMessage: '',
       authError: '',
+      showChangePassword: false,
+      currentPassword: '',
+      newPassword: '',
       authUser: null,
       userRole: ROLES.USER,
       searchQuery: '',
@@ -385,7 +474,8 @@ export default {
         sport: '',
         maxDistance: 1000,
         difficulty: '',
-        location: ''
+        location: '',
+        sort: ''
       }
     }
   },
@@ -393,6 +483,9 @@ export default {
     authPopupTitle() {
       if (this.authUser) {
         return 'Účet'
+      }
+      if (this.authMode === 'forgot') {
+        return 'Obnovenie hesla'
       }
 
       return this.authMode === 'register' ? 'Vytvoriť účet' : 'Prihlásenie'
@@ -426,11 +519,64 @@ export default {
     },
     closeAuthMenu() {
       this.isAuthMenuOpen = false
+      this.showChangePassword = false
+      this.currentPassword = ''
+      this.newPassword = ''
     },
     setAuthMode(mode) {
       this.authMode = mode
       this.authError = ''
       this.authMessage = ''
+    },
+    // A routed page (e.g. the like button) asking an anonymous visitor to sign in.
+    openSignIn() {
+      this.authMode = 'login'
+      this.isAuthMenuOpen = true
+      this.closeMenu()
+      this.collapseSearch()
+    },
+    openChangePassword() {
+      this.showChangePassword = true
+      this.authError = ''
+      this.authMessage = ''
+      this.currentPassword = ''
+      this.newPassword = ''
+    },
+    async submitForgotPassword() {
+      this.authError = ''
+      this.authMessage = ''
+      this.authLoading = true
+
+      try {
+        const res = await api.post('/api/auth/forgot-password', { email: this.authEmail })
+        // The server answers the same way whether or not the account exists,
+        // so this message must not be second-guessed on the client.
+        this.authMessage = res?.message || 'Ak k tejto adrese existuje účet, poslali sme naň odkaz.'
+      } catch (error) {
+        this.authError = error.message || 'Nepodarilo sa odoslať odkaz. Skúste to znova.'
+      } finally {
+        this.authLoading = false
+      }
+    },
+    async submitChangePassword() {
+      this.authError = ''
+      this.authMessage = ''
+      this.authLoading = true
+
+      try {
+        const res = await api.post('/api/auth/change-password', {
+          currentPassword: this.currentPassword,
+          newPassword: this.newPassword
+        })
+        this.authMessage = res?.message || 'Heslo bolo zmenené.'
+        this.currentPassword = ''
+        this.newPassword = ''
+        this.showChangePassword = false
+      } catch (error) {
+        this.authError = error.message || 'Nepodarilo sa zmeniť heslo. Skúste to znova.'
+      } finally {
+        this.authLoading = false
+      }
     },
     async submitAuth() {
       this.authError = ''
@@ -466,6 +612,10 @@ export default {
         this.userRole = ROLES.USER
         this.authEmail = ''
         this.authPassword = ''
+        this.showChangePassword = false
+        this.currentPassword = ''
+        this.newPassword = ''
+        this.authMode = 'login'
         this.authMessage = 'Odhlásenie prebehlo úspešne.'
       } catch (error) {
         this.authError = error.message || 'Odhlásenie zlyhalo. Skús to znova.'

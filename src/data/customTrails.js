@@ -95,5 +95,21 @@ export const deleteRemoteAdminTrail = async (trailId) => {
 
 export const removeAdminTrail = ({ trailId }) => deleteRemoteAdminTrail(trailId)
 
+// ── Likes ────────────────────────────────────────────────────────────────
+// The server computes likeCount / likedByMe on read and returns the fresh
+// count from these calls, so callers can update in place without re-fetching
+// the whole list.
+
+export const setTrailLike = async (trailId, liked) => {
+  const slug = getStorageTrailId(trailId)
+  const path = `/api/trails/${encodeURIComponent(slug)}/like`
+  return liked ? api.put(path) : api.delete(path)
+}
+
+export const getLikedTrails = async () => {
+  const trails = await api.get('/api/likes')
+  return (trails || []).map(trail => normalizeTrail(trail)).filter(Boolean)
+}
+
 // Re-exported so legacy callers importing getStorageTrailId from here still work.
 export { getStorageTrailId }

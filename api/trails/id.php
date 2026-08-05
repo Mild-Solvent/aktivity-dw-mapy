@@ -30,7 +30,8 @@ if ($id === '') {
 $method = $_SERVER['REQUEST_METHOD'] ?? '';
 
 if ($method === 'GET') {
-    $trail = get_trail($id);
+    $viewer = current_user();
+    $trail = get_trail($id, $viewer['email'] ?? null);
     if (!$trail) notFound('Trasa nebola nájdená');
     ok($trail);
 }
@@ -80,6 +81,10 @@ if ($method === 'DELETE') {
     if (!$existing) notFound('Trasa nebola nájdená');
     try {
         delete_trail($id);
+        // Likes reference the trail by id with no foreign key, so they would
+        // otherwise survive it and be inherited by any future trail that
+        // slugified to the same id.
+        delete_trail_likes($id);
         // Clean up uploaded files under tracks/<slug>/.
         delete_by_prefix(storage_trail_id($id));
     } catch (Throwable $e) {

@@ -105,6 +105,16 @@
                   <TrendingUp class="stat-icon" :size="16" aria-hidden="true" />
                   <span class="stat-value">{{ track.elevation }}</span>
                 </div>
+                <LikeButton
+                  class="stat stat-like"
+                  compact
+                  :trail-id="track.id"
+                  :like-count="track.likeCount || 0"
+                  :liked-by-me="Boolean(track.likedByMe)"
+                  :auth-user="authUser"
+                  @changed="applyLikeChange"
+                  @needs-auth="promptSignIn"
+                />
               </div>
             </div>
           </div>
@@ -125,12 +135,13 @@
 <script>
 import { Clock, MapPin, Ruler, TrendingUp } from 'lucide-vue-next'
 import DifficultyBadge from './DifficultyBadge.vue'
+import LikeButton from './LikeButton.vue'
 import SportIcon from './SportIcon.vue'
 import { getAdminTrailState } from '../data/customTrails'
 
 export default {
   name: 'HomePage',
-  components: { Clock, DifficultyBadge, MapPin, Ruler, SportIcon, TrendingUp },
+  components: { Clock, DifficultyBadge, LikeButton, MapPin, Ruler, SportIcon, TrendingUp },
   props: {
     filters: {
       type: Object,
@@ -139,8 +150,15 @@ export default {
     searchQuery: {
       type: String,
       default: ''
+    },
+    // Passed down by <router-view> in App.vue; needed to decide whether the
+    // like button acts or asks the visitor to sign in.
+    authUser: {
+      type: Object,
+      default: null
     }
   },
+  emits: ['request-sign-in'],
   data() {
     return {
       tracks: [],
@@ -189,10 +207,30 @@ export default {
         )
       }
 
+      // Popularity sort, applied last so it orders whatever survived the
+      // filters. Ties keep their existing (id) order.
+      if (this.filters.sort === 'popular') {
+        filtered = [...filtered].sort(
+          (a, b) => (b.likeCount || 0) - (a.likeCount || 0)
+        )
+      }
+
       return filtered
     }
   },
   methods: {
+    // Keep the local copy in step so the count survives re-filtering and
+    // re-sorting without another round trip.
+    applyLikeChange({ trailId, likeCount, likedByMe }) {
+      const track = this.tracks.find(t => t.id === trailId)
+      if (track) {
+        track.likeCount = likeCount
+        track.likedByMe = likedByMe
+      }
+    },
+    promptSignIn() {
+      this.$emit('request-sign-in')
+    },
     async loadTracks() {
       this.loading = true
       this.error = null

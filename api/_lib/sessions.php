@@ -44,3 +44,27 @@ function delete_session(string $token): void {
     db()->prepare('DELETE FROM sessions WHERE token = :token')
         ->execute([':token' => $token]);
 }
+
+/**
+ * Revoke every session belonging to an email, optionally sparing one token.
+ *
+ * A password change has to invalidate sessions, or someone who already stole
+ * one keeps their access precisely when the owner is trying to lock them out.
+ * $exceptToken lets a signed-in user change their own password without being
+ * logged out of the tab they are sitting in.
+ *
+ * @return int number of sessions revoked
+ */
+function delete_sessions_for_email(string $email, ?string $exceptToken = null): int {
+    $email = strtolower(trim($email));
+    if ($exceptToken === null) {
+        $stmt = db()->prepare('DELETE FROM sessions WHERE email = :email');
+        $stmt->execute([':email' => $email]);
+    } else {
+        $stmt = db()->prepare(
+            'DELETE FROM sessions WHERE email = :email AND token <> :keep'
+        );
+        $stmt->execute([':email' => $email, ':keep' => $exceptToken]);
+    }
+    return $stmt->rowCount();
+}

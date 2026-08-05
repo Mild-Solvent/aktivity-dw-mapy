@@ -14,14 +14,17 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'GET') {
     ok([]);
 }
 
+// Resolved before the query so the like join can mark which trails this
+// viewer has already liked.
+$user = current_user();
+
 try {
-    $trails = list_trails();
+    $trails = list_trails($user['email'] ?? null);
 } catch (Throwable $e) {
     error_log('[api/trails] list failed: ' . $e->getMessage());
     serverError('Nepodarilo sa načítať trasy');
 }
 
-$user = current_user();
 $manager = $user && is_trail_manager($user['role']);
 
 $visible = $manager

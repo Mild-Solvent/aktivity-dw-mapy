@@ -29,6 +29,14 @@ function notFound(string $message = 'Nenájdené'): void {
     json_response(404, ['error' => $message]);
 }
 function conflict(string $message): void { json_response(409, ['error' => $message]); }
+/**
+ * 429. Used by the password-reset endpoints, which are the only unauthenticated
+ * routes that cause the server to send mail — without a limit they are a spam
+ * relay aimed at our own sending reputation.
+ */
+function tooManyRequests(string $message = 'Príliš veľa požiadaviek. Skúste to neskôr.'): void {
+    json_response(429, ['error' => $message]);
+}
 function serverError(string $message = 'Interná chyba servera'): void {
     json_response(500, ['error' => $message]);
 }

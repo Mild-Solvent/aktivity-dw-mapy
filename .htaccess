@@ -32,15 +32,26 @@ DirectoryIndex index.html
   # second pass and asked for a trail called "index.php". [END] stops rewriting
   # outright (Apache 2.4+).
 
-  RewriteRule ^api/auth/register$  api/auth/register.php [END,QSA]
-  RewriteRule ^api/auth/login$     api/auth/login.php    [END,QSA]
-  RewriteRule ^api/auth/logout$    api/auth/logout.php   [END,QSA]
-  RewriteRule ^api/auth/me$        api/auth/me.php       [END,QSA]
+  RewriteRule ^api/auth/register$         api/auth/register.php        [END,QSA]
+  RewriteRule ^api/auth/login$            api/auth/login.php           [END,QSA]
+  RewriteRule ^api/auth/logout$           api/auth/logout.php          [END,QSA]
+  RewriteRule ^api/auth/me$               api/auth/me.php              [END,QSA]
+  RewriteRule ^api/auth/forgot-password$  api/auth/forgot-password.php [END,QSA]
+  RewriteRule ^api/auth/reset-password$   api/auth/reset-password.php  [END,QSA]
+  RewriteRule ^api/auth/change-password$  api/auth/change-password.php [END,QSA]
 
   RewriteRule ^api/roles$          api/roles/index.php   [END,QSA]
   RewriteRule ^api/roles/(.+)$     api/roles/email.php   [END,QSA]
 
+  # The trails your account has liked. A top-level path rather than
+  # /api/trails/liked, which the catch-all id rule below would otherwise
+  # shadow — and which would collide with a trail whose slug were "liked".
+  RewriteRule ^api/likes$          api/likes.php         [END,QSA]
+
   RewriteRule ^api/trails$         api/trails/index.php  [END,QSA]
+  # MUST stay above the catch-all: otherwise "<id>/like" is captured by (.+)
+  # and id.php looks for a trail literally named "<id>/like".
+  RewriteRule ^api/trails/([^/]+)/like$  api/trails/like.php [END,QSA]
   RewriteRule ^api/trails/(.+)$    api/trails/id.php     [END,QSA]
 
   RewriteRule ^api/upload$         api/upload.php        [END,QSA]

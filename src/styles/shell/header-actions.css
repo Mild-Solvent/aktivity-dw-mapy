@@ -257,6 +257,37 @@
   background: #1f2937;
 }
 
+/* The account panel links to the liked-trails page with a router-link, which
+   renders an <a> rather than a <button> — these keep it looking identical. */
+a.auth-option-button {
+  display: block;
+  text-decoration: none;
+}
+
+/* Quiet inline action: "Zabudli ste heslo?" and "Späť na prihlásenie". */
+.auth-link-button {
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  font-size: 0.85rem;
+  margin-top: 0.15rem;
+  padding: 0.4rem;
+  text-decoration: underline;
+  width: 100%;
+}
+
+.auth-link-button:hover {
+  color: #111827;
+}
+
+.auth-hint {
+  color: #6b7280;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  margin: 0 0 0.9rem;
+}
+
 .auth-message {
   border-radius: 8px;
   font-size: 0.85rem;

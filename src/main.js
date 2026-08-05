@@ -8,6 +8,8 @@ import AdminManageTrails from './components/AdminManageTrails.vue'
 import AdminRoles from './components/AdminRoles.vue'
 import Terms from './components/Terms.vue'
 import Privacy from './components/Privacy.vue'
+import MyLikedTrails from './components/MyLikedTrails.vue'
+import ResetPassword from './components/ResetPassword.vue'
 import './styles/index.css'
 
 const routes = [
@@ -18,7 +20,10 @@ const routes = [
   { path: '/admin/manage-trails', name: 'AdminManageTrails', component: AdminManageTrails },
   { path: '/admin/roles', name: 'AdminRoles', component: AdminRoles },
   { path: '/terms', name: 'Terms', component: Terms },
-  { path: '/privacy', name: 'Privacy', component: Privacy }
+  { path: '/privacy', name: 'Privacy', component: Privacy },
+  { path: '/moje-oblubene', name: 'MyLikedTrails', component: MyLikedTrails },
+  // Reached from the password-reset email; the token arrives as ?token=…
+  { path: '/reset-password', name: 'ResetPassword', component: ResetPassword }
 ]
 
 const router = createRouter({

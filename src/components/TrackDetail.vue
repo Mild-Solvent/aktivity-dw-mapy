@@ -125,12 +125,22 @@
               </a>
             </div>
             <div class="track-gpx-action" v-if="track.gpxFile">
-              <button 
-                @click="downloadGPX" 
+              <button
+                @click="downloadGPX"
                 class="action-button secondary gpx-download-btn"
               >
                 <Download :size="18" aria-hidden="true" /> Stiahnuť GPX
               </button>
+            </div>
+            <div class="track-like-action">
+              <LikeButton
+                :trail-id="track.id"
+                :like-count="track.likeCount || 0"
+                :liked-by-me="Boolean(track.likedByMe)"
+                :auth-user="authUser"
+                @changed="applyLikeChange"
+                @needs-auth="$emit('request-sign-in')"
+              />
             </div>
           </div>
         </div>
@@ -198,6 +208,7 @@ import DifficultyBadge from './DifficultyBadge.vue'
 import SportIcon from './SportIcon.vue'
 import { getAdminTrailById, getAdminTrailState } from '../data/customTrails'
 import { getStorageTrailId } from '../utils/slug'
+import LikeButton from './LikeButton.vue'
 import { api } from '../lib/api'
 
 export default {
@@ -213,6 +224,7 @@ export default {
     Download,
     FileText,
     Images,
+    LikeButton,
     LoaderCircle,
     MapIcon,
     Ruler,
@@ -225,8 +237,15 @@ export default {
     id: {
       type: String,
       required: true
+    },
+    // From <router-view> in App.vue — decides whether the like button acts or
+    // asks the visitor to sign in.
+    authUser: {
+      type: Object,
+      default: null
     }
   },
+  emits: ['request-sign-in'],
   data() {
     return {
       track: null,
@@ -251,6 +270,11 @@ export default {
     }
   },
   methods: {
+    applyLikeChange({ likeCount, likedByMe }) {
+      if (!this.track) return
+      this.track.likeCount = likeCount
+      this.track.likedByMe = likedByMe
+    },
     async loadTrack() {
       try {
         this.loading = true
