@@ -3,7 +3,10 @@
     <section class="reset-card">
       <h1>Nastavenie nového hesla</h1>
 
-      <p v-if="!token" class="auth-message auth-message-error">
+      <!-- `&& !done` matters: the token is cleared once it has been redeemed,
+           so without it a successful reset also renders "link is incomplete"
+           directly above its own success message. -->
+      <p v-if="!token && !done" class="auth-message auth-message-error">
         Odkaz je neúplný. Otvorte ho prosím presne tak, ako prišiel v e-maile.
       </p>
 
