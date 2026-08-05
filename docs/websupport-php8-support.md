@@ -1,6 +1,30 @@
 # Websupport support request — PHP 8.5 not applying to aktivity.ceaeurope.sk
 
-**Status:** blocking. Everything else in the migration is done and verified.
+> **RESOLVED 5 Aug 2026 — no ticket was needed. Kept for reference only.**
+>
+> Websupport did apply PHP 8.5; it simply took roughly an hour after the service
+> was created, with no further action from us. The site now reports PHP 8.5.8 on
+> `fpm-fcgi`.
+>
+> Two faults of our own were hiding behind it and only surfaced once PHP 8
+> arrived — both fixed, see the commits on `migrate-websupport`:
+>
+> 1. `db.php` probed the MariaDB socket with `file_exists()`. `open_basedir`
+>    forbids stat-ing that path from the web servers, and `bootstrap.php`
+>    promotes warnings to exceptions, so every database-backed request 500'd.
+>    Connection candidates are now tried in order instead of probed.
+> 2. The API rewrites used `[L]`, which in `.htaccess` only ends the current
+>    pass. mod_rewrite re-fed `api/trails/index.php` through the rules, matched
+>    the `id` rule, and looked up a trail called "index.php". Now `[END]`.
+>
+> A third, unrelated surprise: Websupport drops its own placeholder `index.php`
+> into a new service's document root, and the default `DirectoryIndex` prefers
+> `.php`, so `/` served Websupport's "nothing here yet" page while every deep
+> link rendered the app correctly. `DirectoryIndex index.html` is now pinned.
+>
+> **If you ever add another subdomain on this account, expect all three.**
+
+**Original status:** blocking. Everything else in the migration is done and verified.
 
 ---
 
