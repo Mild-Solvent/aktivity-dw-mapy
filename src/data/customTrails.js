@@ -1,17 +1,8 @@
 import { api } from '../lib/api'
+import { getStorageTrailId } from '../utils/slug'
 
 const firstString = (...values) => {
   return values.find(value => typeof value === 'string' && value.trim()) || ''
-}
-
-const getStorageTrailId = (value) => {
-  return String(value || '')
-    .trim()
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9-]+/g, '-')
-    .replace(/^-+|-+$/g, '')
 }
 
 const normalizeTrail = (trail) => {

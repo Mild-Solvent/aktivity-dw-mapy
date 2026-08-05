@@ -1,0 +1,13 @@
+# private/ holds config.php: database credentials and ADMIN_BOOTSTRAP_EMAIL.
+#
+# The docroot's .htaccess already denies any file named config.php, but this
+# folder sits inside the web root, so it gets its own unconditional deny too.
+# One rule is a typo away from being a leak; two are not.
+
+Require all denied
+
+# Apache 2.2 fallback, in case mod_authz_host runs in compatibility mode.
+<IfModule !mod_authz_core.c>
+  Order allow,deny
+  Deny from all
+</IfModule>

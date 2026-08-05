@@ -2,10 +2,9 @@
 /**
  * Trails table access (replaces Redis trails:<id> + trails:index).
  *
- * The trail id IS the primary key AND the storage folder name under
- * tracks/. The slugify() rules below MUST stay in sync with:
- *   - getStorageTrailId() in src/data/customTrails.js
- *   - storageTrailId() in api/_lib/blob.js (Node, legacy)
+ * The trail id IS the primary key AND the storage folder name under tracks/,
+ * so slugify() lives in _lib/slug.php and is shared with files.php — see the
+ * note there about why there is only one implementation.
  *
  * The payload column holds the full JSON trail object; TRAIL_FIELDS below
  * is the allowlist enforced by handlers before saveTrail() is called.
@@ -14,6 +13,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/slug.php';
 
 /**
  * The 24 fields a trail payload may carry — verbatim from
@@ -39,21 +39,6 @@ function sanitize_trail_payload(array $payload): array {
         }
     }
     return $out;
-}
-
-/**
- * Canonical slug. MUST match slugify() in api/trails/[id].js:23-34 and
- * storageTrailId() in api/_lib/blob.js.
- */
-function slugify(string $s): string {
-    $s = trim(strtolower((string) $s));
-    // Decompose accents (Slovak diacritics) and drop combining marks.
-    $s = normalizer_normalize($s, Normalizer::FORM_D);
-    $s = preg_replace('/\p{M}/u', '', $s);
-    // Collapse non-alphanumerics to '-'.
-    $s = preg_replace('/[^a-z0-9-]+/', '-', $s);
-    $s = trim($s, '-');
-    return $s ?? '';
 }
 
 /** Return every trail payload (published + draft). */

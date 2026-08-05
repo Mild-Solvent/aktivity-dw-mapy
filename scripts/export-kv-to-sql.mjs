@@ -62,6 +62,45 @@ async function scanKeys(match) {
 
 // ── Trails ──────────────────────────────────────────────────────────────
 
+// Trail payloads store absolute Vercel Blob URLs in previewImage, gpxFile and
+// galleryImages. On Websupport those same files are served by Apache from the
+// docroot, so the URLs have to become same-origin paths — otherwise every
+// image and GPX keeps pointing at Vercel and 404s the moment the Blob store is
+// deleted. The pathname is already "tracks/<slug>/<path>", so the rewrite is
+// just "drop the host and the signing query string".
+const BLOB_HOST = /(^|\.)blob\.vercel-storage\.com$/i
+
+function rewriteBlobUrl(value) {
+  if (typeof value !== 'string' || !value.includes('blob.vercel-storage.com')) {
+    return value
+  }
+  let parsed
+  try {
+    parsed = new URL(value)
+  } catch {
+    return value
+  }
+  if (!BLOB_HOST.test(parsed.hostname)) return value
+
+  const path = parsed.pathname.replace(/^\/+/, '')
+  if (!path.startsWith('tracks/')) {
+    console.warn(`  ! blob URL outside tracks/, left as-is: ${value}`)
+    return value
+  }
+  return `/${path}`
+}
+
+function rewriteBlobUrlsDeep(node) {
+  if (typeof node === 'string') return rewriteBlobUrl(node)
+  if (Array.isArray(node)) return node.map(rewriteBlobUrlsDeep)
+  if (node && typeof node === 'object') {
+    return Object.fromEntries(
+      Object.entries(node).map(([k, v]) => [k, rewriteBlobUrlsDeep(v)])
+    )
+  }
+  return node
+}
+
 async function exportTrails() {
   const ids = await redis.get('trails:index')
   if (!Array.isArray(ids) || ids.length === 0) {
@@ -74,7 +113,7 @@ async function exportTrails() {
     const p = payloads[i]
     if (!p) continue
     const id = ids[i]
-    const payloadJson = JSON.stringify({ ...p, id })
+    const payloadJson = JSON.stringify(rewriteBlobUrlsDeep({ ...p, id }))
     const createdBy = p.createdBy ? sqlString(String(p.createdBy)) : 'NULL'
     lines.push(
       `INSERT INTO trails (id, payload, created_by) VALUES (${sqlString(id)}, ${sqlString(payloadJson)}, ${createdBy});`
@@ -169,14 +208,27 @@ sql.push('')
 sql.push('COMMIT;')
 sql.push('')
 
-await writeFile(join(process.cwd(), 'migrate.sql'), sql.join('\n'), 'utf8')
-console.log(`✓ migrate.sql written (${sql.length} lines)`)
+const sqlText = sql.join('\n')
+
+// Refuse to emit a migration that still points at Vercel. Once the Blob store
+// is deleted those URLs are dead, and the failure would only surface as broken
+// images long after the cutover looked successful.
+const leftovers = sqlText.match(/[^"'\s\\]*blob\.vercel-storage\.com[^"'\s\\]*/g)
+if (leftovers) {
+  console.error(`\n✗ ${leftovers.length} Vercel Blob URL(s) survived the rewrite:`)
+  for (const u of [...new Set(leftovers)].slice(0, 10)) console.error(`    ${u}`)
+  console.error('\nNot writing migrate.sql. Fix rewriteBlobUrl() and re-run.')
+  process.exit(1)
+}
+
+await writeFile(join(process.cwd(), 'migrate.sql'), sqlText, 'utf8')
+console.log(`✓ migrate.sql written (${sql.length} lines, no Blob URLs remaining)`)
 
 await exportFiles()
 
 console.log('')
 console.log('Next steps:')
-console.log('  1. Import migrations/001_init.sql into MariaDB (phpMyAdmin → SQL tab).')
-console.log('  2. Import migrate.sql the same way.')
+console.log('  1. php scripts/db-exec.php migrations/001_init.sql   (on the server)')
+console.log('  2. php scripts/db-exec.php migrate.sql               (on the server)')
 console.log('  3. SFTP migration-tracks/* to <docroot>/tracks/ on Websupport.')
 console.log('  4. Delete migrate.sql, migration-tracks/, and this script.')

@@ -197,6 +197,7 @@ import {
 import DifficultyBadge from './DifficultyBadge.vue'
 import SportIcon from './SportIcon.vue'
 import { getAdminTrailById, getAdminTrailState } from '../data/customTrails'
+import { getStorageTrailId } from '../utils/slug'
 import { api } from '../lib/api'
 
 export default {
@@ -318,11 +319,7 @@ export default {
       return this.track?.mapUrl || 'https://mapy.com/s/gokolovofa'
     },
     getTrailStorageId() {
-      return String(this.track?.id || this.id || '')
-        .trim()
-        .toLowerCase()
-        .replace(/[^a-z0-9-]+/g, '-')
-        .replace(/^-+|-+$/g, '')
+      return getStorageTrailId(this.track?.id || this.id)
     },
     async findStoredGpxUrl() {
       // Called as a fallback when the trail's stored gpxFile URL 404s.

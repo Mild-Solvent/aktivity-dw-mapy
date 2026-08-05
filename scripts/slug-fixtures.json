@@ -1,0 +1,21 @@
+{
+  "_comment": "Shared expectations for the trail slug. getStorageTrailId() in src/data/customTrails.js and slugify() in api/_lib/slug.php must both produce these. Checked by check-slug-parity.mjs (locally) and check-slug-parity.php (on the server, where the intl extension may be missing and the transliteration fallback runs instead).",
+  "cases": [
+    ["Kolačín", "kolacin"],
+    ["KOLAČÍN", "kolacin"],
+    ["kolačín", "kolacin"],
+    ["Nová Dubnica", "nova-dubnica"],
+    ["Malý Kolačín", "maly-kolacin"],
+    ["Ľubovňa", "lubovna"],
+    ["Žilina Košice", "zilina-kosice"],
+    ["Dúbrava ô ŕ ĺ", "dubrava-o-r-l"],
+    ["Ťažký Ďumbier", "tazky-dumbier"],
+    ["CEA 8,4", "cea-8-4"],
+    ["  Trasa  ", "trasa"],
+    ["Trasa – pomlčka", "trasa-pomlcka"],
+    ["est-ut-perferendis", "est-ut-perferendis"],
+    ["beh", "beh"],
+    ["---", ""],
+    ["", ""]
+  ]
+}

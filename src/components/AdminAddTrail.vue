@@ -342,6 +342,7 @@ import DifficultyBadge from './DifficultyBadge.vue'
 import SportIcon from './SportIcon.vue'
 import { api } from '../lib/api'
 import { getAdminTrailById, removeAdminTrail, saveAdminTrail } from '../data/customTrails'
+import { getStorageTrailId } from '../utils/slug'
 import { gpxFileToPreviewPng, dataUrlToBlob } from '../utils/gpxMapCapture'
 import { compressImageToWebp } from '../utils/imageCompressor'
 
@@ -540,11 +541,9 @@ export default {
       }
     },
     getTrailStorageId() {
-      return String(this.form.id || this.form.name || `trail-${Date.now()}`)
-        .trim()
-        .toLowerCase()
-        .replace(/[^a-z0-9-]+/g, '-')
-        .replace(/^-+|-+$/g, '') || `trail-${Date.now()}`
+      // Must agree with the id the server derives, or uploads land in a folder
+      // the delete path can never find again.
+      return getStorageTrailId(this.form.id || this.form.name) || `trail-${Date.now()}`
     },
     async uploadPhoto() {
       if (!this.photoFile && !this.gpxPreview && this.form.previewImage) {

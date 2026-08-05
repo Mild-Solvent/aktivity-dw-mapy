@@ -18,17 +18,17 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/slug.php';
+
 const MAX_UPLOAD_BYTES = 25 * 1024 * 1024; // 25 MB hard cap, mirrors upload.js
 
 /**
- * Same slug rules as storageTrailId() in api/_lib/blob.js (Node).
+ * Folder name for a trail's uploads. This is the same value as the trail's
+ * primary key by definition — delete_by_prefix() relies on being able to
+ * recompute it from the id alone, so it must not diverge from slugify().
  */
 function storage_trail_id(string $raw): string {
-    $s = trim(strtolower((string) $raw));
-    $s = normalizer_normalize($s, Normalizer::FORM_D);
-    $s = preg_replace('/\p{M}/u', '', $s);
-    $s = preg_replace('/[^a-z0-9]+/', '-', $s);
-    return trim($s ?? '', '-');
+    return slugify($raw);
 }
 
 function docroot(): string {

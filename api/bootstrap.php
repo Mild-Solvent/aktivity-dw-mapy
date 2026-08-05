@@ -59,6 +59,7 @@ if (!$configLoaded) {
 
 require_once __DIR__ . '/_lib/db.php';
 require_once __DIR__ . '/_lib/response.php';
+require_once __DIR__ . '/_lib/slug.php';
 require_once __DIR__ . '/_lib/hash.php';
 require_once __DIR__ . '/_lib/auth.php';
 require_once __DIR__ . '/_lib/sessions.php';
