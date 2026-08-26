@@ -51,7 +51,10 @@ jobs:
       - name: Install the deploy key
         run: |
           mkdir -p ~/.ssh && chmod 700 ~/.ssh
-          printf '%s\n' "${{ secrets.WS_SSH_KEY }}" > ~/.ssh/deploy_key
+          # tr -d '\r': the secret was set from Windows, where PowerShell's
+          # pipeline can smuggle CRLFs into the key; OpenSSH refuses such a
+          # key with "error in libcrypto".
+          printf '%s\n' "${{ secrets.WS_SSH_KEY }}" | tr -d '\r' > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
 
       - name: Deploy to Websupport
