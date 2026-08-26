@@ -4,8 +4,11 @@ import App from './App.vue'
 import HomePage from './components/HomePage.vue'
 import TrackDetail from './components/TrackDetail.vue'
 import AdminAddTrail from './components/AdminAddTrail.vue'
+import AdminAnnouncements from './components/AdminAnnouncements.vue'
 import AdminManageTrails from './components/AdminManageTrails.vue'
 import AdminRoles from './components/AdminRoles.vue'
+import BlogList from './components/BlogList.vue'
+import BlogPost from './components/BlogPost.vue'
 import Terms from './components/Terms.vue'
 import Privacy from './components/Privacy.vue'
 import MyLikedTrails from './components/MyLikedTrails.vue'
@@ -15,9 +18,12 @@ import './styles/index.css'
 const routes = [
   { path: '/', name: 'Home', component: HomePage },
   { path: '/track/:id', name: 'TrackDetail', component: TrackDetail, props: true },
+  { path: '/novinky', name: 'BlogList', component: BlogList },
+  { path: '/novinky/:id', name: 'BlogPost', component: BlogPost, props: true },
   { path: '/admin/trails/new', name: 'AdminAddTrail', component: AdminAddTrail },
   { path: '/admin/trails/:id/edit', name: 'AdminEditTrail', component: AdminAddTrail, props: true },
   { path: '/admin/manage-trails', name: 'AdminManageTrails', component: AdminManageTrails },
+  { path: '/admin/announcements', name: 'AdminAnnouncements', component: AdminAnnouncements },
   { path: '/admin/roles', name: 'AdminRoles', component: AdminRoles },
   { path: '/terms', name: 'Terms', component: Terms },
   { path: '/privacy', name: 'Privacy', component: Privacy },

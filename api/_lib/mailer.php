@@ -72,7 +72,7 @@ function send_mail(string $to, string $subject, string $body): bool {
         $mail->Encoding = PHPMailer::ENCODING_BASE64;
 
         $from     = defined('SMTP_FROM') && SMTP_FROM !== '' ? SMTP_FROM : SMTP_USER;
-        $fromName = defined('SMTP_FROM_NAME') ? SMTP_FROM_NAME : 'ACTIVITY DW Club';
+        $fromName = defined('SMTP_FROM_NAME') ? SMTP_FROM_NAME : 'AKTIVITY DW KLUB';
         $mail->setFrom($from, $fromName);
         $mail->addAddress($to);
 

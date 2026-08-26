@@ -1,0 +1,78 @@
+name: Build & deploy to Websupport
+
+# Push-to-deploy, same shape as CEA-WEB. The upload itself is delegated to
+# scripts/deploy.sh so CI and a laptop deploy behave identically — including
+# the blast-radius guard that refuses to touch anything outside
+# ceaeurope.sk/sub/aktivity on the shared hosting account.
+#
+# The only secret is WS_SSH_KEY (the same dedicated CI key CEA-WEB uses,
+# authorized on the server independently of anyone's personal key). Host,
+# port, user and target directory are not secrets — they are already written
+# down in scripts/deploy.sh — so they live here in plain sight.
+#
+# private/config.php (SMTP + DB credentials) is not in git and therefore not
+# in CI; deploy.sh notices and deploys without it, leaving the copy already
+# on the server untouched.
+
+on:
+  push:
+    branches: [main, migrate-websupport]
+    paths-ignore:
+      - "**.md"
+      - ".claude/**"
+      - "docs/**"
+  workflow_dispatch:
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - run: npm ci
+
+      - name: Build Vue SPA
+        run: npm run build
+
+      - name: Install the deploy key
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.WS_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+      - name: Deploy to Websupport
+        env:
+          DEPLOY_HOST: shell.r2.websupport.sk
+          DEPLOY_PORT: "28478"
+          DEPLOY_USER: uid92382
+          DEPLOY_REMOTE_DIR: ceaeurope.sk/sub/aktivity
+          DEPLOY_KEY: ~/.ssh/deploy_key
+        run: ./scripts/deploy.sh --no-build
+
+      - name: Verify the live site
+        run: |
+          set -e
+          echo "--- /api/auth/me should answer JSON (unauthenticated) ---"
+          body=$(curl -sS https://aktivity.ceaeurope.sk/api/auth/me)
+          echo "$body"
+          echo "$body" | grep -q 'Neprihlásený' \
+            || { echo "::error::/api/auth/me is not executing PHP"; exit 1; }
+          echo "--- /api/trails should be a JSON array ---"
+          curl -sSf https://aktivity.ceaeurope.sk/api/trails | head -c 200 | grep -q '^\[' \
+            || { echo "::error::/api/trails did not return a JSON array"; exit 1; }
+          echo "--- the SPA root should be 200 ---"
+          curl -sSf -o /dev/null -w '%{http_code}\n' https://aktivity.ceaeurope.sk/

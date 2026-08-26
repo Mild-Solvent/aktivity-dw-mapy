@@ -103,6 +103,32 @@
     font-size: 1.2rem;
   }
 
+  /* Desktop centers the logo with position:absolute, which collides with
+     the action cluster once the admin "+ Trasa" button is present. Below
+     tablet width the logo joins the flex flow and shrinks with an ellipsis
+     instead of sliding under its neighbours. */
+  .logo {
+    position: static;
+    transform: none;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .logo-link {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* The absolute version pairs its fade-out with translateX(-50%); in flow
+     that shift would drag the text sideways. */
+  .logo.logo-hidden {
+    transform: scale(0.8);
+  }
+
   .header-actions {
     gap: 0.5rem;
   }

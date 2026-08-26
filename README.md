@@ -1,4 +1,4 @@
-# TrackFinder — Activity Tracks Discovery
+# TrackFinder — Aktivity Tracks Discovery
 
 Slovak-language single-page app for discovering outdoor activity tracks (running, cycling, hiking) in Slovakia. Filterable grid of trails, per-track detail pages with stats and GPX download, and a small admin back-office for managing trails and user roles.
 

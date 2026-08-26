@@ -4,7 +4,7 @@
     The migration to Websupport changes exactly one record --
     aktivity.ceaeurope.sk -- and nothing else in the zone may move. Run this
     before and after that change and diff the two files; any difference outside
-    the ACTIVITY section means mail routing or authentication was disturbed and
+    the AKTIVITY section means mail routing or authentication was disturbed and
     the change must be rolled back from the BIND export in .backup/.
 
         pwsh scripts/dns-email-check.ps1 -OutFile .backup/dns-before.txt
@@ -79,7 +79,7 @@ $lines += Get-Records $Domain 'A'
 $lines += Get-Records "www.$Domain" 'CNAME'
 $lines += ''
 
-$lines += '## ACTIVITY - THE ONLY RECORD THIS MIGRATION CHANGES'
+$lines += '## AKTIVITY - THE ONLY RECORD THIS MIGRATION CHANGES'
 $lines += Get-Records "aktivity.$Domain" 'CNAME'
 $lines += Get-Records "aktivity.$Domain" 'A'
 

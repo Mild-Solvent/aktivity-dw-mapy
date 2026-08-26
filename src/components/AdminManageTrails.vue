@@ -22,6 +22,9 @@
             <img :src="trail.previewImage" :alt="trail.name" />
             <div>
               <h2>{{ trail.name }}</h2>
+              <!-- The id is the primary key and the public URL; showing it here
+                   is what makes an already-taken id visible when adding. -->
+              <p class="admin-list-id">/track/{{ trail.id }}</p>
               <p>
                 {{ trail.distance }} · {{ trail.duration }}
                 <span

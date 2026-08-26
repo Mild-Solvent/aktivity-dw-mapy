@@ -1,4 +1,4 @@
-import { api } from '../lib/api'
+import { api, ApiError } from '../lib/api'
 import { getStorageTrailId } from '../utils/slug'
 
 const firstString = (...values) => {
@@ -78,16 +78,53 @@ export const getAdminTrailById = async (id) => {
   return trails.find(trail => trail.id === id) || null
 }
 
-export const saveRemoteAdminTrail = async (trail) => {
+/**
+ * @param {object} trail
+ * @param {{ expectNew?: boolean }} options
+ *   expectNew marks this as a *create*. The server's PUT is an upsert, so
+ *   without it a reused id silently overwrites whatever trail already owns
+ *   that row; with it the server answers 409 instead.
+ */
+export const saveRemoteAdminTrail = async (trail, { expectNew = false } = {}) => {
   if (!trail?.id) {
     throw new Error('Trasa musí mať id.')
   }
   // Slugify the id for the URL so it matches the server's slugified URL param.
   const slug = getStorageTrailId(trail.id)
-  await api.put(`/api/trails/${encodeURIComponent(slug)}`, { ...trail, id: slug })
+  await api.put(`/api/trails/${encodeURIComponent(slug)}`, { ...trail, id: slug, expectNew })
 }
 
-export const saveAdminTrail = (trail) => saveRemoteAdminTrail(trail)
+export const saveAdminTrail = (trail, options) => saveRemoteAdminTrail(trail, options)
+
+/**
+ * Is this id already spoken for? Asks the server rather than the cached list,
+ * because the answer decides whether a save will clobber someone else's trail.
+ * A 404 is the only "free" answer — anything else is rethrown so a network
+ * failure can never read as "go ahead".
+ */
+export const isTrailIdTaken = async (id) => {
+  const slug = getStorageTrailId(id)
+  if (!slug) return false
+  try {
+    await api.get(`/api/trails/${encodeURIComponent(slug)}`)
+    return true
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) {
+      return false
+    }
+    throw error
+  }
+}
+
+/** First free "<base>-2", "<base>-3", … for the "try this instead" hint. */
+export const nextFreeTrailId = (base, takenIds = []) => {
+  const slug = getStorageTrailId(base)
+  if (!slug) return ''
+  const taken = new Set(takenIds.map(id => getStorageTrailId(id)))
+  let suffix = 2
+  while (taken.has(`${slug}-${suffix}`)) suffix += 1
+  return `${slug}-${suffix}`
+}
 
 export const deleteRemoteAdminTrail = async (trailId) => {
   await api.delete(`/api/trails/${encodeURIComponent(trailId)}`)

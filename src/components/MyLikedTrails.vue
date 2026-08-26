@@ -54,6 +54,10 @@
                 <span class="track-image-placeholder-icon">🗺</span>
                 <span class="track-image-placeholder-label">Bez náhľadu</span>
               </div>
+              <div class="track-location">
+                <MapPin class="location-icon" :size="14" aria-hidden="true" />
+                <span class="location-text">{{ track.location }}</span>
+              </div>
             </div>
 
             <div class="track-content">
@@ -62,10 +66,6 @@
                   <SportIcon :sport="track.sport" size="sm" />
                 </span>
                 <DifficultyBadge :difficulty="track.difficulty" size="sm" />
-                <div class="track-location">
-                  <MapPin class="location-icon" :size="14" aria-hidden="true" />
-                  <span class="location-text">{{ track.location }}</span>
-                </div>
               </div>
               <h3 class="track-title">{{ track.name }}</h3>
               <p class="track-description">{{ track.description }}</p>

@@ -67,4 +67,4 @@ define('SMTP_PORT',      465);              // 465 implicit TLS, or 587 STARTTLS
 define('SMTP_USER',      'noreply@ceaeurope.sk');
 define('SMTP_PASSWORD',  'your_mailbox_password');
 define('SMTP_FROM',      'noreply@ceaeurope.sk');
-define('SMTP_FROM_NAME', 'ACTIVITY DW Club');
+define('SMTP_FROM_NAME', 'AKTIVITY DW KLUB');

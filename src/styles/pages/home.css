@@ -239,29 +239,32 @@
 }
 
 .track-location {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 2;
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  color: #666;
+  max-width: calc(100% - 1.5rem);
+  color: #444;
   font-size: 0.8rem;
-  background: rgba(0, 0, 0, 0.05);
-  padding: 0.25rem 0.5rem;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.3rem 0.6rem;
   border-radius: 12px;
-  margin-left: auto;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
 }
 
 .location-icon {
   font-size: 0.8rem;
+  flex-shrink: 0;
 }
 
 .location-text {
   font-weight: 500;
-}
-
-/* Location within badges container */
-.track-badges .track-location {
-  margin-left: auto;
-  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* No results */

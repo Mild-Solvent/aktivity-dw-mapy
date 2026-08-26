@@ -185,6 +185,41 @@
   font-size: 0.78rem;
   font-style: italic;
   font-weight: 500;
+  margin: 0;
+}
+
+/* "Upraviť ID" / "Odvodiť z názvu" — sits inline at the end of a .field-hint. */
+.field-inline-button {
+  background: none;
+  border: none;
+  color: #475569;
+  cursor: pointer;
+  font: inherit;
+  font-style: normal;
+  padding: 0 0 0 0.35rem;
+  text-decoration: underline;
+}
+
+.field-inline-button:hover {
+  color: #111827;
+}
+
+/* Duplicate-id warning. Louder than .field-hint because ignoring it used to
+   mean overwriting another trail. */
+.field-error {
+  color: #b91c1c;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.form-field input[aria-invalid='true'] {
+  border-color: #b91c1c;
+}
+
+.form-field input:read-only {
+  background: #f8fafc;
+  color: #475569;
 }
 
 .gpx-banner {
@@ -428,6 +463,12 @@
 .admin-list-item p {
   color: #64748b;
   margin: 0;
+}
+
+.admin-list-item p.admin-list-id {
+  color: #94a3b8;
+  font-size: 0.78rem;
+  margin: 0 0 0.15rem;
 }
 
 .admin-inline-button {

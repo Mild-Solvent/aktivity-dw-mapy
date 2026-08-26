@@ -10,9 +10,11 @@
 @import './pages/home.css';
 @import './pages/track-detail.css';
 @import './pages/legal.css';
+@import './pages/blog.css';
 @import './responsive.css';
 @import './animations.css';
 @import './accessibility.css';
 @import './components/icons-stats.css';
 @import './components/admin-extras.css';
+@import './components/news-ticker.css';
 @import './components/gallery-modal.css';

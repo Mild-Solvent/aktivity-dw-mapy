@@ -1,0 +1,232 @@
+/* News ticker — ants marching left across the hero, towing announcements.
+ *
+ * Rendering contract (the admin editor's guidelines mirror these numbers):
+ *   - the band is one line high; text never wraps
+ *   - media renders at a fixed height (--ticker-media-h) with natural width,
+ *     cropped by object-fit: cover past --ticker-media-maxw. Anything with an
+ *     aspect ratio between 1:1 and 5:1 shows uncropped.
+ */
+
+.news-ticker {
+  width: 100%;
+  overflow: hidden;
+  margin-top: 2.5rem;
+  --ticker-media-h: clamp(44px, 7vw, 64px);
+  --ticker-media-maxw: min(70vw, 320px);
+}
+
+/* Moved by the component's requestAnimationFrame marquee (see NewsTicker.vue
+ * for why it is not a CSS animation). Hover-pause also lives there. */
+.news-ticker-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+/* base.css clamps every element to max-width: 100vw as overflow protection.
+ * A marquee is deliberately wider than the viewport — with the clamp active,
+ * each group collapses to the screen width on phones, its content spills
+ * out, and the following copy renders on top of it. The .news-ticker host
+ * keeps the clamp and hides the overflow; everything inside must be free. */
+.news-ticker-track,
+.news-ticker-group,
+.ticker-unit,
+.ticker-ant-row,
+.ticker-card {
+  max-width: none;
+}
+
+.news-ticker-group {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  flex-shrink: 0;
+}
+
+.ticker-unit {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding-right: 2.5rem;
+  flex-shrink: 0;
+}
+
+/* ── The ants ─────────────────────────────────────────────────────────
+ * Each ant is an 8-frame walk-cycle sprite sheet (generated top-view ant,
+ * tripod gait, facing left). Three layers of motion compose the march:
+ *   1. the track slides left (the whole trail travels — JS marquee)
+ *   2. .ticker-ant-wave drifts up/down on its own phase → the meandering,
+ *      single-file wavy line real ant trails have
+ *   3. .ticker-ant steps through its frames — legs actually swing — with
+ *      its own stride tempo and phase via CSS vars set inline.
+ */
+.ticker-ant-row {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.ticker-ant-wave {
+  display: inline-flex;
+  margin-right: var(--ant-gap, 0.6rem);
+  animation: ant-wave var(--wave-dur, 3s) ease-in-out var(--wave-delay, 0s) infinite alternate;
+}
+
+/* Sheet cells are 240x180 → aspect ratio 4:3. background-size 800% packs the
+ * 8 frames; with it, frame i sits at background-position-x = i * 100/7 %, so
+ * stepping 0% → 800/7 % in 8 steps plays the whole cycle then wraps. */
+.ticker-ant {
+  --ant-h: calc(clamp(24px, 3.5vw, 36px) * var(--ant-scale, 1));
+  display: block;
+  height: var(--ant-h);
+  width: calc(var(--ant-h) * 1.3333);
+  background-image: var(--ant-sheet);
+  background-size: 800% 100%;
+  background-repeat: no-repeat;
+  filter: brightness(0) invert(1);
+  opacity: 0.85;
+  flex-shrink: 0;
+  animation: ant-walk var(--walk-dur, 0.7s) steps(8) var(--walk-delay, 0s) infinite;
+}
+
+@keyframes ant-wave {
+  from { transform: translateY(-3px); }
+  to   { transform: translateY(3px); }
+}
+
+@keyframes ant-walk {
+  from { background-position-x: 0%; }
+  to   { background-position-x: 114.2857%; }
+}
+
+.ticker-card {
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-white, #fff);
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ticker-card--text {
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  padding: 0.45rem 1.1rem;
+  font-size: clamp(0.85rem, 1.6vw, 1rem);
+  font-weight: 600;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+a.ticker-card--text:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.ticker-card--image {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.ticker-media {
+  display: block;
+  height: var(--ticker-media-h);
+  width: auto;
+  max-width: var(--ticker-media-maxw);
+  object-fit: cover;
+}
+
+/* The JS marquee already respects prefers-reduced-motion (it never starts);
+ * these stop the in-place leg/drift loops too. */
+@media (prefers-reduced-motion: reduce) {
+  .ticker-ant-wave,
+  .ticker-ant {
+    animation: none;
+  }
+}
+
+/* ── Admin editor (Správa noviniek) ─────────────────────────────────── */
+
+.announcement-kind-toggle {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.announcement-kind-toggle .kind-active {
+  background: var(--primary, #2e7d32);
+  color: #fff;
+  border-color: var(--primary, #2e7d32);
+}
+
+.announcement-guidelines {
+  background: rgba(46, 125, 50, 0.08);
+  border: 1px solid rgba(46, 125, 50, 0.25);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.announcement-guidelines ul {
+  margin: 0.4rem 0 0;
+  padding-left: 1.2rem;
+}
+
+/* Dark strip that mimics the hero so the preview is honest about size. */
+.announcement-preview-band {
+  --ticker-media-h: 64px;
+  --ticker-media-maxw: 320px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--primary, #2e7d32);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-top: 0.75rem;
+}
+
+.announcement-preview-band .field-hint {
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+}
+
+.announcement-preview-img {
+  border-radius: 8px;
+}
+
+.announcement-item--hidden {
+  opacity: 0.55;
+}
+
+.announcement-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.announcement-check input {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--primary, #2e7d32);
+}
+
+.announcement-editing-note {
+  background: rgba(46, 125, 50, 0.08);
+  border: 1px solid rgba(46, 125, 50, 0.25);
+  border-radius: 10px;
+  padding: 0.6rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.announcement-link-note {
+  display: inline-block;
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+  color: #666;
+  word-break: break-all;
+}

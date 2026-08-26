@@ -27,9 +27,47 @@
               <input v-model.trim="form.name" required type="text" placeholder="KOLACIN TRAIL" />
             </label>
 
+            <!--
+              This id is the database primary key, the public URL and the
+              uploads folder all at once. It used to be a free-text field, and
+              two trails saved under the same id silently replaced each other,
+              so it is derived from the name unless the editor asks for it and
+              is frozen once the trail exists.
+            -->
             <label class="form-field">
               <span>ID / názov priečinka</span>
-              <input v-model.trim="form.id" required type="text" placeholder="kolacin-trail" />
+              <input
+                ref="idInput"
+                v-model.trim="form.id"
+                required
+                type="text"
+                placeholder="kolacin-trail"
+                :readonly="isEditing || idMode === 'auto'"
+                :aria-invalid="Boolean(idError)"
+              />
+              <p v-if="isEditing" class="field-hint">
+                ID sa po vytvorení nedá zmeniť — určuje adresu trasy aj priečinok jej súborov.
+              </p>
+              <p v-else class="field-hint">
+                Adresa trasy: /track/{{ trailIdSlug || '…' }}
+                <button
+                  v-if="idMode === 'auto'"
+                  type="button"
+                  class="field-inline-button"
+                  @click.prevent="editIdManually"
+                >
+                  Upraviť ID
+                </button>
+                <button
+                  v-else
+                  type="button"
+                  class="field-inline-button"
+                  @click.prevent="deriveIdFromName"
+                >
+                  Odvodiť z názvu
+                </button>
+              </p>
+              <p v-if="idError" class="field-error">{{ idError }}</p>
             </label>
 
             <label class="form-field form-field-wide">
@@ -340,8 +378,15 @@
 import { Clock, Megaphone, NotebookPen, Ruler, TrendingUp } from 'lucide-vue-next'
 import DifficultyBadge from './DifficultyBadge.vue'
 import SportIcon from './SportIcon.vue'
-import { api } from '../lib/api'
-import { getAdminTrailById, removeAdminTrail, saveAdminTrail } from '../data/customTrails'
+import { api, ApiError } from '../lib/api'
+import {
+  getAdminTrailById,
+  getAdminTrails,
+  isTrailIdTaken,
+  nextFreeTrailId,
+  removeAdminTrail,
+  saveAdminTrail
+} from '../data/customTrails'
 import { getStorageTrailId } from '../utils/slug'
 import { gpxFileToPreviewPng, dataUrlToBlob } from '../utils/gpxMapCapture'
 import { compressImageToWebp } from '../utils/imageCompressor'
@@ -411,7 +456,14 @@ export default {
       savingStep: '',
       message: '',
       error: '',
-      galleryPreviews: []
+      galleryPreviews: [],
+      // 'auto' keeps the id in step with the name; 'manual' means the editor
+      // took the wheel. Only ever 'manual' by an explicit click.
+      idMode: 'auto',
+      idError: '',
+      // [{ id, name }] of the trails that already exist, so a clash can be
+      // reported as the name the editor recognises rather than a bare slug.
+      existingTrails: []
     }
   },
   computed: {
@@ -442,11 +494,88 @@ export default {
       if (this.form.sport === 'hiking') return 'Typ turistiky'
       if (this.form.sport === 'running') return 'Typ behu'
       return 'Typ cyklotrasy'
+    },
+    // What the server will actually store, shown under the field so the id is
+    // never a surprise.
+    trailIdSlug() {
+      return getStorageTrailId(this.form.id || this.form.name)
+    },
+    existingTrailIds() {
+      return this.existingTrails.map(trail => trail.id)
+    }
+  },
+  watch: {
+    'form.name'(value) {
+      if (this.isEditing || this.idMode !== 'auto') return
+      this.form.id = getStorageTrailId(value)
+    },
+    'form.id'() {
+      this.validateId()
+    },
+    // authUser resolves after mount, so the trail list has to be (re)loaded
+    // once the role is known — a draft trail is invisible until then.
+    canAddTrails() {
+      this.loadExistingTrails()
     }
   },
   methods: {
     goHome() {
       this.$router.push('/')
+    },
+    editIdManually() {
+      this.idMode = 'manual'
+      this.$nextTick(() => this.$refs.idInput?.focus())
+    },
+    deriveIdFromName() {
+      this.idMode = 'auto'
+      this.form.id = getStorageTrailId(this.form.name)
+    },
+    async loadExistingTrails() {
+      if (this.isEditing) return
+      try {
+        const trails = await getAdminTrails()
+        this.existingTrails = trails.map(trail => ({ id: trail.id, name: trail.name || '' }))
+        this.validateId()
+      } catch {
+        // Non-fatal: submitTrail() re-checks against the server, and the PUT
+        // carries expectNew so nothing can be overwritten regardless.
+      }
+    },
+    duplicateIdMessage(slug) {
+      const clash = this.existingTrails.find(trail => trail.id === slug)
+      const which = clash?.name ? ` (${clash.name})` : ''
+      const suggestion = nextFreeTrailId(slug, this.existingTrailIds)
+      return `Trasa s ID „${slug}“${which} už existuje. Skús napríklad „${suggestion}“.`
+    },
+    /** Cheap local check against the loaded list, run on every id change. */
+    validateId() {
+      if (this.isEditing) {
+        this.idError = ''
+        return
+      }
+      const slug = this.trailIdSlug
+      this.idError = slug && this.existingTrailIds.includes(slug)
+        ? this.duplicateIdMessage(slug)
+        : ''
+    },
+    /**
+     * The gate that runs before a single byte is uploaded — uploads are keyed
+     * by the same slug, so letting them run first would scatter files into the
+     * other trail's folder even if the save were then rejected.
+     */
+    async assertIdAvailable(slug) {
+      let taken = false
+      try {
+        taken = await isTrailIdTaken(slug)
+      } catch {
+        // Server unreachable: proceed. The save carries expectNew, so the worst
+        // case is a 409 instead of a silent overwrite.
+        return
+      }
+      if (taken) {
+        this.idError = this.duplicateIdMessage(slug)
+        throw new Error(this.idError)
+      }
     },
     setSport(sport) {
       this.form.sport = sport
@@ -542,7 +671,13 @@ export default {
     },
     getTrailStorageId() {
       // Must agree with the id the server derives, or uploads land in a folder
-      // the delete path can never find again.
+      // the delete path can never find again. When editing, that is the row's
+      // own id and never the form field: buildTrail() keeps the original id,
+      // so following the field here is how one trail ended up owning files
+      // inside another trail's folder.
+      if (this.isEditing) {
+        return getStorageTrailId(this.id)
+      }
       return getStorageTrailId(this.form.id || this.form.name) || `trail-${Date.now()}`
     },
     async uploadPhoto() {
@@ -799,13 +934,23 @@ export default {
       }
 
       this.saving = true
-      this.savingStep = 'Nahrávam fotku...'
+      this.savingStep = 'Kontrolujem ID...'
 
       try {
-        const photoUrl = await this.uploadPhoto()
-        
-        this.savingStep = 'Nahrávam galériu...'
         const trailId = this.getTrailStorageId()
+        if (!this.isEditing) {
+          // A readonly input is barred from constraint validation, so the
+          // field's own `required` cannot be relied on to catch this.
+          if (!this.trailIdSlug) {
+            throw new Error('Z názvu sa nepodarilo odvodiť ID. Zadaj ho ručne cez „Upraviť ID“.')
+          }
+          await this.assertIdAvailable(trailId)
+        }
+
+        this.savingStep = 'Nahrávam fotku...'
+        const photoUrl = await this.uploadPhoto()
+
+        this.savingStep = 'Nahrávam galériu...'
         const galleryUrls = await this.uploadGalleryImages(trailId)
 
         this.savingStep = 'Nahrávam GPX...'
@@ -815,7 +960,7 @@ export default {
         const trail = this.buildTrail(photoUrl, gpx, galleryUrls)
 
         await this.withTimeout(
-          saveAdminTrail(trail),
+          saveAdminTrail(trail, { expectNew: !this.isEditing }),
           12000,
           'Ukladanie trasy trvá príliš dlho.'
         )
@@ -823,6 +968,11 @@ export default {
         this.message = 'Trasa bola uložená.'
         this.$router.push('/admin/manage-trails')
       } catch (error) {
+        // 409: the id was taken between the pre-check and the save. Mirror it
+        // onto the field so it reads the same as the inline warning.
+        if (error instanceof ApiError && error.status === 409) {
+          this.idError = error.message
+        }
         this.error = error.message || 'Nepodarilo sa uložiť trasu.'
       } finally {
         this.saving = false
@@ -867,6 +1017,7 @@ export default {
   },
   mounted() {
     this.loadTrailForEdit()
+    this.loadExistingTrails()
   }
 }
 </script>

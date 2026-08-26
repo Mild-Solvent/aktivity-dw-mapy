@@ -4,7 +4,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
 
 ## Project Overview
 
-**TrackFinder** (Activity DW Club) is a Vue 3 single-page application for discovering MTB cycling tracks in Slovakia. The app features an interactive track browser with filtering, individual track detail pages, and GPX downloads. It's optimized for GitHub Pages deployment with static page generation for SEO.
+**TrackFinder** (Aktivity DW KLUB) is a Vue 3 single-page application for discovering MTB cycling tracks in Slovakia. The app features an interactive track browser with filtering, individual track detail pages, and GPX downloads. It's optimized for GitHub Pages deployment with static page generation for SEO.
 
 ## Common Commands
 

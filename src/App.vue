@@ -20,6 +20,9 @@
                 <router-link to="/" @click="closeMenu" class="menu-item">
                   <House class="section-icon" :size="16" aria-hidden="true" /> Domov
                 </router-link>
+                <router-link to="/novinky" @click="closeMenu" class="menu-item">
+                  <Megaphone class="section-icon" :size="16" aria-hidden="true" /> Novinky
+                </router-link>
                 <router-link to="/terms" @click="closeMenu" class="menu-item">
                   <ScrollText class="section-icon" :size="16" aria-hidden="true" /> Všeobecné podmienky
                 </router-link>
@@ -35,6 +38,9 @@
 
                 <router-link v-if="canAddTrails" to="/admin/manage-trails" @click="closeMenu" class="menu-item">
                   Správa trás
+                </router-link>
+                <router-link v-if="isAdmin" to="/admin/announcements" @click="closeMenu" class="menu-item">
+                  Správa noviniek
                 </router-link>
                 <router-link v-if="isAdmin" to="/admin/roles" @click="closeMenu" class="menu-item">
                   Správa rolí
@@ -155,7 +161,7 @@
         <!-- Logo -->
         <div class="logo" :class="{ 'logo-hidden': isSearchExpanded }">
           <router-link to="/" class="logo-link">
-            ACTIVITY DW Club
+            AKTIVITY DW KLUB
           </router-link>
         </div>
 
@@ -415,12 +421,12 @@
           
           <div class="footer-info">
             <div class="copyright">
-              Vytvorené v spolupráci s <a href="https://new.ceaeurope.sk/" target="_blank" rel="noopener" class="support-link">ceaeurope.sk</a>
+              Vytvorené v spolupráci s <a href="https://ceaeurope.sk/" target="_blank" rel="noopener" class="support-link">ceaeurope.sk</a>
             </div>
             <div class="developer">
               Development a design od <a href="https://mild-solvent.github.io/Portfolio/" target="_blank" rel="noopener" class="developer-link">Mild Solvent</a>
             </div>
-            <a href="https://new.ceaeurope.sk/" target="_blank" rel="noopener" class="footer-cea-flower">
+            <a href="https://ceaeurope.sk/" target="_blank" rel="noopener" class="footer-cea-flower">
               <img src="/assets/shared/cea-flower.png" alt="CEA Flower" class="cea-flower-logo">
             </a>
           </div>
@@ -434,7 +440,7 @@
 </template>
 
 <script>
-import { House, Lock, ScrollText, Search } from 'lucide-vue-next'
+import { House, Lock, Megaphone, ScrollText, Search } from 'lucide-vue-next'
 import CookieBanner from './components/CookieBanner.vue'
 import DifficultyBadge from './components/DifficultyBadge.vue'
 import SportIcon from './components/SportIcon.vue'
@@ -448,6 +454,7 @@ export default {
     DifficultyBadge,
     House,
     Lock,
+    Megaphone,
     ScrollText,
     Search,
     SportIcon

@@ -54,7 +54,7 @@ if (get_user($email)) {
     $link = 'https://' . ($_SERVER['HTTP_HOST'] ?? 'aktivity.ceaeurope.sk')
           . '/reset-password?token=' . rawurlencode($token);
 
-    $subject = 'Obnovenie hesla — ACTIVITY DW Club';
+    $subject = 'Obnovenie hesla — AKTIVITY DW KLUB';
     $text = <<<TXT
 Dobrý deň,
 
@@ -69,7 +69,7 @@ Odkaz je platný jednu hodinu a dá sa použiť iba raz.
 Ak ste o obnovenie hesla nežiadali, tento e-mail pokojne ignorujte —
 vaše heslo zostáva nezmenené.
 
-ACTIVITY DW Club
+AKTIVITY DW KLUB
 TXT;
 
     // Return value ignored on purpose: a failed send must not change the

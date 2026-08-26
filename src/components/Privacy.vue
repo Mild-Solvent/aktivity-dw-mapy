@@ -10,101 +10,120 @@
 
       <div class="content">
         <section class="section">
-          <p class="last-updated">Posledná aktualizácia: december 2024</p>
+          <p class="last-updated">Posledná aktualizácia: august 2026</p>
         </section>
 
         <section class="section">
-          <h2>1. Žiadne zhromažďovanie údajov</h2>
+          <h2>1. Prevádzkovateľ</h2>
           <p>
-            <strong>ACTIVITY DW Club nezhromažďuje žiadne osobné údaje ani informácie o používateľoch.</strong>
+            Prevádzkovateľom tejto webovej stránky a správcom osobných údajov je občianske združenie
+            <strong>AKTIVITY DW KLUB</strong>, so sídlom Farská 493, 018 51 Nová Dubnica, IČO: 42 021 014.
+            Stránka je hostovaná u spoločnosti Websupport, s.r.o. (Slovensko), ktorá pre nás údaje
+            technicky spracúva ako sprostredkovateľ.
           </p>
+        </section>
+
+        <section class="section">
+          <h2>2. Aké údaje spracúvame</h2>
           <p>
-            Naša webová stránka je navrhnutá tak, aby rešpektovala vaše súkromie. Nepoužívame:
+            Väčšinu obsahu stránky si môžete prezerať bez akejkoľvek registrácie — v takom prípade
+            o vás neukladáme žiadne osobné údaje. Ak si vytvoríte účet alebo ho používate, spracúvame:
           </p>
           <ul>
-            <li><strong>Sledovacie cookies:</strong> Nesledujeme vaše správanie na webe</li>
-            <li><strong>Analytické nástroje:</strong> Nezhromažďujeme štatistiky o návštevnosti</li>
-            <li><strong>Osobné údaje:</strong> Nepýtame si ani neuchováváme žiadne osobné informácie</li>
-            <li><strong>Údaje o polohe:</strong> Neprístupujeme k vašej polohe</li>
-            <li><strong>Vyhľadávacie dotazy:</strong> Neukladáme vaše vyhľadávania</li>
+            <li><strong>Údaje o účte:</strong> e-mailová adresa, heslo (ukladané výhradne v zahashovanej podobe, nikdy ako čistý text), rola účtu a dátum vytvorenia</li>
+            <li><strong>Prihlásenie:</strong> náhodný token relácie uložený v cookie a v databáze, platný 7 dní</li>
+            <li><strong>Obľúbené trasy:</strong> informácia, ktoré trasy ste označili ako „páči sa mi", spojená s vaším e-mailom</li>
+            <li><strong>Obnova hesla:</strong> pri žiadosti o obnovenie hesla ukladáme e-mail, zahashovaný token a IP adresu, z ktorej žiadosť prišla — IP adresa slúži výlučne na ochranu pred zneužitím (obmedzenie počtu žiadostí)</li>
+            <li><strong>Pridaný obsah:</strong> pri trasách a oznamoch pridaných oprávnenými používateľmi evidujeme, kto ich vytvoril</li>
+          </ul>
+          <p>
+            Nepoužívame žiadne analytické ani reklamné nástroje a nesledujeme vaše správanie na stránke.
+          </p>
+        </section>
+
+        <section class="section">
+          <h2>3. Účely a právne základy</h2>
+          <ul>
+            <li><strong>Vedenie účtu a prihlásenie:</strong> plnenie zmluvy — bez týchto údajov účet nemôže fungovať</li>
+            <li><strong>Odosielanie e-mailov na obnovu hesla:</strong> plnenie zmluvy</li>
+            <li><strong>Ukladanie IP adries pri obnove hesla:</strong> oprávnený záujem na zabezpečení stránky pred zneužitím</li>
           </ul>
         </section>
 
         <section class="section">
-          <h2>2. GitHub Pages Hosting</h2>
+          <h2>4. Cookies a lokálne úložisko</h2>
           <p>
-            Táto webová stránka je hostovaná na <strong>GitHub Pages</strong>, čo znamená:
+            Používame iba <strong>nevyhnutné technické cookies</strong> — žiadne sledovacie ani marketingové:
           </p>
           <ul>
-            <li>Stránka je statická a nemá vlastný server na spracovanie údajov</li>
-            <li>Všetky údaje sú spracované lokálne vo vašom prehliadači</li>
-            <li>Nemôžeme zhromažďovať ani uchovávať údaje na serveri</li>
-            <li>GitHub môže zachytiť základné informácie o návštevnosti (ako každá webová stránka), ale ACTIVITY DW Club k nim nemá prístup</li>
+            <li><strong>Cookie relácie:</strong> po prihlásení uchováva váš prihlasovací token (HttpOnly, platnosť 7 dní). Bez nej prihlásenie nefunguje.</li>
+            <li><strong>Lokálne úložisko prehliadača:</strong> pamätá si, že ste vzali na vedomie informáciu o cookies. Tento údaj nikdy neopúšťa váš prehliadač.</li>
           </ul>
         </section>
 
         <section class="section">
-          <h2>3. Lokálne údaje</h2>
-          <p>
-            Jedinou informáciou, ktorá sa uchováva, sú:
-          </p>
+          <h2>5. Doba uchovávania</h2>
           <ul>
-            <li><strong>Predvoľby filtrov:</strong> Ukladané lokálne vo vašom prehliadači pre lepšiu užívateľskú skúsenosť</li>
-            <li><strong>Súhlas s cookies:</strong> Informácia o tom, že ste si prečítali túto poznámku</li>
-          </ul>
-          <p>
-            Tieto údaje sú ukladané iba lokálne vo vašom prehliadači a nikdy sa neposielajú na server.
-          </p>
-        </section>
-
-        <section class="section">
-          <h2>4. Cookies</h2>
-          <p>
-            <strong>Nepoužívame žiadne sledovacie cookies.</strong> Jediné cookies, ktoré používame, sú:
-          </p>
-          <ul>
-            <li>Lokálne úložisko prehliadača na zapamätanie vašich preferencií</li>
-            <li>Session storage na dočasné údaje počas používania stránky</li>
-          </ul>
-          <p>
-            Žiadne z týchto údajov sa neodosielajú na externé servery.
-          </p>
-        </section>
-
-        <section class="section">
-          <h2>5. Služby tretích strán</h2>
-          <p>
-            Naša stránka môže obsahovať odkazy na externé webové stránky (napr. ceaeurope.sk). 
-            <strong>ACTIVITY DW Club nie je zodpovedné za praktiky ochrany súkromia týchto externých stránok.</strong>
-          </p>
-        </section>
-
-        <section class="section">
-          <h2>6. Vaše práva a kontrola</h2>
-          <p>
-            Ponievaž nezhromažďujeme žiadne údaje, máte úplnú kontrolu nad vaším súkromím:
-          </p>
-          <ul>
-            <li>Môžete vymazať lokálne údaje prehliadača kedykoľvek</li>
-            <li>Môžete vypnúť JavaScript a stránka bude štále fungovať</li>
-            <li>Môžete používať režim inkognito alebo súkromné prehliadače</li>
-            <li>Nemáme žiadne údaje na vymazanie ani prenos</li>
+            <li><strong>Údaje o účte a obľúbené trasy:</strong> po dobu existencie účtu</li>
+            <li><strong>Relácie:</strong> 7 dní, po vypršaní sa automaticky mažú</li>
+            <li><strong>Záznamy o obnove hesla (vrátane IP adries):</strong> token platí 1 hodinu; záznamy sa mažú približne 7 dní po vypršaní</li>
           </ul>
         </section>
 
         <section class="section">
-          <h2>7. Zmeny týchto zásad</h2>
+          <h2>6. Komu údaje sprístupňujeme</h2>
           <p>
-            Ak vykonáme zmeny v týchto zásadách ochrany súkromia, aktualizácia sa zobrazí na tejto stránke 
+            Vaše údaje nepredávame ani neposkytujeme tretím stranám na marketingové účely. Technicky ich spracúva iba:
+          </p>
+          <ul>
+            <li><strong>Websupport, s.r.o.:</strong> hosting stránky, databázy a odosielanie e-mailov (napr. pri obnove hesla)</li>
+          </ul>
+          <p>
+            Stránka môže obsahovať odkazy na externé webové stránky (napr. ceaeurope.sk).
+            Za praktiky ochrany súkromia týchto stránok nezodpovedáme.
+          </p>
+        </section>
+
+        <section class="section">
+          <h2>7. Vaše práva</h2>
+          <p>
+            Podľa nariadenia GDPR máte právo:
+          </p>
+          <ul>
+            <li>na prístup k svojim osobným údajom a na ich kópiu,</li>
+            <li>na opravu nesprávnych údajov,</li>
+            <li>na vymazanie údajov (vrátane zrušenia účtu),</li>
+            <li>na obmedzenie spracúvania a na námietku proti spracúvaniu založenému na oprávnenom záujme,</li>
+            <li>na prenosnosť údajov,</li>
+            <li>podať sťažnosť na Úrad na ochranu osobných údajov Slovenskej republiky (dataprotection.gov.sk).</li>
+          </ul>
+          <p>
+            Na uplatnenie týchto práv nás kontaktujte spôsobom uvedeným v časti Kontakt.
+          </p>
+        </section>
+
+        <section class="section">
+          <h2>8. Zabezpečenie</h2>
+          <p>
+            Heslá ukladáme iba v zahashovanej podobe, tokeny na obnovu hesla sú jednorazové a v databáze
+            uložené tiež len ako hash. Komunikácia so stránkou prebieha cez HTTPS a prihlasovacia cookie
+            nie je prístupná skriptom (HttpOnly).
+          </p>
+        </section>
+
+        <section class="section">
+          <h2>9. Zmeny týchto zásad</h2>
+          <p>
+            Ak vykonáme zmeny v týchto zásadách ochrany súkromia, aktualizácia sa zobrazí na tejto stránke
             s novým dátumom poslednej aktualizácie.
           </p>
         </section>
 
         <section class="section">
-          <h2>8. Kontakt</h2>
+          <h2>10. Kontakt</h2>
           <p>
-            Ak máte otázky o týchto zásadách ochrany súkromia pre <strong>ACTIVITY DW Club</strong>, 
-            môžete nás kontaktovať prostredníctvom našej webovej stránky.
+            Ak máte otázky o týchto zásadách ochrany súkromia alebo si chcete uplatniť svoje práva,
+            kontaktujte <strong>AKTIVITY DW KLUB</strong> prostredníctvom kontaktných údajov uvedených na našej webovej stránke.
           </p>
         </section>
       </div>

@@ -3,7 +3,7 @@
     <div class="hero-section">
       <div class="hero-content">
         <!-- Desktop layout - logos on sides -->
-        <img src="/assets/icons/aktivity-dw-logo.png" alt="Activity DW Logo" class="hero-logo hero-logo-left hero-logo-desktop">
+        <img src="/assets/icons/aktivity-dw-logo.png" alt="Aktivity DW Logo" class="hero-logo hero-logo-left hero-logo-desktop">
         <div class="hero-text">
           <h1 class="hero-title">Objavte úžasné trasy</h1>
           <p class="hero-subtitle">Nájdite perfektnú bežeckú, cyklistickú alebo turistickú trasu vo vašom okolí</p>
@@ -14,22 +14,15 @@
 
         <!-- Mobile layout - logos together -->
         <div class="hero-logos-container hero-logo-mobile">
-          <img src="/assets/icons/aktivity-dw-logo.png" alt="Activity DW Logo" class="hero-logo hero-logo-left">
+          <img src="/assets/icons/aktivity-dw-logo.png" alt="Aktivity DW Logo" class="hero-logo hero-logo-left">
           <a href="https://www.ceaeurope.sk/" target="_blank" rel="noopener noreferrer" class="hero-logo-link">
             <img src="/assets/icons/logo-cea.png" alt="CEA Logo" class="hero-logo hero-logo-right">
           </a>
         </div>
       </div>
-      <div class="footer-image">
-        <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
-        <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
-        <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
-        <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
-        <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
-        <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
-        <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
-        <img src="/assets/shared/mravce.png" alt="Mravce Logo" class="footer-logo">
-      </div>
+      <!-- The ant parade doubles as the news channel: ants march left and
+           tow the announcements maintained in /admin/announcements. -->
+      <NewsTicker />
     </div>
 
     <div class="container">
@@ -76,6 +69,10 @@
                 <span class="track-image-placeholder-icon">🗺</span>
                 <span class="track-image-placeholder-label">Bez náhľadu</span>
               </div>
+              <div class="track-location">
+                <MapPin class="location-icon" :size="14" aria-hidden="true" />
+                <span class="location-text">{{ track.location }}</span>
+              </div>
             </div>
 
             <div class="track-content">
@@ -84,10 +81,6 @@
                   <SportIcon :sport="track.sport" size="sm" />
                 </span>
                 <DifficultyBadge :difficulty="track.difficulty" size="sm" />
-                <div class="track-location">
-                  <MapPin class="location-icon" :size="14" aria-hidden="true" />
-                  <span class="location-text">{{ track.location }}</span>
-                </div>
               </div>
               <h3 class="track-title">{{ track.name }}</h3>
               <p class="track-description">{{ track.description }}</p>
@@ -136,12 +129,13 @@
 import { Clock, MapPin, Ruler, TrendingUp } from 'lucide-vue-next'
 import DifficultyBadge from './DifficultyBadge.vue'
 import LikeButton from './LikeButton.vue'
+import NewsTicker from './NewsTicker.vue'
 import SportIcon from './SportIcon.vue'
 import { getAdminTrailState } from '../data/customTrails'
 
 export default {
   name: 'HomePage',
-  components: { Clock, DifficultyBadge, LikeButton, MapPin, Ruler, SportIcon, TrendingUp },
+  components: { Clock, DifficultyBadge, LikeButton, MapPin, NewsTicker, Ruler, SportIcon, TrendingUp },
   props: {
     filters: {
       type: Object,

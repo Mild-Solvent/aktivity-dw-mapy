@@ -1,7 +1,8 @@
 <?php
 /**
  * GET    /api/trails/<id>   → public read (drafts only for managers)
- * PUT    /api/trails/<id>   → create or update (trail managers only)
+ * PUT    /api/trails/<id>   → create or update (trail managers only); 409 when
+ *                            the body sets expectNew and the id is taken
  * DELETE /api/trails/<id>   → remove trail + its files (trail managers only)
  *
  * Direct port of api/trails/[id].js. The id is slugified server-side so
@@ -25,6 +26,13 @@ $id = slugify($idRaw);
 
 if ($id === '') {
     badRequest('Chýba id trasy');
+}
+
+// tracks/announcements/ holds the news-ticker media (see _lib/announcements.php).
+// A trail with this slug would share the folder — and deleting it would call
+// delete_by_prefix() and wipe every news image.
+if ($id === 'announcements') {
+    badRequest('ID „announcements“ je rezervované pre novinky. Zvoľ iné ID.');
 }
 
 $method = $_SERVER['REQUEST_METHOD'] ?? '';
@@ -55,6 +63,15 @@ if ($method === 'PUT') {
     }
 
     $existedBefore = get_trail($id);
+
+    // save_trail() is an upsert, so a *create* that reuses an id silently
+    // replaces the other trail — which is exactly what happened on 11 Aug 2026
+    // (two PUT /api/trails/beh from /admin/trails/new, 201 then 200).
+    // expectNew is the client saying "this is a new trail". It is read from the
+    // raw body and is absent from TRAIL_FIELDS, so it can never be stored.
+    if ($existedBefore && !empty($body['expectNew'])) {
+        conflict('Trasa s ID „' . $id . '“ už existuje. Zvoľ iné ID.');
+    }
 
     $VALID_STATUS = ['published', 'draft'];
     $status = in_array($body['status'] ?? null, $VALID_STATUS, true) ? $body['status'] : 'published';
