@@ -59,16 +59,42 @@ DirectoryIndex index.html
 
   RewriteRule ^api/upload$         api/upload.php        [END,QSA]
 
+  # ── SEO ────────────────────────────────────────────────────────────────
+  # The sitemap is generated from the database (trails and blog posts are
+  # rows, not files), so /sitemap.xml is a PHP handler. robots.txt has
+  # advertised this URL since 2025; before this rule the SPA fallback below
+  # answered it with index.html and a 200, and Search Console was reading a
+  # web page where a sitemap should be.
+  RewriteRule ^sitemap\.xml$   api/seo/sitemap.php  [END]
+
+  # api/seo/* is reachable only through the internal rewrites in this file.
+  # Both of those carry [END], so they never re-enter these rules and never
+  # meet this guard; a browser asking for the handler directly does, and gets
+  # a 403 instead of a second, duplicate copy of the home page.
+  RewriteRule ^api/seo/ - [F,L]
+
   # ── SPA fallback ───────────────────────────────────────────────────────
   # Match anything that is NOT:
   #   - under /api/         (handled above)
   #   - an existing file    (Vite JS/CSS, /assets, /tracks uploads)
   #   - an existing dir
-  # and rewrite it to index.html so Vue Router can take over.
+  # and rewrite it to the shell renderer, which serves index.html with a head
+  # built for this specific URL — title, description, canonical, Open Graph
+  # and JSON-LD — and with the right status code. See api/seo/render.php; if
+  # anything in it fails it falls back to the untouched index.html.
+  #
+  # index.html is *not* named directly any more. The one hard-coded
+  # <link rel="canonical" href="…/"> it ships with was telling Google that
+  # every trail page was a duplicate of the home page, which is why Search
+  # Console reported 8 URLs as "Alternative page with proper canonical tag".
   RewriteCond %{REQUEST_URI} !^/api/
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . /index.html [L]
+  RewriteRule . api/seo/render.php [END,QSA]
+
+  # The home page too: DirectoryIndex would serve index.html straight off the
+  # disk, and "/" is the one URL that must not miss out on a real head.
+  RewriteRule ^$ api/seo/render.php [END,QSA]
 </IfModule>
 
 # ── Caching ──────────────────────────────────────────────────────────────

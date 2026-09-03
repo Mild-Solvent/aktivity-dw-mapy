@@ -13,6 +13,7 @@ import Terms from './components/Terms.vue'
 import Privacy from './components/Privacy.vue'
 import MyLikedTrails from './components/MyLikedTrails.vue'
 import ResetPassword from './components/ResetPassword.vue'
+import { breadcrumbNode, organizationNode, setHead } from './utils/head'
 import './styles/index.css'
 
 const routes = [
@@ -35,6 +36,52 @@ const routes = [
 const router = createRouter({
   history: createWebHistory('/'),
   routes
+})
+
+/**
+ * Heads for the routes whose content is fixed.
+ *
+ * The data-driven pages — the trail list, a trail, the blog and an article —
+ * are missing on purpose: they own their heads and set them once their data
+ * arrives, so writing a provisional one here would only be overwritten a beat
+ * later. The server has already sent the correct head for the landing URL
+ * (api/seo/render.php); these entries exist for what happens after the
+ * visitor starts clicking, when no new document is ever fetched.
+ */
+const STATIC_HEADS = {
+  Terms: {
+    title: 'Všeobecné podmienky',
+    description: 'Podmienky používania portálu AKTIVITY DW KLUB — pravidlá pre trasy, '
+      + 'GPX súbory a používateľské účty.'
+  },
+  Privacy: {
+    title: 'Ochrana súkromia',
+    description: 'Ako AKTIVITY DW KLUB spracúva osobné údaje, cookies a údaje o účtoch návštevníkov.'
+  },
+  MyLikedTrails: { title: 'Moje obľúbené trasy', noindex: true },
+  ResetPassword: { title: 'Obnova hesla', noindex: true },
+  AdminAddTrail: { title: 'Pridať trasu', noindex: true },
+  AdminEditTrail: { title: 'Upraviť trasu', noindex: true },
+  AdminManageTrails: { title: 'Správa trás', noindex: true },
+  AdminRoles: { title: 'Správa rolí', noindex: true },
+  // Both names for the blog back office: the route was renamed when the blog
+  // became its own module, and this table is keyed by route name.
+  AdminAnnouncements: { title: 'Blog a novinky', noindex: true },
+  AdminPostList: { title: 'Blog a novinky', noindex: true },
+  AdminPostNew: { title: 'Nový článok', noindex: true },
+  AdminPostEdit: { title: 'Upraviť článok', noindex: true }
+}
+
+router.afterEach((to) => {
+  const meta = STATIC_HEADS[to.name]
+  if (!meta) return
+  setHead({
+    ...meta,
+    path: to.path,
+    jsonld: meta.noindex
+      ? []
+      : [breadcrumbNode([['Domov', '/'], [meta.title, to.path]]), organizationNode()]
+  })
 })
 
 const app = createApp(App).use(router)

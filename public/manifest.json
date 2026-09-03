@@ -1,8 +1,9 @@
 {
-  "name": "AKTIVITY DW KLUB - Objavte Úžasné Trasy",
+  "name": "AKTIVITY DW KLUB - trasy na behanie, bicykel a turistiku",
   "short_name": "AKTIVITY DW",
-  "description": "Objavte najlepšie bežecké, cyklistické a turistické trasy na Slovensku",
+  "description": "Objavte overené bežecké, cyklistické a turistické trasy na Slovensku. Mapy, prevýšenie a GPX súbory na stiahnutie.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2d3748",
@@ -15,7 +16,13 @@
       "src": "/favicon.ico",
       "sizes": "48x48 32x32 16x16",
       "type": "image/x-icon",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/aktivity-dw-logo.png",
+      "sizes": "605x594",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }

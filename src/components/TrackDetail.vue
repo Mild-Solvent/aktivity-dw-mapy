@@ -210,6 +210,7 @@ import { getAdminTrailById, getAdminTrailState } from '../data/customTrails'
 import { getStorageTrailId } from '../utils/slug'
 import LikeButton from './LikeButton.vue'
 import { api } from '../lib/api'
+import { absoluteUrl, breadcrumbNode, organizationNode, setHead, summarize } from '../utils/head'
 
 export default {
   name: 'TrackDetail',
@@ -284,9 +285,13 @@ export default {
           : await getAdminTrailById(this.id)
         if (!this.track) {
           this.error = 'Trasu sa nepodarilo nájsť'
+          // A direct hit already got a 404 from the server; this covers the
+          // in-app case, where the status line is long since sent.
+          setHead({ title: 'Stránka sa nenašla', path: this.$route.path, noindex: true })
         } else {
           this.error = null
           this.validGalleryImages = this.track.galleryImages || []
+          this.applyHead()
           console.log('Loaded track object:', this.track)
         }
       } catch (error) {
@@ -295,6 +300,68 @@ export default {
       } finally {
         this.loading = false
       }
+    },
+    /**
+     * This page's head, once the trail is loaded.
+     *
+     * api/_lib/seo.php::seo_meta_trail() produces the same thing server-side
+     * for a direct hit; this keeps it correct after an in-app navigation,
+     * where no new document is fetched and the head would otherwise still
+     * describe the page the visitor arrived on.
+     */
+    applyHead() {
+      const t = this.track
+      if (!t) return
+
+      const sport = { running: 'bežecká', cycling: 'cyklistická', hiking: 'turistická' }[t.sport] || 'outdoorová'
+      const kind = `${t.distance ? `${t.distance} ` : ''}${sport} trasa`
+      // Lead the snippet with the numbers — they are what a searcher scans
+      // for, and most descriptions open with prose.
+      const difficulty = {
+        beginner: 'pre začiatočníkov',
+        easy: 'ľahká',
+        moderate: 'stredne náročná',
+        intermediate: 'stredne náročná',
+        hard: 'náročná',
+        expert: 'veľmi náročná'
+      }[t.difficulty]
+      const facts = [t.distance, t.elevation && `prevýšenie ${t.elevation}`, difficulty, t.location]
+        .filter(Boolean)
+        .join(' · ')
+      const path = `/track/${t.id}`
+
+      setHead({
+        title: [t.name, kind].filter(Boolean).join(' – '),
+        description: `${facts ? `${facts}. ` : ''}${t.description || ''}`,
+        path,
+        image: t.previewImage,
+        jsonld: [
+          {
+            '@type': 'TouristTrip',
+            '@id': `${absoluteUrl(path)}#trip`,
+            name: t.name,
+            description: summarize(t.description || '', 500),
+            url: absoluteUrl(path),
+            ...(t.previewImage ? { image: absoluteUrl(t.previewImage) } : {}),
+            provider: { '@id': `${absoluteUrl('/')}#organization` },
+            ...(t.location
+              ? {
+                  itinerary: {
+                    '@type': 'Place',
+                    name: t.location,
+                    address: {
+                      '@type': 'PostalAddress',
+                      addressLocality: t.location,
+                      addressCountry: 'SK'
+                    }
+                  }
+                }
+              : {})
+          },
+          breadcrumbNode([['Domov', '/'], [t.name, path]]),
+          organizationNode()
+        ]
+      })
     },
     goBack() {
       this.$router.push('/')

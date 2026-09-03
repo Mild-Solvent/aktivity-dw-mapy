@@ -3,20 +3,20 @@
     <div class="hero-section">
       <div class="hero-content">
         <!-- Desktop layout - logos on sides -->
-        <img src="/assets/icons/aktivity-dw-logo.png" alt="Aktivity DW Logo" class="hero-logo hero-logo-left hero-logo-desktop">
+        <img src="/assets/icons/aktivity-dw-logo.png" alt="AKTIVITY DW KLUB" class="hero-logo hero-logo-left hero-logo-desktop" width="605" height="594" fetchpriority="high">
         <div class="hero-text">
           <h1 class="hero-title">Objavte úžasné trasy</h1>
           <p class="hero-subtitle">Nájdite perfektnú bežeckú, cyklistickú alebo turistickú trasu vo vašom okolí</p>
         </div>
         <a href="https://www.ceaeurope.sk/" target="_blank" rel="noopener noreferrer" class="hero-logo-link hero-logo-desktop">
-          <img src="/assets/icons/logo-cea.png" alt="CEA Logo" class="hero-logo hero-logo-right">
+          <img src="/assets/icons/logo-cea.png" alt="CEA Europe" class="hero-logo hero-logo-right" width="480" height="341" loading="lazy" decoding="async">
         </a>
 
         <!-- Mobile layout - logos together -->
         <div class="hero-logos-container hero-logo-mobile">
-          <img src="/assets/icons/aktivity-dw-logo.png" alt="Aktivity DW Logo" class="hero-logo hero-logo-left">
+          <img src="/assets/icons/aktivity-dw-logo.png" alt="AKTIVITY DW KLUB" class="hero-logo hero-logo-left" width="605" height="594" fetchpriority="high">
           <a href="https://www.ceaeurope.sk/" target="_blank" rel="noopener noreferrer" class="hero-logo-link">
-            <img src="/assets/icons/logo-cea.png" alt="CEA Logo" class="hero-logo hero-logo-right">
+            <img src="/assets/icons/logo-cea.png" alt="CEA Europe" class="hero-logo hero-logo-right" width="480" height="341" loading="lazy" decoding="async">
           </a>
         </div>
       </div>
@@ -52,7 +52,7 @@
 
         <div class="tracks-grid">
           <div
-            v-for="track in filteredTracks"
+            v-for="(track, index) in filteredTracks"
             :key="track.id"
             class="track-card"
             @click="goToTrack(track.id)"
@@ -61,8 +61,10 @@
               <img
                 v-if="track.previewImage"
                 :src="track.previewImage"
-                :alt="track.name"
+                :alt="`Náhľad trasy ${track.name}`"
                 :class="{ 'generated-map-preview': track.isGeneratedMapPreview }"
+                :loading="index < 3 ? 'eager' : 'lazy'"
+                decoding="async"
                 @error="handleImageError($event, track)"
               />
               <div v-else class="track-image-placeholder">
@@ -82,7 +84,14 @@
                 </span>
                 <DifficultyBadge :difficulty="track.difficulty" size="sm" />
               </div>
-              <h3 class="track-title">{{ track.name }}</h3>
+              <!-- A real <a href>, not just the card's @click: the click
+                   handler is invisible to a crawler, and without a link on
+                   this page no trail page was reachable from anywhere. -->
+              <h3 class="track-title">
+                <router-link :to="`/track/${track.id}`" class="track-title-link" @click.stop>
+                  {{ track.name }}
+                </router-link>
+              </h3>
               <p class="track-description">{{ track.description }}</p>
 
               <div class="track-stats">
@@ -132,6 +141,7 @@ import LikeButton from './LikeButton.vue'
 import NewsTicker from './NewsTicker.vue'
 import SportIcon from './SportIcon.vue'
 import { getAdminTrailState } from '../data/customTrails'
+import { absoluteUrl, organizationNode, ORIGIN, setHead, SITE_NAME } from '../utils/head'
 
 export default {
   name: 'HomePage',
@@ -233,6 +243,7 @@ export default {
         const { trails } = await getAdminTrailState()
         this.tracks = trails
         this.error = null
+        this.applyHead()
       } catch (error) {
         console.error('Error loading trails:', error)
         this.error = 'Nepodarilo sa načítať trasy.'
@@ -240,6 +251,57 @@ export default {
       } finally {
         this.loading = false
       }
+    },
+    /**
+     * The home page's head, once the catalogue is known.
+     *
+     * The server already sent this exact head for a visitor who landed here
+     * (api/_lib/seo.php::seo_meta_home); this is the copy that has to be
+     * re-applied when the router brings someone *back* here from a trail.
+     */
+    applyHead() {
+      const published = this.tracks.filter(t => (t.status || 'published') === 'published')
+      const withPhoto = published.find(t => t.previewImage)
+      setHead({
+        title: 'Trasy na behanie, bicykel a turistiku',
+        description: published.length
+          ? `Objavte ${published.length} overených trás na behanie, bicykel a turistiku na Slovensku. `
+            + 'Mapy, prevýšenie, náročnosť a GPX súbory na stiahnutie zadarmo.'
+          : 'Objavte overené bežecké, cyklistické a turistické trasy na Slovensku. '
+            + 'Mapy, prevýšenie, náročnosť a GPX súbory na stiahnutie zadarmo.',
+        path: '/',
+        image: withPhoto ? withPhoto.previewImage : undefined,
+        jsonld: [
+          {
+            '@type': 'WebSite',
+            '@id': `${ORIGIN}/#website`,
+            name: SITE_NAME,
+            url: `${ORIGIN}/`,
+            inLanguage: 'sk-SK',
+            publisher: { '@id': `${ORIGIN}/#organization` },
+            potentialAction: {
+              '@type': 'SearchAction',
+              target: {
+                '@type': 'EntryPoint',
+                urlTemplate: `${ORIGIN}/?search={search_term_string}`
+              },
+              'query-input': 'required name=search_term_string'
+            }
+          },
+          organizationNode(),
+          {
+            '@type': 'ItemList',
+            name: 'Trasy',
+            numberOfItems: published.length,
+            itemListElement: published.map((track, i) => ({
+              '@type': 'ListItem',
+              position: i + 1,
+              url: absoluteUrl(`/track/${track.id}`),
+              name: track.name
+            }))
+          }
+        ]
+      })
     },
     goToTrack(trackId) {
       this.$router.push({ name: 'TrackDetail', params: { id: trackId } })

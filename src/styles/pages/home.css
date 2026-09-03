@@ -199,6 +199,19 @@
   line-height: 1.3;
 }
 
+/* The title is a real <a> so the trail pages are crawlable and openable in a
+   new tab. It must not look like one — the whole card was already clickable,
+   and turning one line of it blue would read as a second, different action. */
+.track-card .track-title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.track-card .track-title-link:hover,
+.track-card .track-title-link:focus-visible {
+  text-decoration: underline;
+}
+
 .track-card .track-description {
   color: #666;
   margin-bottom: 1.5rem;

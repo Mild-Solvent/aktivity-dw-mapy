@@ -1,22 +1,27 @@
+# https://aktivity.ceaeurope.sk/robots.txt
+#
+# Everything public is crawlable. The Disallow list below is only the parts of
+# the SPA that have nothing to offer a search result: the back office, the
+# signed-in account pages, and the one-shot links out of password e-mails.
+# Those routes also send "noindex" in their head (see api/_lib/seo.php) —
+# robots.txt keeps the crawler away, the header covers a URL that reaches
+# Google some other way, e.g. from a link.
+
 User-agent: *
 Allow: /
 
-# Sitemap
+Disallow: /admin
+Disallow: /moje-oblubene
+Disallow: /reset-password
+# JSON, not pages. Crawling it wastes budget and indexes nothing.
+Disallow: /api/
+# Legacy GitHub Pages deep-link encoding (index.html rewrites ?p= back into a
+# real path). Every such URL is a duplicate of the path it encodes.
+Disallow: /*?p=
+
+# Uploaded photos and GPX files are content — Google Images should have them.
+Allow: /tracks/
+Allow: /assets/
+
+# Generated from the database on request; see api/seo/sitemap.php.
 Sitemap: https://aktivity.ceaeurope.sk/sitemap.xml
-
-# Disallow crawling of API endpoints if any
-# User-agent: *
-# Disallow: /api/
-
-# Allow all major search engines
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Slurp
-Allow: /
-
-User-agent: DuckDuckBot
-Allow: /
